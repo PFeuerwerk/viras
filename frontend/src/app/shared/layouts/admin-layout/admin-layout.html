@@ -1,0 +1,115 @@
+<div class="tw:flex tw:min-h-screen tw:w-full tw:bg-slate-50 tw:font-sans">
+    <!-- BARRA LATERAL (SIDEBAR) -->
+    <aside class="tw:w-20 tw:bg-slate-900 tw:text-white tw:flex tw:flex-col tw:sticky tw:top-0 tw:h-screen tw:transition-all tw:duration-300 tw:shrink-0 tw:lg:w-64">
+        <div class="tw:p-4 tw:lg:p-6 tw:flex tw:items-center tw:justify-center tw:lg:justify-start tw:gap-3 tw:border-b tw:border-slate-800">
+            <img src="/assets/logo.png" alt="VIRAS" class="tw:h-8 tw:w-auto tw:object-contain">
+            <div class="tw:hidden tw:lg:flex tw:flex-col tw:leading-none">
+                <span class="tw:text-lg tw:font-black tw:tracking-tighter">VIRAS</span>
+                <span class="tw:text-[10px] tw:text-slate-400 tw:font-bold tw:uppercase tw:tracking-widest">SaaS Professional</span>
+            </div>
+        </div>
+
+        <nav class="tw:flex-1 tw:py-6 tw:px-3 tw:lg:px-4 tw:space-y-8 tw:overflow-y-auto">
+            <!-- 1. SECCIÓN: SUPERUSUARIO -->
+            <div class="tw:space-y-1" *ngIf="isTechSoft()">
+                <small class="tw:px-3 tw:text-[10px] tw:font-bold tw:text-slate-500 tw:uppercase tw:tracking-widest tw:hidden tw:lg:block tw:mb-2">Plataforma Global</small>
+                <a routerLink="/techsoft/dashboard" routerLinkActive="tw:bg-blue-600 tw:text-white" 
+                   class="tw:flex tw:items-center tw:justify-center tw:lg:justify-start tw:gap-3 tw:px-3 tw:py-2.5 tw:rounded-xl tw:text-slate-400 tw:transition-all tw:hover:bg-slate-800 tw:hover:text-white">
+                    <i class="material-icons tw:text-xl">terminal</i>
+                    <span class="tw:hidden tw:lg:block tw:text-sm tw:font-bold">Consola TechSoft</span>
+                </a>
+            </div>
+
+            <!-- 2. SECCIÓN: CONFIGURACIÓN DE MARCA -->
+            <div class="tw:space-y-1" *ngIf="isAdmin()">
+                <small class="tw:px-3 tw:text-[10px] tw:font-bold tw:text-slate-500 tw:uppercase tw:tracking-widest tw:hidden tw:lg:block tw:mb-2">Dirección del Negocio</small>
+                <a routerLink="/admin/dashboard" routerLinkActive="tw:bg-blue-600 tw:text-white"
+                   class="tw:flex tw:items-center tw:justify-center tw:lg:justify-start tw:gap-3 tw:px-3 tw:py-2.5 tw:rounded-xl tw:text-slate-400 tw:transition-all tw:hover:bg-slate-800 tw:hover:text-white">
+                    <i class="material-icons tw:text-xl">dashboard</i>
+                    <span class="tw:hidden tw:lg:block tw:text-sm tw:font-bold">Panel Ejecutivo</span>
+                </a>
+                <a routerLink="/admin/business-config" routerLinkActive="tw:bg-blue-600 tw:text-white"
+                   class="tw:flex tw:items-center tw:justify-center tw:lg:justify-start tw:gap-3 tw:px-3 tw:py-2.5 tw:rounded-xl tw:text-slate-400 tw:transition-all tw:hover:bg-slate-800 tw:hover:text-white">
+                    <i class="material-icons tw:text-xl">settings_suggest</i>
+                    <span class="tw:hidden tw:lg:block tw:text-sm tw:font-bold">Configurar Sitio</span>
+                </a>
+                <a routerLink="/admin/staff" routerLinkActive="tw:bg-blue-600 tw:text-white"
+                   class="tw:flex tw:items-center tw:justify-center tw:lg:justify-start tw:gap-3 tw:px-3 tw:py-2.5 tw:rounded-xl tw:text-slate-400 tw:transition-all tw:hover:bg-slate-800 tw:hover:text-white">
+                    <i class="material-icons tw:text-xl">badge</i>
+                    <span class="tw:hidden tw:lg:block tw:text-sm tw:font-bold">Gestión de Staff</span>
+                </a>
+            </div>
+
+            <!-- 3. SECCIÓN: OPERACIONES -->
+            <div class="tw:space-y-1" *ngIf="isAdmin() || isDoctor() || isAsistente()">
+                <small class="tw:px-3 tw:text-[10px] tw:font-bold tw:text-slate-500 tw:uppercase tw:tracking-widest tw:hidden tw:lg:block tw:mb-2">Centro de Control</small>
+                <a *ngIf="isAsistente()" routerLink="/asistente/dashboard" routerLinkActive="tw:bg-blue-600 tw:text-white"
+                   class="tw:flex tw:items-center tw:justify-center tw:lg:justify-start tw:gap-3 tw:px-3 tw:py-2.5 tw:rounded-xl tw:text-slate-400 tw:transition-all tw:hover:bg-slate-800 tw:hover:text-white">
+                    <i class="material-icons tw:text-xl">support_agent</i>
+                    <span class="tw:hidden tw:lg:block tw:text-sm tw:font-bold">Panel Asistente</span>
+                </a>
+                <a routerLink="/admin/citas-master" routerLinkActive="tw:bg-blue-600 tw:text-white"
+                   class="tw:flex tw:items-center tw:justify-center tw:lg:justify-start tw:gap-3 tw:px-3 tw:py-2.5 tw:rounded-xl tw:text-slate-400 tw:transition-all tw:hover:bg-slate-800 tw:hover:text-white">
+                    <i class="material-icons tw:text-xl">calendar_month</i>
+                    <span class="tw:hidden tw:lg:block tw:text-sm tw:font-bold">Agenda de Citas</span>
+                </a>
+                <a class="tw:flex tw:items-center tw:justify-center tw:lg:justify-start tw:gap-3 tw:px-3 tw:py-2.5 tw:rounded-xl tw:text-slate-600 tw:cursor-not-allowed tw:opacity-50">
+                    <i class="material-icons tw:text-xl">groups</i>
+                    <span class="tw:hidden tw:lg:block tw:text-sm tw:font-bold">Pacientes</span>
+                </a>
+            </div>
+
+            <!-- 4. SECCIÓN: PACIENTE -->
+            <div class="tw:space-y-1" *ngIf="isPaciente()">
+                <small class="tw:px-3 tw:text-[10px] tw:font-bold tw:text-slate-500 tw:uppercase tw:tracking-widest tw:hidden tw:lg:block tw:mb-2">Mi Salud</small>
+                <a routerLink="/paciente/dashboard" routerLinkActive="tw:bg-blue-600 tw:text-white"
+                   class="tw:flex tw:items-center tw:justify-center tw:lg:justify-start tw:gap-3 tw:px-3 tw:py-2.5 tw:rounded-xl tw:text-slate-400 tw:transition-all tw:hover:bg-slate-800 tw:hover:text-white">
+                    <i class="material-icons tw:text-xl">dashboard</i>
+                    <span class="tw:hidden tw:lg:block tw:text-sm tw:font-bold">Mi Portal</span>
+                </a>
+                <a routerLink="/paciente/mis-citas" routerLinkActive="tw:bg-blue-600 tw:text-white"
+                   class="tw:flex tw:items-center tw:justify-center tw:lg:justify-start tw:gap-3 tw:px-3 tw:py-2.5 tw:rounded-xl tw:text-slate-400 tw:transition-all tw:hover:bg-slate-800 tw:hover:text-white">
+                    <i class="material-icons tw:text-xl">event</i>
+                    <span class="tw:hidden tw:lg:block tw:text-sm tw:font-bold">Mis Citas</span>
+                </a>
+            </div>
+        </nav>
+
+        <div class="tw:p-3 tw:lg:p-4 tw:border-t tw:border-slate-800">
+            <button class="tw:w-full tw:flex tw:items-center tw:justify-center tw:lg:justify-start tw:gap-3 tw:px-3 tw:lg:px-4 tw:py-3 tw:bg-red-500/10 tw:text-red-400 tw:rounded-xl tw:border-none tw:font-black tw:text-xs tw:uppercase tw:tracking-widest tw:cursor-pointer tw:transition-all tw:hover:bg-red-500 tw:hover:text-white" 
+                    (click)="logout()">
+                <i class="material-icons tw:text-lg">power_settings_new</i>
+                <span class="tw:hidden tw:lg:block">Cerrar Sesión</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="tw:flex-1 tw:flex tw:flex-col tw:min-w-0">
+        <header class="tw:h-16 tw:bg-white tw:border-b tw:border-slate-200 tw:flex tw:items-center tw:justify-between tw:px-4 tw:lg:px-8 tw:shrink-0">
+            <div class="tw:flex tw:items-center tw:gap-4">
+                <span class="tw:text-[13px] tw:font-bold tw:text-slate-500 tw:uppercase tw:tracking-widest" *ngIf="isAdmin()">Administración de Negocio</span>
+                <span class="tw:text-[13px] tw:font-bold tw:text-slate-500 tw:uppercase tw:tracking-widest" *ngIf="isTechSoft()">Consola Global de Clientes</span>
+                <span class="tw:text-[13px] tw:font-bold tw:text-slate-500 tw:uppercase tw:tracking-widest" *ngIf="isDoctor()">Agenda Médica Profesional</span>
+                <span class="tw:text-[13px] tw:font-bold tw:text-slate-500 tw:uppercase tw:tracking-widest" *ngIf="isAsistente()">Gestión Operativa de Consultas</span>
+                <span class="tw:text-[13px] tw:font-bold tw:text-slate-500 tw:uppercase tw:tracking-widest" *ngIf="isPaciente()">Mi Historial y Citas</span>
+            </div>
+            <div class="tw:flex tw:items-center tw:gap-4">
+                <div class="tw:flex tw:items-center tw:gap-3 tw:px-2 tw:lg:px-3 tw:py-1.5 tw:bg-slate-50 tw:rounded-2xl tw:border tw:border-slate-100">
+                    <div class="tw:hidden tw:sm:flex tw:flex-col tw:text-right tw:leading-none">
+                        <span class="tw:text-xs tw:font-black tw:text-slate-800">{{ userName }}</span>
+                        <span class="tw:text-[10px] tw:text-blue-600 tw:font-bold tw:uppercase tw:tracking-widest tw:mt-1">{{ userRole }}</span>
+                    </div>
+                    <div class="tw:w-8 tw:h-8 tw:bg-blue-100 tw:text-blue-600 tw:rounded-lg tw:flex tw:items-center tw:justify-center">
+                        <i class="material-icons tw:text-xl">account_circle</i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- ZONA DE CARGA DINÁMICA -->
+        <main class="tw:flex-1 tw:overflow-y-auto tw:p-4 tw:lg:p-8">
+            <router-outlet></router-outlet>
+        </main>
+    </div>
+</div>

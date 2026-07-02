@@ -1,0 +1,46 @@
+<div class="tw:fixed tw:inset-0 tw:bg-black/80 tw:z-[3000] tw:flex tw:items-center tw:justify-center tw:backdrop-blur-sm" *ngIf="show" (click)="onClose.emit()">
+    <div class="tw:bg-white tw:p-10 tw:rounded-[20px] tw:w-[90%] tw:max-w-[500px] tw:relative tw:text-slate-900 animate-fade-in" (click)="$event.stopPropagation()">
+        <button class="tw:absolute tw:top-5 tw:right-5 tw:bg-slate-100 tw:border-none tw:w-10 tw:h-10 tw:rounded-full tw:cursor-pointer tw:font-bold tw:transition-colors tw:hover:bg-slate-200" (click)="onClose.emit()">✕</button>
+
+        <div class="modal-body" *ngIf="!bookingSuccess">
+            <div class="tw:mb-6">
+                <h3 class="tw:text-2xl tw:font-extrabold tw:m-0">Confirmar Reserva</h3>
+                <p class="tw:text-slate-500 tw:mt-1">Asegura tu atención en <strong>{{ businessName }}</strong></p>
+            </div>
+
+            <form (ngSubmit)="confirmar.emit()" #f="ngForm" class="tw:flex tw:flex-col tw:gap-5">
+                <div class="tw:flex tw:flex-col">
+                    <label class="tw:block tw:mb-2 tw:font-semibold tw:text-sm">Especialista</label>
+                    <select class="tw:w-full tw:p-3.5 tw:border tw:border-slate-200 tw:rounded-xl tw:outline-none tw:focus:border-blue-600 tw:transition-all" [(ngModel)]="reserva.professionalId" name="prof" required>
+                        <option value="">Selecciona un profesional</option>
+                        <option *ngFor="let p of staff" [value]="p.id">{{ p.nombre }}</option>
+                    </select>
+                </div>
+
+                <div class="tw:grid tw:grid-cols-2 tw:gap-4">
+                    <div class="tw:flex tw:flex-col">
+                        <label class="tw:block tw:mb-2 tw:font-semibold tw:text-sm">Fecha</label>
+                        <input type="date" class="tw:w-full tw:p-3.5 tw:border tw:border-slate-200 tw:rounded-xl tw:outline-none tw:focus:border-blue-600 tw:transition-all" [(ngModel)]="reserva.fecha" name="fecha" required>
+                    </div>
+                    <div class="tw:flex tw:flex-col">
+                        <label class="tw:block tw:mb-2 tw:font-semibold tw:text-sm">Hora</label>
+                        <input type="time" class="tw:w-full tw:p-3.5 tw:border tw:border-slate-200 tw:rounded-xl tw:outline-none tw:focus:border-blue-600 tw:transition-all" [(ngModel)]="reserva.hora" name="hora" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="tw:w-full tw:p-4 tw:bg-blue-600 tw:text-white tw:border-none tw:rounded-2xl tw:font-bold tw:cursor-pointer tw:mt-2.5 tw:transition-all tw:duration-300 tw:hover:bg-blue-700 tw:disabled:bg-slate-300 tw:disabled:cursor-not-allowed" [disabled]="!f.valid || isBooking">
+                    {{ isBooking ? 'Procesando...' : 'Confirmar Cita Ahora' }}
+                </button>
+            </form>
+        </div>
+
+        <div class="tw:text-center tw:py-5" *ngIf="bookingSuccess">
+            <div class="tw:mb-5">
+                <i class="material-icons tw:text-[80px] tw:text-emerald-500">verified</i>
+            </div>
+            <h3 class="tw:text-xl tw:font-extrabold tw:m-0">¡Cita Agendada!</h3>
+            <p class="tw:text-slate-500 tw:mt-2">Tu solicitud ha sido procesada con éxito.</p>
+            <button class="tw:w-full tw:p-4 tw:bg-blue-600 tw:text-white tw:border-none tw:rounded-2xl tw:font-bold tw:cursor-pointer tw:mt-2.5 tw:transition-all tw:duration-300 tw:hover:bg-blue-700" (click)="onClose.emit()">Entendido</button>
+        </div>
+    </div>
+</div>

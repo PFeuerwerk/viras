@@ -1,0 +1,80 @@
+<section class="tw:bg-white animate-fade-in" *ngIf="businessData && displayContent">
+    <!-- Hero Section Minimalista -->
+    <div class="tw:py-12 tw:pb-7 tw:bg-gradient-to-br tw:from-slate-50 tw:to-white tw:text-center">
+        <div class="tw:max-w-[1200px] tw:mx-auto tw:px-[5%]">
+            <span class="tw:text-blue-600 tw:font-extrabold tw:text-[0.75rem] tw:tracking-[2px] tw:uppercase tw:inline-block tw:mb-2.5">NUESTRA SOLUCIÓN</span>
+            <h1 class="tw:text-[clamp(1.6rem,4vw,2.8rem)] tw:text-slate-800 tw:font-extrabold tw:max-w-[800px] tw:mx-auto tw:mb-3.5 tw:leading-[1.15] tw:tracking-tight">{{ displayContent.titulo }}</h1>
+            <p class="tw:text-[0.95rem] tw:text-slate-500 tw:max-w-[680px] tw:mx-auto tw:leading-relaxed">{{ displayContent.introduccion }}</p>
+        </div>
+    </div>
+
+    <!-- Sección de Metodología (El "Cómo") -->
+    <div class="tw:py-9">
+        <div class="tw:max-w-[1200px] tw:mx-auto tw:px-[5%]">
+            <div class="tw:text-center tw:mb-7">
+                <h2 class="tw:text-[1.7rem] tw:text-slate-800 tw:mb-2 tw:font-extrabold">Procesos de Excelencia</h2>
+                <p class="tw:text-slate-500 tw:text-[0.9rem]">Un flujo estructurado para garantizar resultados de clase mundial en cada paciente de {{
+                    businessData.nombre_empresa }}.</p>
+            </div>
+
+            <div class="tw:grid tw:grid-cols-[repeat(auto-fit,minmax(240px,1fr))] tw:gap-4">
+                <!-- Iteración dinámica sobre los items configurados por el Admin -->
+                <div class="tw:relative tw:p-[22px_20px] tw:bg-slate-50 tw:rounded-[18px] tw:transition-all tw:duration-300 tw:border tw:border-slate-100 tw:hover:bg-white tw:hover:-translate-y-1.5 tw:hover:shadow-2xl tw:hover:shadow-slate-200 tw:hover:border-blue-600" *ngFor="let item of displayContent.items; let i = index">
+                    <div class="tw:text-[2.2rem] tw:font-black tw:text-blue-600 tw:opacity-15 tw:mb-0.5 tw:leading-none">{{ i + 1 | number:'2.0-0' }}</div>
+                    <div class="tw:flex tw:flex-col">
+                        <h3 class="tw:text-[1.05rem] tw:text-slate-800 tw:mb-2 tw:font-bold">{{ item.nombre }}</h3>
+                        <p class="tw:text-slate-500 tw:leading-relaxed tw:text-[0.88rem]">{{ item.descripcion }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de Diferenciales (El "Por qué") -->
+    <div class="tw:py-9 tw:bg-slate-50">
+        <div class="tw:max-w-[1200px] tw:mx-auto tw:px-[5%]">
+            <div class="tw:grid tw:grid-cols-1 tw:lg:grid-cols-2 tw:gap-12 tw:items-center">
+                <div class="tw:relative tw:max-w-[420px] tw:mx-auto tw:lg:max-w-none">
+                    <img class="tw:w-full tw:rounded-[24px] tw:shadow-2xl tw:shadow-slate-300 tw:object-cover tw:aspect-[4/5]" 
+                        [src]="displayContent.diferenciales_imagen_url || businessData.config_visual?.hero_image || 'assets/images/default-wwd.jpg'"
+                        alt="Nuestra excelencia">
+                    <div class="tw:absolute tw:bottom-[-12px] tw:right-[-12px] tw:bg-blue-600 tw:text-white tw:p-[14px_20px] tw:rounded-2xl tw:text-center tw:shadow-xl tw:shadow-blue-600/20">
+                        <strong class="tw:text-[1.6rem] tw:block tw:leading-none">Calidad</strong>
+                        <span class="tw:text-[0.72rem] tw:font-semibold tw:uppercase tw:tracking-widest">Garantizada</span>
+                    </div>
+                </div>
+
+                <div class="tw:flex tw:flex-col tw:lg:text-left tw:text-center">
+                    <span class="tw:text-blue-600 tw:font-extrabold tw:text-[0.75rem] tw:tracking-[2px] tw:uppercase tw:inline-block tw:mb-2.5">¿POR QUÉ ELEGIRNOS?</span>
+                    <h2 class="tw:text-3xl tw:text-slate-800 tw:font-extrabold tw:mb-4">
+                        {{ displayContent.diferenciales_titulo || 'Compromiso inquebrantable con la calidad' }}
+                    </h2>
+                    <p class="tw:text-slate-500 tw:leading-relaxed tw:mb-6">
+                        {{ displayContent.diferenciales_introduccion || 'Entendemos que cada detalle cuenta para que te sientas en las mejores manos.' }}
+                    </p>
+
+                    <ul class="tw:list-none tw:p-0 tw:mt-5 tw:flex tw:flex-col tw:gap-4.5">
+                        <li class="tw:flex tw:gap-3 tw:items-start tw:text-left" *ngFor="let diff of displayContent.diferenciales_items">
+                            <i class="material-icons tw:text-[1.3rem] tw:text-blue-600 tw:bg-white tw:p-2 tw:rounded-xl tw:shadow-sm tw:shrink-0">{{ diff.icono || 'star' }}</i>
+                            <div>
+                                <strong class="tw:block tw:text-[0.95rem] tw:text-slate-800 tw:mb-1 tw:font-bold">{{ diff.titulo }}</strong>
+                                <p class="tw:text-slate-500 tw:leading-snug tw:text-[0.85rem]">{{ diff.descripcion }}</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Final -->
+    <div class="tw:py-14 tw:text-center tw:bg-blue-600 tw:text-white tw:relative tw:overflow-hidden">
+        <div class="tw:max-w-[1200px] tw:mx-auto tw:px-[5%]">
+            <h2 class="tw:text-[clamp(1.4rem,3vw,2.2rem)] tw:mb-3 tw:font-extrabold">¿Listo para empezar tu transformación?</h2>
+            <p class="tw:text-[0.95rem] tw:opacity-90 tw:max-w-[520px] tw:mx-auto">Agenda una evaluación inicial en {{ businessData.nombre_empresa }} y descubre lo que podemos hacer por
+                ti.</p>
+            <button class="tw:mt-6 tw:px-9 tw:py-3.5 tw:bg-white tw:text-blue-600 tw:border-none tw:rounded-xl tw:font-black tw:text-[0.95rem] tw:cursor-pointer tw:transition-all tw:duration-250 tw:shadow-lg tw:hover:scale-105 tw:hover:-translate-y-0.5 tw:hover:shadow-xl" 
+                    (click)="onAgendar()">Agendar Cita Ahora</button>
+        </div>
+    </div>
+</section>

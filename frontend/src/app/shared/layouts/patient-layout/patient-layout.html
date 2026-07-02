@@ -1,0 +1,153 @@
+<div class="tw:flex tw:flex-col tw:min-h-screen tw:bg-slate-50 tw:font-sans">
+    <!-- 1. MAIN NAVBAR -->
+    <header class="tw:bg-white tw:border-b tw:border-slate-100 tw:sticky tw:top-0 tw:z-[1000] tw:shadow-sm tw:relative tw:print:hidden">
+        <div class="tw:max-w-7xl tw:mx-auto tw:h-full tw:flex tw:items-center tw:justify-between tw:px-6">
+
+            <!-- BRAND -->
+            <div class="tw:flex tw:items-center tw:gap-2.5 tw:cursor-pointer tw:shrink-0" routerLink="/paciente/dashboard">
+                <img src="/assets/logo.png" alt="VIRAS Logo" class="tw:h-7 tw:w-auto tw:object-contain">
+                <div class="tw:flex tw:flex-col tw:leading-none">
+                    <span class="tw:text-[0.8rem] tw:font-black tw:text-slate-800 tw:tracking-tight">Portal Paciente</span>
+                    <span class="tw:text-[0.6rem] tw:text-blue-500 tw:font-bold tw:uppercase tw:tracking-widest tw:mt-0.5">{{ businessName }}</span>
+                </div>
+            </div>
+
+            <!-- NAVIGATION (CENTERED) -->
+            <nav class="tw:hidden tw:lg:block tw:absolute tw:left-1/2 tw:-translate-x-1/2">
+                <ul class="tw:list-none tw:flex tw:gap-1 tw:items-center tw:m-0 tw:p-0">
+                    <li><a [routerLink]="['/', businessSlug]" class="tw:text-[0.7rem] tw:font-bold tw:text-slate-400 tw:border tw:border-slate-200 tw:px-2.5 tw:py-1 tw:rounded-md tw:inline-flex tw:items-center tw:transition-colors tw:hover:bg-slate-50 tw:hover:text-slate-500 tw:hover:border-slate-300">Sitio Web</a></li>
+                    <li>
+                        <a routerLink="/paciente/dashboard" routerLinkActive="tw:text-blue-600 tw:bg-blue-50/80 tw:font-bold" 
+                           class="tw:no-underline tw:text-[0.78rem] tw:font-semibold tw:text-slate-600 tw:px-3 tw:py-1.5 tw:rounded-lg tw:transition-all tw:hover:text-blue-600 tw:hover:bg-blue-50/50">
+                           Mi Panel
+                        </a>
+                    </li>
+                    <li>
+                        <a (click)="goToNewAppointment()" 
+                           class="tw:bg-blue-600 tw:text-white tw:text-[0.78rem] tw:font-bold tw:px-3.5 tw:py-1.5 tw:rounded-full tw:shadow-lg tw:shadow-blue-600/20 tw:transition-all tw:cursor-pointer tw:hover:bg-blue-700 tw:hover:-translate-y-0.5 tw:hover:shadow-blue-600/30">
+                           Nueva Cita
+                        </a>
+                    </li>
+                    <li>
+                        <a routerLink="/paciente/mis-citas" routerLinkActive="tw:text-blue-600 tw:bg-blue-50/80 tw:font-bold"
+                           class="tw:no-underline tw:text-[0.78rem] tw:font-semibold tw:text-slate-600 tw:px-3 tw:py-1.5 tw:rounded-lg tw:transition-all tw:hover:text-blue-600 tw:hover:bg-blue-50/50">
+                           Mis Citas
+                        </a>
+                    </li>
+                    <li>
+                        <a routerLink="/paciente/anamnesis" routerLinkActive="tw:text-blue-600 tw:bg-blue-50/80 tw:font-bold"
+                           class="tw:no-underline tw:text-[0.78rem] tw:font-semibold tw:text-slate-600 tw:px-3 tw:py-1.5 tw:rounded-lg tw:transition-all tw:hover:text-blue-600 tw:hover:bg-blue-50/50">
+                           Mi Expediente
+                        </a>
+                    </li>
+                    <li>
+                        <a (click)="goToProfile()" 
+                           class="tw:no-underline tw:text-[0.78rem] tw:font-semibold tw:text-slate-600 tw:px-3 tw:py-1.5 tw:rounded-lg tw:transition-all tw:cursor-pointer tw:hover:text-blue-600 tw:hover:bg-blue-50/50">
+                           Mi Perfil
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- USER ACTIONS -->
+            <div class="tw:flex tw:items-center tw:gap-2 tw:shrink-0">
+                <div class="tw:flex tw:items-center tw:gap-2 tw:p-1 tw:pl-2.5 tw:bg-slate-50 tw:rounded-xl tw:border tw:border-slate-100 tw:transition-colors tw:cursor-pointer tw:hover:bg-slate-100" 
+                     routerLink="/paciente/perfil" title="Ver mi perfil">
+                    <div class="tw:text-right tw:flex tw:flex-col tw:leading-none tw:sm:flex tw:hidden">
+                        <span class="tw:text-[0.75rem] tw:font-bold tw:text-slate-900 tw:whitespace-nowrap">{{ userName }}</span>
+                        <span class="tw:text-[0.6rem] tw:text-blue-500 tw:font-bold tw:uppercase tw:tracking-wider tw:mt-0.5">Paciente</span>
+                    </div>
+                    <div class="tw:flex tw:items-center">
+                        <img *ngIf="userAvatar" [src]="userAvatar" class="tw:w-[30px] tw:h-[30px] tw:rounded-lg tw:object-cover tw:border-2 tw:border-white tw:shadow-sm" alt="">
+                        <div *ngIf="!userAvatar" class="tw:w-[30px] tw:h-[30px] tw:bg-gradient-to-br tw:from-blue-600 tw:to-blue-800 tw:text-white tw:flex tw:items-center tw:justify-center tw:text-[0.7rem] tw:font-black tw:rounded-lg tw:border-2 tw:border-white tw:shadow-sm">
+                            {{ userNameInitials }}
+                        </div>
+                    </div>
+                </div>
+                <button class="tw:w-8 tw:h-8 tw:flex tw:items-center tw:justify-center tw:bg-transparent tw:border-none tw:text-slate-400 tw:cursor-pointer tw:rounded-lg tw:transition-all tw:hover:text-red-500 tw:hover:bg-red-50" 
+                        (click)="logout()" title="Cerrar Sesión">
+                    <i class="material-icons tw:text-[18px]">logout</i>
+                </button>
+            </div>
+            <!-- MOBILE HAMBURGER -->
+            <button class="tw:lg:hidden tw:w-10 tw:h-10 tw:flex tw:items-center tw:justify-center tw:bg-transparent tw:border-none tw:text-slate-700 tw:cursor-pointer tw:rounded-xl tw:transition-all tw:hover:bg-slate-100"
+                    (click)="isMobileMenuOpen = !isMobileMenuOpen"
+                    [attr.aria-expanded]="isMobileMenuOpen"
+                    aria-label="Abrir menú">
+                <i class="material-icons tw:text-2xl">{{ isMobileMenuOpen ? 'close' : 'menu' }}</i>
+            </button>
+
+        </div>
+
+        <!-- ═════════════════════════════════════════ -->
+        <!-- MOBILE MENU DRAWER                           -->
+        <!-- ═════════════════════════════════════════ -->
+        <div *ngIf="isMobileMenuOpen"
+             class="tw:absolute tw:top-full tw:left-0 tw:w-full tw:bg-white tw:border-b tw:border-slate-100 tw:shadow-2xl tw:shadow-slate-200/50 tw:lg:hidden tw:z-50"
+             role="dialog" aria-label="Menú de navegación">
+            <div class="tw:px-6 tw:py-6 tw:flex tw:flex-col tw:gap-1">
+
+                <!-- Links de Navegación -->
+                <a routerLink="/paciente/dashboard" 
+                   routerLinkActive="tw:text-blue-600 tw:bg-blue-50"
+                   (click)="isMobileMenuOpen = false"
+                   class="tw:flex tw:items-center tw:gap-3 tw:px-4 tw:py-3.5 tw:text-sm tw:font-bold tw:text-slate-700 tw:rounded-2xl tw:transition-all tw:cursor-pointer tw:hover:bg-blue-50 tw:hover:text-blue-600">
+                    <i class="material-icons tw:text-lg tw:text-blue-400">dashboard</i>
+                    Mi Panel
+                </a>
+                <a (click)="goToNewAppointment(); isMobileMenuOpen = false"
+                   class="tw:flex tw:items-center tw:gap-3 tw:px-4 tw:py-3.5 tw:text-sm tw:font-bold tw:text-slate-700 tw:rounded-2xl tw:transition-all tw:cursor-pointer tw:hover:bg-blue-50 tw:hover:text-blue-600">
+                    <i class="material-icons tw:text-lg tw:text-blue-400">calendar_today</i>
+                    Nueva Cita
+                </a>
+                <a routerLink="/paciente/mis-citas"
+                   routerLinkActive="tw:text-blue-600 tw:bg-blue-50"
+                   (click)="isMobileMenuOpen = false"
+                   class="tw:flex tw:items-center tw:gap-3 tw:px-4 tw:py-3.5 tw:text-sm tw:font-bold tw:text-slate-700 tw:rounded-2xl tw:transition-all tw:cursor-pointer tw:hover:bg-blue-50 tw:hover:text-blue-600">
+                    <i class="material-icons tw:text-lg tw:text-blue-400">event</i>
+                    Mis Citas
+                </a>
+                <a routerLink="/paciente/anamnesis"
+                   routerLinkActive="tw:text-blue-600 tw:bg-blue-50"
+                   (click)="isMobileMenuOpen = false"
+                   class="tw:flex tw:items-center tw:gap-3 tw:px-4 tw:py-3.5 tw:text-sm tw:font-bold tw:text-slate-700 tw:rounded-2xl tw:transition-all tw:cursor-pointer tw:hover:bg-blue-50 tw:hover:text-blue-600">
+                    <i class="material-icons tw:text-lg tw:text-blue-400">assignment</i>
+                    Mi Expediente
+                </a>
+                <a (click)="goToProfile(); isMobileMenuOpen = false"
+                   class="tw:flex tw:items-center tw:gap-3 tw:px-4 tw:py-3.5 tw:text-sm tw:font-bold tw:text-slate-700 tw:rounded-2xl tw:transition-all tw:cursor-pointer tw:hover:bg-blue-50 tw:hover:text-blue-600">
+                    <i class="material-icons tw:text-lg tw:text-blue-400">person</i>
+                    Mi Perfil
+                </a>
+
+                <!-- Divider -->
+                <div class="tw:border-t tw:border-slate-100 tw:my-3"></div>
+
+                <!-- Logout -->
+                <button (click)="logout()"
+                        class="tw:w-full tw:flex tw:items-center tw:gap-3 tw:px-4 tw:py-3.5 tw:text-sm tw:font-bold tw:text-red-500 tw:rounded-2xl tw:transition-all tw:cursor-pointer tw:bg-transparent tw:border-none tw:hover:bg-red-50">
+                    <i class="material-icons tw:text-lg">logout</i>
+                    Cerrar Sesión
+                </button>
+
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. CONTENIDO DINÁMICO -->
+    <main class="tw:flex-1 tw:w-full tw:py-8 tw:flex tw:justify-center">
+        <div class="tw:w-full tw:max-w-[1300px] tw:px-4 tw:md:px-8">
+            <router-outlet></router-outlet>
+        </div>
+    </main>
+
+    <!-- 3. FOOTER SINCRONIZADO -->
+    <ng-container *ngIf="businessData$ | async as businessData">
+        <app-placeholder-footer 
+            [businessData]="businessData" 
+            [configVisual]="businessData.config_visual"
+            (navigate)="handleFooterNavigation($event)">
+        </app-placeholder-footer>
+    </ng-container>
+</div>
+

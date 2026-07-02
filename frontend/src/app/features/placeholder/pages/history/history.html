@@ -1,0 +1,48 @@
+<section class="tw:bg-white animate-fade-in" *ngIf="businessData">
+    <!-- Hero Historia -->
+    <div class="tw:text-center tw:py-16 tw:bg-slate-50">
+        <div class="tw:max-w-[1200px] tw:mx-auto tw:px-[5%]">
+            <span class="tw:text-blue-600 tw:font-extrabold tw:text-[0.75rem] tw:tracking-[2px] tw:uppercase tw:inline-block tw:mb-2.5">NUESTRA TRAYECTORIA</span>
+            <h1 class="tw:text-4xl tw:md:text-5xl tw:text-slate-800 tw:font-black tw:mb-4">Un legado construido paso a paso</h1>
+            <p class="tw:text-slate-500 tw:text-lg tw:max-w-2xl tw:mx-auto">Desde nuestros inicios hasta convertirnos en referentes del sector, nuestra
+                historia es el reflejo de nuestro compromiso.</p>
+        </div>
+    </div>
+
+    <!-- Timeline Section -->
+    <div class="tw:py-20 tw:relative">
+        <div class="tw:max-w-[1200px] tw:mx-auto tw:px-[5%]">
+            <div class="tw:relative tw:before:absolute tw:before:inset-0 tw:before:left-1/2 tw:before:-translate-x-px tw:before:w-0.5 tw:before:bg-slate-200">
+
+                <!-- Iteración de hitos -->
+                <div *ngFor="let milestone of milestones; let i = index" 
+                    class="tw:relative tw:mb-12 tw:flex tw:items-center tw:w-full"
+                    [ngClass]="i % 2 === 0 ? 'tw:flex-row-reverse' : ''">
+
+                    <div class="tw:absolute tw:left-1/2 tw:top-4 tw:-translate-x-1/2 tw:w-4 tw:h-4 tw:bg-blue-600 tw:rounded-full tw:border-4 tw:border-white tw:shadow-sm tw:z-10"></div>
+
+                    <div class="tw:w-1/2" [ngClass]="i % 2 === 0 ? 'tw:pl-12' : 'tw:pr-12 tw:text-right'">
+                        <div class="tw:inline-block tw:px-4 tw:py-1 tw:bg-blue-600 tw:text-white tw:text-sm tw:font-bold tw:rounded-full tw:mb-3">{{ milestone.year }}</div>
+                        <div class="tw:bg-white tw:p-8 tw:rounded-2xl tw:shadow-xl tw:shadow-slate-100 tw:border tw:border-slate-100 tw:transition-all tw:hover:border-blue-600 tw:hover:shadow-2xl tw:hover:shadow-blue-600/5">
+                            <h3 class="tw:text-xl tw:text-slate-800 tw:font-extrabold tw:mb-2">{{ milestone.title }}</h3>
+                            <p class="tw:text-slate-500 tw:leading-relaxed">{{ milestone.description }}</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de Visión Final -->
+    <div class="tw:py-20 tw:bg-blue-600">
+        <div class="tw:max-w-[1200px] tw:mx-auto tw:px-[5%]">
+            <div class="tw:text-center tw:text-white tw:max-w-3xl tw:mx-auto">
+                <i class="material-icons tw:text-6xl tw:mb-6 tw:opacity-50">auto_awesome</i>
+                <h2 class="tw:text-3xl tw:font-black tw:mb-4">El futuro es hoy</h2>
+                <p class="tw:text-lg tw:opacity-90">Nuestra historia no termina aquí. Continuamos innovando día a día para ofrecerte soluciones que
+                    superen tus expectativas en {{ businessData.nombre_empresa }}.</p>
+            </div>
+        </div>
+    </div>
+</section>

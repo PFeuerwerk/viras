@@ -1,0 +1,192 @@
+<section class="assistant-dashboard">
+  <header class="dashboard-header">
+    <div>
+      <span class="eyebrow">Recepción clínica</span>
+      <h1>Panel del Asistente</h1>
+      <p>Coordina pacientes, doctores y agenda diaria desde un único punto operativo.</p>
+    </div>
+    <div class="header-actions">
+      <input type="date" [value]="selectedDate" (change)="onDateChange($any($event.target).value)" aria-label="Día de agenda">
+      <button type="button" (click)="loadDashboard()" [disabled]="isLoading">
+        <i class="material-icons" [class.spin]="isLoading">sync</i>
+        Actualizar
+      </button>
+    </div>
+  </header>
+
+  <div class="alert error" *ngIf="errorMessage">
+    <i class="material-icons">error_outline</i>
+    {{ errorMessage }}
+  </div>
+
+  <div class="alert success" *ngIf="successMessage">
+    <i class="material-icons">check_circle</i>
+    {{ successMessage }}
+  </div>
+
+  <div class="stats-grid">
+    <article>
+      <span>Pacientes hoy</span>
+      <strong>{{ stats.totalToday }}</strong>
+    </article>
+    <article>
+      <span>Confirmadas</span>
+      <strong>{{ stats.confirmed }}</strong>
+    </article>
+    <article>
+      <span>Pendientes</span>
+      <strong>{{ stats.pending }}</strong>
+    </article>
+    <article>
+      <span>Ausentes</span>
+      <strong>{{ stats.absent }}</strong>
+    </article>
+    <article>
+      <span>Canceladas</span>
+      <strong>{{ stats.cancelled }}</strong>
+    </article>
+    <article>
+      <span>Huecos libres</span>
+      <strong>{{ stats.freeSlots }}</strong>
+    </article>
+  </div>
+
+  <div class="content-grid">
+    <section class="agenda-panel">
+      <div class="panel-title">
+        <div>
+          <h2>Agenda por doctor</h2>
+          <p>Pacientes programados para el día seleccionado.</p>
+        </div>
+        <a routerLink="/admin/citas-master">Ver agenda completa</a>
+      </div>
+
+      <div class="loading-state" *ngIf="isLoading">
+        <div class="spinner"></div>
+        Sincronizando agenda...
+      </div>
+
+      <div class="empty-state" *ngIf="!isLoading && doctorGroups.length === 0">
+        <i class="material-icons">event_available</i>
+        <h3>No hay citas para este día</h3>
+        <p>Cuando existan pacientes programados aparecerán agrupados por doctor.</p>
+      </div>
+
+      <div class="doctor-group" *ngFor="let group of doctorGroups; trackBy: trackByGroup">
+        <div class="doctor-heading">
+          <div>
+            <span>Doctor</span>
+            <strong>{{ group.doctorName }}</strong>
+          </div>
+          <small>{{ group.citas.length }} cita(s)</small>
+        </div>
+
+        <div class="appointment-card" *ngFor="let cita of group.citas; trackBy: trackByCita">
+          <div class="appointment-time">
+            <strong>{{ cita.fecha | date:'HH:mm' }}</strong>
+            <span>{{ cita.duracionEstimada || 30 }} min</span>
+          </div>
+
+          <div class="appointment-main">
+            <div class="patient-line">
+              <h3>{{ getPatientName(cita) }}</h3>
+              <span [class]="'status status-' + cita.estado.toLowerCase()">{{ cita.estado }}</span>
+            </div>
+            <p>{{ cita.motivoConsulta || cita.servicio_cita || 'Consulta general' }}</p>
+            <small>{{ cita.paciente?.email || 'Sin correo registrado' }}</small>
+
+            <div class="reschedule-row" *ngIf="editingCitaId === cita.id">
+              <input type="datetime-local" [value]="rescheduleValue" (change)="rescheduleValue = $any($event.target).value">
+              <button type="button" class="soft" (click)="saveReschedule(cita)">Guardar</button>
+              <button type="button" class="ghost" (click)="cancelReschedule()">Cerrar</button>
+            </div>
+          </div>
+
+          <div class="appointment-actions">
+            <button type="button" title="Confirmar" (click)="cambiarEstado(cita, 'CONFIRMADA')" [disabled]="cita.estado === 'CONFIRMADA'">
+              <i class="material-icons">done</i>
+            </button>
+            <button type="button" title="Reprogramar" (click)="startReschedule(cita)">
+              <i class="material-icons">edit_calendar</i>
+            </button>
+            <button type="button" title="Ausente" (click)="cambiarEstado(cita, 'AUSENTE')">
+              <i class="material-icons">person_off</i>
+            </button>
+            <button type="button" title="Finalizar" (click)="cambiarEstado(cita, 'FINALIZADA')">
+              <i class="material-icons">task_alt</i>
+            </button>
+            <button type="button" class="danger" title="Anular" (click)="cambiarEstado(cita, 'CANCELADA')">
+              <i class="material-icons">close</i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="patient-panel">
+      <div class="panel-title">
+        <div>
+          <h2>Alta rápida de paciente</h2>
+          <p>Registro básico para recepción.</p>
+        </div>
+      </div>
+
+      <form [formGroup]="patientForm" (ngSubmit)="crearPaciente()" class="patient-form">
+        <label>
+          Nombres
+          <input type="text" formControlName="nombres" autocomplete="given-name">
+        </label>
+        <label>
+          Apellidos
+          <input type="text" formControlName="apellidos" autocomplete="family-name">
+        </label>
+        <label>
+          Email
+          <input type="email" formControlName="email" autocomplete="email">
+        </label>
+        <label>
+          Móvil
+          <input type="tel" formControlName="movil1" autocomplete="tel">
+        </label>
+        <label>
+          Documento
+          <input type="text" formControlName="numero_documento">
+        </label>
+        <label>
+          Fecha de nacimiento
+          <input type="date" formControlName="fecha_nacimiento">
+        </label>
+        <label>
+          Género
+          <select formControlName="genero">
+            <option value="">Sin especificar</option>
+            <option value="FEMENINO">Femenino</option>
+            <option value="MASCULINO">Masculino</option>
+            <option value="OTRO">Otro</option>
+          </select>
+        </label>
+        <label>
+          Doctor asignado
+          <select formControlName="dentista_id">
+            <option value="">Sin asignar</option>
+            <option *ngFor="let doctor of doctors" [value]="doctor.id">{{ doctor.nombres }} {{ doctor.apellidos }}</option>
+          </select>
+        </label>
+        <label class="full">
+          Dirección
+          <textarea rows="3" formControlName="direccion"></textarea>
+        </label>
+
+        <button type="submit" [disabled]="isSavingPatient">
+          <i class="material-icons">person_add</i>
+          Crear paciente
+        </button>
+      </form>
+
+      <div class="patient-summary">
+        <span>Pacientes activos del negocio</span>
+        <strong>{{ patients.length }}</strong>
+      </div>
+    </aside>
+  </div>
+</section>

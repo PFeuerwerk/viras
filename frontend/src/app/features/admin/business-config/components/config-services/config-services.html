@@ -1,0 +1,57 @@
+<div class="tw:bg-white tw:p-[30px] tw:rounded-[20px] tw:shadow-lg tw:shadow-slate-200/50 tw:border tw:border-slate-100 animate-fade-in">
+    <!-- Encabezado de Sección -->
+    <div class="tw:flex tw:justify-between tw:items-center tw:mb-[30px] tw:border-b tw:border-slate-100 tw:pb-5">
+        <div class="tw:flex tw:gap-[15px] tw:items-center">
+            <i class="material-icons tw:text-blue-600 tw:text-4xl">medical_services</i>
+            <div>
+                <h3 class="tw:text-[1.4rem] tw:text-slate-800 tw:font-extrabold tw:m-0">Gestión de Servicios</h3>
+                <p class="tw:text-slate-500 tw:text-sm tw:m-0">Añade y personaliza los servicios con iconos temáticos.</p>
+            </div>
+        </div>
+        <button type="button" class="viras-btn-primary tw:px-[18px] tw:py-[10px] tw:text-sm tw:flex tw:items-center tw:gap-2" (click)="addService.emit()">
+            <i class="material-icons">add</i> Nuevo Servicio
+        </button>
+    </div>
+
+    <!-- Lista de Servicios -->
+    <div class="tw:flex tw:flex-col tw:gap-5">
+        <div *ngFor="let service of business.servicios; let i = index; trackBy: trackByIndex" 
+             class="tw:bg-slate-50 tw:p-5 tw:rounded-2xl tw:border tw:border-slate-200 tw:transition-all tw:duration-300 tw:hover:bg-white tw:hover:border-blue-600 tw:hover:shadow-xl tw:hover:shadow-blue-600/5 tw:grid tw:grid-cols-[120px_1fr_50px] tw:gap-6">
+
+            <!-- Selector de Icono (PNG personalizado) -->
+            <div class="tw:flex tw:flex-col">
+                <label class="viras-label">Icono</label>
+                <app-icon-picker [selectedIcon]="service.icono || ''" [tipoNegocio]="business.tipo_negocio"
+                    (iconSelected)="onIconPick(i, $event)">
+                </app-icon-picker>
+            </div>
+
+            <!-- Información del Servicio -->
+            <div class="tw:flex tw:flex-col tw:gap-4">
+                <div class="tw:flex tw:flex-col">
+                    <label class="viras-label">Nombre del Servicio</label>
+                    <input type="text" class="viras-form-control" [(ngModel)]="service.titulo" (ngModelChange)="changed.emit()"
+                        placeholder="Ej. Blanqueamiento Dental">
+                </div>
+                <div class="tw:flex tw:flex-col">
+                    <label class="viras-label">Descripción (Máx. 120 caracteres)</label>
+                    <textarea class="viras-form-control" rows="2" [(ngModel)]="service.descripcion" (ngModelChange)="changed.emit()"
+                        placeholder="Breve explicación del tratamiento..." maxlength="120"></textarea>
+                </div>
+            </div>
+
+            <!-- Acciones -->
+            <div class="tw:flex tw:items-center tw:justify-center">
+                <button type="button" class="tw:bg-none tw:border-none tw:text-red-500 tw:cursor-pointer tw:transition-all tw:duration-200 tw:hover:scale-125" (click)="removeService.emit(i)" title="Eliminar servicio">
+                    <i class="material-icons">delete_outline</i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Estado Vacío -->
+        <div *ngIf="!business.servicios?.length" class="tw:text-center tw:p-[50px] tw:text-slate-400">
+            <i class="material-icons tw:text-[3rem] tw:mb-2.5">category</i>
+            <p class="tw:m-0">No hay servicios configurados aún. ¡Añade el primero!</p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,154 @@
+<div class="tw:max-w-6xl tw:mx-auto animate-fade-in">
+    <!-- Contenido Principal -->
+    <div class="tw:bg-white tw:p-8 tw:rounded-[32px] tw:border tw:border-slate-100 tw:shadow-sm">
+        <header class="tw:flex tw:flex-col tw:md:flex-row tw:justify-between tw:items-start tw:md:items-center tw:gap-4 tw:mb-8 tw:pb-6 tw:border-b tw:border-slate-50">
+            <div class="tw:flex-1">
+                <h1 class="tw:text-2xl tw:font-black tw:text-slate-900 tw:tracking-tight tw:mb-1">Mis Citas Agendadas</h1>
+                <p class="tw:text-sm tw:text-slate-500 tw:font-medium">Gestione sus consultas en todos los negocios de nuestra red.</p>
+            </div>
+            <button class="tw:px-5 tw:py-2.5 tw:bg-slate-50 tw:text-slate-600 tw:text-[13px] tw:font-black tw:rounded-xl tw:border tw:border-slate-200 tw:transition-all tw:hover:bg-slate-100" 
+                    (click)="volver()">
+                Volver al Tablero
+            </button>
+        </header>
+
+        <!-- Estado de Carga -->
+        <div *ngIf="loading" class="tw:py-20 tw:text-center">
+            <div class="tw:w-10 tw:h-10 tw:border-4 tw:border-blue-100 tw:border-t-blue-600 tw:rounded-full tw:animate-spin tw:mx-auto tw:mb-4"></div>
+            <p class="tw:text-slate-400 tw:font-bold tw:text-sm">Sincronizando su historial...</p>
+        </div>
+
+        <!-- Estado Vacío -->
+        <div *ngIf="!loading && citasProximas.length === 0 && citasPasadas.length === 0" class="tw:py-20 tw:text-center">
+            <div class="tw:text-5xl tw:mb-6">📅</div>
+            <h2 class="tw:text-xl tw:font-black tw:text-slate-800 tw:mb-2">Sin citas registradas</h2>
+            <p class="tw:text-slate-500 tw:text-sm tw:max-w-md tw:mx-auto tw:mb-8">Estimado/a {{ userName }}, aún no tiene citas programadas en la plataforma.</p>
+            <button class="tw:px-8 tw:py-3.5 tw:bg-blue-600 tw:text-white tw:text-sm tw:font-black tw:rounded-2xl tw:shadow-xl tw:shadow-blue-600/20 tw:transition-all tw:hover:bg-blue-700" 
+                    (click)="router.navigate(['/paciente/dashboard'])">
+                Agendar mi primera cita
+            </button>
+        </div>
+
+        <!-- SECCIÓN A: PRÓXIMAS CONSULTAS -->
+        <div class="tw:mb-12" *ngIf="!loading && citasProximas.length > 0">
+            <h3 class="tw:flex tw:items-center tw:gap-3 tw:text-sm tw:font-black tw:text-slate-800 tw:mb-6">
+                <span class="tw:w-2 tw:h-2 tw:bg-emerald-500 tw:rounded-full tw:animate-pulse"></span> 
+                Próximas Citas
+            </h3>
+            <div class="tw:overflow-x-auto tw:rounded-2xl tw:border tw:border-slate-100">
+                <table class="tw:w-full tw:border-collapse">
+                    <thead>
+                        <tr class="tw:bg-slate-50">
+                            <th class="tw:text-left tw:p-4 tw:text-[10px] tw:font-black tw:text-slate-400 tw:uppercase tw:tracking-widest">Clínica</th>
+                            <th class="tw:text-left tw:p-4 tw:text-[10px] tw:font-black tw:text-slate-400 tw:uppercase tw:tracking-widest">Fecha y Hora</th>
+                            <th class="tw:text-left tw:p-4 tw:text-[10px] tw:font-black tw:text-slate-400 tw:uppercase tw:tracking-widest">Doctor</th>
+                            <th class="tw:text-left tw:p-4 tw:text-[10px] tw:font-black tw:text-slate-400 tw:uppercase tw:tracking-widest">Estado</th>
+                            <th class="tw:text-right tw:p-4 tw:text-[10px] tw:font-black tw:text-slate-400 tw:uppercase tw:tracking-widest">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tw:divide-y tw:divide-slate-50">
+                        <tr *ngFor="let cita of citasProximas" class="tw:group tw:hover:bg-slate-50/50 tw:transition-colors">
+                            <td class="tw:p-4">
+                                <span class="tw:text-sm tw:font-black tw:text-blue-600">{{ cita.business?.nombre_empresa || 'Negocio Local' }}</span>
+                            </td>
+                            <td class="tw:p-4">
+                                <span class="tw:text-sm tw:font-bold tw:text-slate-700">{{ cita.fecha | date:'dd/MM/yyyy HH:mm' }}</span>
+                            </td>
+                            <td class="tw:p-4">
+                                <span class="tw:text-sm tw:font-bold tw:text-slate-600">Dr. {{ cita.doctor?.nombres }} {{ cita.doctor?.apellidos }}</span>
+                            </td>
+                            <td class="tw:p-4">
+                                <span class="tw:inline-flex tw:px-2.5 tw:py-1 tw:rounded-lg tw:text-[10px] tw:font-black tw:uppercase tw:tracking-wider"
+                                      [ngClass]="{
+                                        'tw:bg-amber-100 tw:text-amber-700': cita.estado === 'PENDIENTE',
+                                        'tw:bg-emerald-100 tw:text-emerald-700': cita.estado === 'CONFIRMADA'
+                                      }">
+                                    {{ cita.estado }}
+                                </span>
+                            </td>
+                            <td class="tw:p-4 tw:text-right">
+                                <button *ngIf="cita.estado === 'PENDIENTE' || cita.estado === 'CONFIRMADA'"
+                                        class="tw:px-3 tw:py-1.5 tw:bg-white tw:text-red-500 tw:text-[11px] tw:font-black tw:rounded-lg tw:border tw:border-red-100 tw:transition-all tw:hover:bg-red-500 tw:hover:text-white tw:hover:border-red-500" 
+                                        (click)="pedirConfirmacionAnular(cita)">
+                                    Anular
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SECCIÓN B: HISTORIAL -->
+        <div *ngIf="!loading && citasPasadas.length > 0">
+            <h3 class="tw:text-sm tw:font-black tw:text-slate-400 tw:mb-6">Historial de Consultas</h3>
+            <div class="tw:overflow-x-auto tw:rounded-2xl tw:border tw:border-slate-100">
+                <table class="tw:w-full tw:border-collapse">
+                    <tbody class="tw:divide-y tw:divide-slate-50">
+                        <tr *ngFor="let cita of citasPasadas" class="tw:bg-slate-50/30">
+                            <td class="tw:p-4">
+                                <span class="tw:text-sm tw:font-bold tw:text-slate-400">{{ cita.business?.nombre_empresa || 'Negocio Local' }}</span>
+                            </td>
+                            <td class="tw:p-4">
+                                <span class="tw:text-sm tw:font-medium tw:text-slate-400">{{ cita.fecha | date:'dd/MM/yyyy HH:mm' }}</span>
+                            </td>
+                            <td class="tw:p-4">
+                                <span class="tw:text-sm tw:font-medium tw:text-slate-400 italic">Dr. {{ cita.doctor?.nombres }}</span>
+                            </td>
+                            <td class="tw:p-4">
+                                <span class="tw:inline-flex tw:px-2.5 tw:py-1 tw:rounded-lg tw:text-[10px] tw:font-black tw:uppercase tw:tracking-wider tw:opacity-50"
+                                      [ngClass]="{
+                                        'tw:bg-slate-200 tw:text-slate-600': cita.estado === 'CANCELADA',
+                                        'tw:bg-blue-100 tw:text-blue-700': cita.estado === 'FINALIZADA'
+                                      }">
+                                    {{ cita.estado }}
+                                </span>
+                            </td>
+                            <td class="tw:p-4 tw:text-right">
+                                <span *ngIf="cita.estado === 'FINALIZADA'" class="tw:text-[11px] tw:font-black tw:text-emerald-500">Completada</span>
+                                <span *ngIf="cita.estado === 'CANCELADA'" class="tw:text-[11px] tw:font-black tw:text-slate-300">Anulada</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL DE CONFIRMACIÓN -->
+<div class="tw:fixed tw:inset-0 tw:bg-slate-900/60 tw:backdrop-blur-sm tw:z-[2000] tw:flex tw:items-center tw:justify-center tw:p-4" *ngIf="showConfirmModal">
+    <div class="tw:bg-white tw:w-full tw:max-w-md tw:rounded-[40px] tw:p-10 tw:text-center tw:shadow-2xl tw:animate-in tw:fade-in tw:zoom-in tw:duration-300">
+        <div class="tw:w-20 tw:h-20 tw:bg-amber-100 tw:text-amber-600 tw:rounded-[32px] tw:flex tw:items-center tw:justify-center tw:mx-auto tw:mb-8">
+            <i class="material-icons tw:text-4xl">report_problem</i>
+        </div>
+        <h2 class="tw:text-2xl tw:font-black tw:text-slate-900 tw:mb-4">Confirmar Anulación</h2>
+        <p class="tw:text-slate-600 tw:font-medium tw:mb-2">Estimado/a <strong>{{ userName }}</strong>,</p>
+        <p class="tw:text-sm tw:text-slate-500 tw:leading-relaxed tw:mb-4">
+            ¿Está seguro de que desea anular la cita en <strong>{{ citaParaAnular?.business?.nombre_empresa }}</strong>?
+        </p>
+        <div class="tw:bg-slate-50 tw:p-4 tw:rounded-2xl tw:mb-10">
+            <p class="tw:text-xs tw:font-bold tw:text-slate-600">
+                Programada para el <strong>{{ citaParaAnular?.fecha | date:'dd/MM/yyyy' }}</strong> a las <strong>{{ citaParaAnular?.fecha | date:'HH:mm' }}</strong>.
+            </p>
+        </div>
+
+        <div class="tw:flex tw:flex-col tw:gap-3">
+            <button class="tw:w-full tw:py-4 tw:bg-red-600 tw:text-white tw:font-black tw:text-sm tw:rounded-2xl tw:border-none tw:cursor-pointer tw:transition-all tw:hover:bg-red-700 tw:disabled:opacity-50" 
+                    [disabled]="isProcessing" (click)="confirmarAnulacion()">
+                {{ isProcessing ? 'Anulando...' : 'Sí, anular cita' }}
+            </button>
+            <button class="tw:w-full tw:py-4 tw:bg-slate-100 tw:text-slate-600 tw:font-black tw:text-sm tw:rounded-2xl tw:border-none tw:cursor-pointer tw:transition-all tw:hover:bg-slate-200" 
+                    [disabled]="isProcessing" (click)="cerrarModal()">
+                No, mantener cita
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST DE ÉXITO -->
+<div class="tw:fixed tw:bottom-10 tw:left-1/2 tw:-translate-x-1/2 tw:bg-slate-900 tw:text-white tw:px-8 tw:py-4 tw:rounded-full tw:flex tw:items-center tw:gap-3 tw:text-sm tw:font-bold tw:shadow-2xl tw:transition-all tw:duration-500 tw:z-[2100]"
+     [ngClass]="showSuccessToast ? 'tw:opacity-100 tw:translate-y-0' : 'tw:opacity-0 tw:translate-y-20 tw:pointer-events-none'">
+    <span class="tw:text-emerald-400">✅</span>
+    {{ mensajeToast }}
+</div>

@@ -1,0 +1,52 @@
+model Business {
+  id                  String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  slug                String         @unique @db.VarChar(100)
+  tipo_negocio        TipoNegocio    @default(OTROS)
+  nombre_empresa      String         @db.VarChar(150)
+  logo_url            String?
+  titulo_hero         String?        @db.VarChar(255)
+  slogan_hero         String?        @db.VarChar(255)
+  descripcion_hero    String?
+  horario_texto       String?        @db.VarChar(255)
+  direccion           String?        @db.VarChar(255)
+  telefono            String?        @db.VarChar(20)
+  google_maps_link    String?
+  facebook_url        String?
+  instagram_url       String?
+  twitter_url         String?
+  linkedin_url        String?
+  config_visual       Json?
+  servicios           Json?
+  reviews             Json?
+  seccion_que_hacemos Json?
+  booking_services    Json?
+  creado_en           DateTime?      @default(now()) @db.Timestamptz(6)
+  actualizado_en      DateTime?      @default(now()) @db.Timestamptz(6)
+  cif                 String?        @db.VarChar(20)
+  delegado_datos      String?        @db.VarChar(150)
+  email               String?        @db.VarChar(150)
+  professionals       Professional[]
+  citas               citas[]
+  usuarios            usuarios[]
+}
+
+model Professional {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id    String    @db.Uuid
+  nombre         String    @db.VarChar(150)
+  cargo          String    @db.VarChar(100)
+  formacion      String?   @db.VarChar(255)
+  descripcion    String?
+  foto_url       String?
+  orden          Int       @default(0)
+  linkedin_url   String?
+  instagram_url  String?
+  creado_en      DateTime? @default(now()) @db.Timestamptz(6)
+  actualizado_en DateTime? @default(now()) @db.Timestamptz(6)
+  usuario_id     String?   @db.Uuid
+  business       Business  @relation(fields: [business_id], references: [id], onDelete: Cascade)
+  usuario        usuarios? @relation(fields: [usuario_id], references: [id])
+
+  @@index([business_id])
+  @@index([usuario_id])
+}

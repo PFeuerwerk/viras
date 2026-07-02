@@ -1,0 +1,68 @@
+<section class="tw:relative tw:min-h-[60vh] tw:flex tw:items-center tw:overflow-hidden tw:bg-slate-900" id="inicio">
+
+    <!-- Fondo con imagen y overlay degradado -->
+    <div class="tw:absolute tw:inset-0 tw:z-0">
+        <div class="tw:absolute tw:inset-0 tw:bg-gradient-to-b tw:from-slate-900/70 tw:via-slate-900/50 tw:to-slate-900/80 tw:z-10"></div>
+        <div class="tw:w-full tw:h-full tw:bg-cover tw:bg-center tw:transition-transform tw:duration-[10000ms] tw:hover:scale-110"
+            [style.background-image]="heroImage ? 'url(' + heroImage + ')' : 'url(assets/images/defaults/hero-placeholder.jpg)'">
+        </div>
+    </div>
+
+    <!-- Contenedor centrado -->
+    <div class="tw:max-w-7xl tw:mx-auto tw:px-6 tw:relative tw:z-20 tw:w-full tw:py-8">
+        <div class="tw:flex tw:flex-col tw:items-center tw:text-center tw:max-w-3xl tw:mx-auto">
+
+            <!-- CASO A: BIENVENIDA PERSONALIZADA -->
+            <ng-container *ngIf="currentUser">
+                <h1 class="tw:text-4xl tw:md:text-6xl tw:text-white tw:font-black tw:mb-6 tw:tracking-tight tw:leading-tight animate-fade-in">
+                    ¡Hola de nuevo, <span class="tw:text-blue-400">{{ currentUser.nombres }}</span>!
+                </h1>
+                <div class="tw:w-20 tw:h-1.5 tw:bg-blue-600 tw:mb-8 tw:rounded-full"></div>
+                <p class="tw:text-lg tw:md:text-xl tw:text-slate-300 tw:leading-relaxed tw:mb-10 animate-fade-in">
+                    Es un gusto verte de nuevo. Accede rápidamente a tu gestión diaria desde aquí.
+                </p>
+            </ng-container>
+
+            <!-- CASO B: TÍTULO COMERCIAL -->
+            <ng-container *ngIf="!currentUser">
+                <h1 class="tw:text-4xl tw:md:text-6xl tw:text-white tw:font-black tw:mb-6 tw:tracking-tight tw:leading-tight animate-fade-in">
+                    {{ titulo || 'Excelencia Profesional en cada Detalle' }}
+                </h1>
+                <div class="tw:w-20 tw:h-1.5 tw:bg-blue-600 tw:mb-8 tw:rounded-full"></div>
+                <p class="tw:text-lg tw:md:text-xl tw:text-slate-300 tw:leading-relaxed tw:mb-10 tw:max-w-2xl animate-fade-in">
+                    {{ slogan || 'Comprometidos con ofrecerte resultados de alto nivel y atención personalizada.' }}
+                </p>
+            </ng-container>
+
+            <!-- BOTÓN DE ACCIÓN CENTRADO -->
+            <div class="animate-fade-in">
+                <button class="tw:inline-flex tw:items-center tw:gap-3 tw:px-10 tw:py-5 tw:bg-blue-600 tw:text-white tw:border-none tw:rounded-2xl tw:font-black tw:text-lg tw:cursor-pointer tw:transition-all tw:duration-300 tw:shadow-2xl tw:shadow-blue-600/30 tw:hover:bg-blue-700 tw:hover:-translate-y-1 tw:hover:shadow-blue-600/50"
+                        (click)="handlePrimaryAction()"
+                        [title]="currentUser ? 'Ir a mi panel' : 'Agendar cita ahora'">
+
+                    <ng-container *ngIf="userRole === 'PACIENTE'">
+                        <span>Ver mis Citas</span>
+                        <i class="material-icons tw:text-2xl">event_available</i>
+                    </ng-container>
+
+                    <ng-container *ngIf="userRole === 'DOCTOR' || userRole === 'ASISTENTE'">
+                        <span>Gestionar Agenda</span>
+                        <i class="material-icons tw:text-2xl">pending_actions</i>
+                    </ng-container>
+
+                    <ng-container *ngIf="userRole === 'ADMIN' || userRole === 'TECHSOFT'">
+                        <span>Panel de Control</span>
+                        <i class="material-icons tw:text-2xl">dashboard_customize</i>
+                    </ng-container>
+
+                    <ng-container *ngIf="!currentUser">
+                        <span>Agendar una Cita</span>
+                        <i class="material-icons tw:text-2xl">calendar_today</i>
+                    </ng-container>
+
+                </button>
+            </div>
+
+        </div>
+    </div>
+</section>

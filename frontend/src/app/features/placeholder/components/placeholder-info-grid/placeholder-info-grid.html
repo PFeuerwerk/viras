@@ -1,0 +1,87 @@
+<section class="tw:py-12 tw:bg-white animate-fade-in" *ngIf="configVisual?.show_services">
+    <div class="tw:max-w-[1200px] tw:mx-auto tw:px-[5%]">
+        <div class="tw:grid tw:grid-cols-1 tw:lg:grid-cols-3 tw:gap-8">
+
+            <!-- 1. SPALTE: Standorte & Kontakt -->
+            <div class="tw:bg-slate-50 tw:p-6 tw:rounded-[32px] tw:border tw:border-slate-100 tw:transition-all tw:duration-300 tw:hover:bg-white tw:hover:shadow-2xl tw:hover:shadow-blue-600/5">
+                <div class="tw:flex tw:items-center tw:gap-4 tw:mb-4">
+                    <div class="tw:w-12 tw:h-12 tw:bg-blue-600 tw:text-white tw:rounded-xl tw:flex tw:items-center tw:justify-center">
+                        <i class="material-icons">contact_support</i>
+                    </div>
+                    <h3 class="tw:text-xl tw:text-slate-800 tw:font-black">Atención Directa</h3>
+                </div>
+
+                <div class="tw:flex tw:flex-col tw:gap-6">
+                    <div class="tw:flex tw:gap-4">
+                        <i class="material-icons tw:text-blue-600">location_on</i>
+                        <div class="tw:flex tw:flex-col">
+                            <span class="tw:text-xs tw:text-slate-400 tw:uppercase tw:font-black tw:tracking-widest tw:mb-1">Nuestra Clínica</span>
+                            <p class="tw:text-slate-700 tw:font-semibold tw:leading-relaxed">{{ direccion || 'Dirección no disponible' }}</p>
+                        </div>
+                    </div>
+
+                    <div class="tw:flex tw:gap-4">
+                        <i class="material-icons tw:text-blue-600">phone</i>
+                        <div class="tw:flex tw:flex-col">
+                            <span class="tw:text-xs tw:text-slate-400 tw:uppercase tw:font-black tw:tracking-widest tw:mb-1">Teléfono de contacto</span>
+                            <p class="tw:text-slate-700 tw:font-semibold">{{ telefono || 'Teléfono no disponible' }}</p>
+                        </div>
+                    </div>
+
+                    <div class="tw:flex tw:gap-4">
+                        <i class="material-icons tw:text-blue-600">alternate_email</i>
+                        <div class="tw:flex tw:flex-col">
+                            <span class="tw:text-xs tw:text-slate-400 tw:uppercase tw:font-black tw:tracking-widest tw:mb-1">Correo electrónico</span>
+                            <p class="tw:text-slate-700 tw:font-semibold">{{ email }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. SPALTE: Arbeitszeiten (Dinámico) -->
+            <div class="tw:bg-slate-50 tw:p-6 tw:rounded-[32px] tw:border tw:border-slate-100 tw:transition-all tw:duration-300 tw:hover:bg-white tw:hover:shadow-2xl tw:hover:shadow-blue-600/5">
+                <div class="tw:flex tw:items-center tw:gap-4 tw:mb-4">
+                    <div class="tw:w-12 tw:h-12 tw:bg-blue-600 tw:text-white tw:rounded-xl tw:flex tw:items-center tw:justify-center">
+                        <i class="material-icons">schedule</i>
+                    </div>
+                    <h3 class="tw:text-xl tw:text-slate-800 tw:font-black">Horario Laboral</h3>
+                </div>
+
+                <div class="tw:flex tw:flex-col">
+                    <ul class="tw:list-none tw:p-0 tw:m-0 tw:flex tw:flex-col tw:gap-3">
+                        <li *ngFor="let dia of diasSemana" class="tw:flex tw:items-center tw:justify-between tw:py-1 tw:border-b tw:border-slate-200/50 tw:last:border-none" [class.tw:opacity-40]="dia.isClosed">
+                            <span class="tw:text-sm tw:font-bold tw:text-slate-700">{{ dia.nombre }}</span>
+                            <span class="tw:flex-grow tw:mx-4 tw:border-t tw:border-dotted tw:border-slate-300"></span>
+                            <span class="tw:text-sm tw:font-black tw:text-blue-600" [class.tw:text-slate-400]="dia.isClosed">{{ dia.horas }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 3. SPALTE: Interaktive Karte -->
+            <div class="tw:bg-slate-50 tw:p-6 tw:rounded-[32px] tw:border tw:border-slate-100 tw:transition-all tw:duration-300 tw:hover:bg-white tw:hover:shadow-2xl tw:hover:shadow-blue-600/5">
+                <div class="tw:flex tw:items-center tw:gap-4 tw:mb-4">
+                    <div class="tw:w-12 tw:h-12 tw:bg-blue-600 tw:text-white tw:rounded-xl tw:flex tw:items-center tw:justify-center">
+                        <i class="material-icons">map</i>
+                    </div>
+                    <h3 class="tw:text-xl tw:text-slate-800 tw:font-black">Cómo Llegar</h3>
+                </div>
+
+                <div class="tw:w-full tw:h-[220px] tw:rounded-2xl tw:overflow-hidden tw:bg-slate-200 tw:relative">
+                    <ng-container *ngIf="googleMapsLink; else noMap">
+                        <iframe [src]="googleMapsLink | safeUrl" width="100%" height="100%" style="border:0;"
+                            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </ng-container>
+                    <ng-template #noMap>
+                        <div class="tw:flex tw:flex-col tw:items-center tw:justify-center tw:h-full tw:gap-2">
+                            <i class="material-icons tw:text-4xl tw:text-slate-400">map_marker_off</i>
+                            <p class="tw:text-slate-400 tw:text-sm tw:font-bold">Mapa no configurado</p>
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

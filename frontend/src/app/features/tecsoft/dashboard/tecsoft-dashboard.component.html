@@ -1,0 +1,126 @@
+<div class="tecsoft-container">
+    <!-- CABECERA DE LA CONSOLA GLOBAL -->
+    <header class="console-header">
+        <div class="header-info">
+            <h1>Consola TechSoft</h1>
+            <p>Panel de Control Global del Ecosistema SaaS</p>
+        </div>
+        <div class="header-actions">
+            <button class="btn-refresh" (click)="loadAllBusinesses()" [disabled]="isLoading">
+                <i class="material-icons" [class.spinning]="isLoading">sync</i>
+                Actualizar Datos
+            </button>
+        </div>
+    </header>
+
+    <!-- INDICADORES CLAVE (STAT CARDS) -->
+    <section class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon total">
+                <i class="material-icons">business</i>
+            </div>
+            <div class="stat-content">
+                <span class="stat-label">Total Negocios</span>
+                <span class="stat-value">{{ stats.total }}</span>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon dental">
+                <i class="material-icons">health_and_safety</i>
+            </div>
+            <div class="stat-content">
+                <span class="stat-label">Clínicas Dentales</span>
+                <span class="stat-value">{{ stats.dentistas }}</span>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon otros">
+                <i class="material-icons">category</i>
+            </div>
+            <div class="stat-content">
+                <span class="stat-label">Otros Sectores</span>
+                <span class="stat-value">{{ stats.otros }}</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- LISTADO MAESTRO DE NEGOCIOS -->
+    <main class="main-content shadow-sm">
+        <div class="table-header">
+            <h3>Directorio de Sitios Web Registrados</h3>
+            <div class="table-search">
+                <i class="material-icons">search</i>
+                <input type="text" placeholder="Buscar por nombre o slug...">
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="tecsoft-table">
+                <thead>
+                    <tr>
+                        <th>Negocio</th>
+                        <th>Tipo</th>
+                        <th>Slug / URL</th>
+                        <th>Registro</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let b of businesses">
+                        <td>
+                            <div class="business-cell">
+                                <div class="mini-logo">
+                                    <img [src]="b.logo_url || '/assets/no-image.png'" alt="Logo">
+                                </div>
+                                <span class="business-name">{{ b.nombre_empresa }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge-type" [ngClass]="b.tipo_negocio">
+                                {{ b.tipo_negocio }}
+                            </span>
+                        </td>
+                        <td>
+                            <code class="slug-text">/{{ b.slug }}</code>
+                        </td>
+                        <td>{{ formatDate(b.creado_en) }}</td>
+                        <td>
+                            <span class="status-indicator online">Online</span>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <!-- BOTÓN: Ver Sitio Público -->
+                                <button class="btn-action view" (click)="viewSite(b.slug)" title="Ver Sitio Público">
+                                    <i class="material-icons">visibility</i>
+                                </button>
+
+                                <!-- BOTÓN: Administrar (CORREGIDO: Ahora dispara la lógica de edición global) -->
+                                <button class="btn-action edit" (click)="editBusiness(b.id!)"
+                                    title="Administrar este negocio">
+                                    <i class="material-icons">settings</i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- EMPTY STATE -->
+                    <tr *ngIf="!isLoading && businesses.length === 0">
+                        <td colspan="6" class="empty-row">
+                            <i class="material-icons">inventory_2</i>
+                            <p>No hay negocios registrados en la plataforma aún.</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- LOADER OVERLAY -->
+        <div class="table-loader" *ngIf="isLoading">
+            <div class="spinner"></div>
+            <p>Sincronizando con la red...</p>
+        </div>
+    </main>
+</div>

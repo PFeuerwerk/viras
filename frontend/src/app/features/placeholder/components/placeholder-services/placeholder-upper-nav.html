@@ -1,0 +1,20 @@
+<div class="upper-nav">
+    <div class="upper-nav-container">
+        <div class="contact-info">
+            <div class="info-item" *ngIf="telefono">
+                <i class="material-icons">phone</i>
+                <span>{{ telefono }}</span>
+            </div>
+            <div class="info-item" *ngIf="direccion">
+                <i class="material-icons">location_on</i>
+                <span>{{ direccion }}</span>
+            </div>
+        </div>
+        <div class="social-links">
+            <span class="opening-hours" *ngIf="horario">
+                <i class="material-icons">schedule</i>
+                <span>{{ horario }}</span>
+            </span>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,40 @@
+<section class="tw:py-12 tw:bg-slate-50" *ngIf="reviews && reviews.length > 0">
+    <div class="tw:max-w-[1200px] tw:mx-auto tw:px-[5%]">
+        <!-- Header de la sección -->
+        <div class="tw:text-center tw:mb-6 animate-fade-in">
+            <span class="tw:text-blue-600 tw:font-extrabold tw:text-xs tw:tracking-[2px] tw:uppercase tw:mb-3 tw:inline-block">Testimonios</span>
+            <h2 class="tw:text-3xl tw:text-slate-800 tw:font-black tw:mb-3">Lo que dicen nuestros pacientes</h2>
+            <p class="tw:text-slate-500 tw:text-lg tw:max-w-xl tw:mx-auto">La confianza de quienes ya transformaron su sonrisa con nosotros.</p>
+        </div>
+
+        <!-- Grid de Testimonios -->
+        <div class="tw:grid tw:grid-cols-1 tw:md:grid-cols-2 tw:lg:grid-cols-3 tw:gap-8">
+            <div class="tw:bg-white tw:p-6 tw:rounded-[24px] tw:shadow-xl tw:shadow-slate-200/50 tw:border tw:border-slate-100 tw:relative tw:flex tw:flex-col tw:transition-all tw:duration-300 tw:hover:-translate-y-2 tw:hover:shadow-2xl tw:hover:shadow-blue-600/5 animate-fade-in" *ngFor="let review of reviews; let i = index"
+                [style.animation-delay]="(i * 0.1) + 's'">
+                <!-- Icono de comillas decorativo -->
+                <div class="tw:absolute tw:top-6 tw:right-8 tw:text-slate-100 tw:text-6xl tw:leading-none tw:pointer-events-none">
+                    <i class="material-icons tw:text-6xl">format_quote</i>
+                </div>
+
+                <div class="tw:relative tw:z-10 tw:mb-4">
+                    <p class="tw:text-slate-600 tw:italic tw:leading-relaxed tw:text-[1.05rem]">"{{ review.comentario }}"</p>
+                </div>
+
+                <div class="tw:mt-auto tw:pt-6 tw:border-t tw:border-slate-50">
+                    <!-- Rating con estrellas dinámicas -->
+                    <div class="tw:flex tw:items-center tw:gap-1 tw:mb-2">
+                        <i class="material-icons tw:text-amber-400 tw:text-[1.2rem]" *ngFor="let star of getStars(review.puntuacion)">star</i>
+                        <span class="tw:ml-1.5 tw:text-slate-400 tw:text-sm tw:font-bold">{{ review.puntuacion }}</span>
+                    </div>
+
+                    <div class="tw:flex tw:items-center tw:gap-4">
+                        <div class="tw:flex tw:flex-col">
+                            <h4 class="tw:text-slate-800 tw:font-bold tw:m-0">{{ review.nombre_cliente }}</h4>
+                            <span class="tw:text-xs tw:text-blue-500 tw:font-bold tw:uppercase tw:tracking-widest">Paciente Verificado</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

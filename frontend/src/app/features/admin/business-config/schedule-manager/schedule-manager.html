@@ -1,0 +1,53 @@
+<div class="schedule-container">
+    <div class="schedule-header">
+        <i class="material-icons">schedule</i>
+        <h4>Gestionar Horarios de Apertura</h4>
+    </div>
+
+    <div class="schedule-grid">
+        <div class="schedule-row" *ngFor="let day of weekSchedule; let i = index">
+            <!-- Nombre del día -->
+            <div class="day-label">
+                <span class="day-name">{{ day.day }}</span>
+            </div>
+
+            <!-- Controles de tiempo -->
+            <div class="time-controls" [class.disabled]="day.isClosed">
+                <div class="input-group">
+                    <label>Apertura</label>
+                    <input type="time" [(ngModel)]="day.open" (change)="emitChange()" [disabled]="day.isClosed"
+                        class="time-input-native">
+                </div>
+
+                <span class="time-separator">-</span>
+
+                <div class="input-group">
+                    <label>Cierre</label>
+                    <input type="time" [(ngModel)]="day.close" (change)="emitChange()" [disabled]="day.isClosed"
+                        class="time-input-native">
+                </div>
+            </div>
+
+            <!-- Estado: Abierto/Cerrado -->
+            <div class="status-toggle">
+                <label class="switch">
+                    <input type="checkbox" [checked]="!day.isClosed"
+                        (change)="day.isClosed = !day.isClosed; emitChange()">
+                    <span class="slider round"></span>
+                </label>
+                <span class="status-label" [class.closed-text]="day.isClosed">
+                    {{ day.isClosed ? 'Cerrado' : 'Abierto' }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mensaje de ayuda actualizado con advertencia de formato -->
+    <p class="schedule-help">
+        <i class="material-icons">info</i>
+        <span>
+            Use el selector para definir los rangos en <strong>formato de 24h</strong>.
+            El sistema los convertirá automáticamente a <strong>AM/PM</strong> para sus clientes.
+        </span>
+    </p>
+</div>

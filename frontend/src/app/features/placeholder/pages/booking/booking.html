@@ -1,0 +1,240 @@
+<!-- CONTENEDOR MAESTRO -->
+<div class="tw:min-h-screen tw:bg-slate-50 tw:font-sans" *ngIf="businessData">
+
+    <!-- 1. UPPER NAVIGATION -->
+    <app-placeholder-upper-nav [telefono]="businessData.telefono" [direccion]="businessData.direccion"
+        [horario]="businessData.horario_texto">
+    </app-placeholder-upper-nav>
+
+    <!-- 2. MAIN NAVBAR -->
+    <header class="tw:sticky tw:top-0 tw:z-[1000] tw:bg-white/95 tw:backdrop-blur-md tw:border-b tw:border-slate-100 tw:transition-all tw:duration-300 tw:relative" 
+            [ngClass]="isScrolled ? 'tw:h-14 tw:shadow-lg tw:shadow-slate-200/20' : 'tw:h-16'">
+        <div class="tw:max-w-[1400px] tw:mx-auto tw:px-[4%] tw:h-full tw:flex tw:justify-between tw:items-center">
+
+            <!-- LOGO -->
+            <div class="tw:flex tw:items-center tw:gap-3 tw:cursor-pointer tw:transition-transform tw:hover:-translate-y-0.5" (click)="navigateTo('home')">
+                <img [src]="businessData.logo_url || 'assets/logos/logo_classic.png'" alt="Logo" class="tw:h-8 tw:w-auto tw:object-contain">
+                <span class="tw:text-base tw:font-black tw:tracking-tighter">{{ businessData.nombre_empresa }}</span>
+            </div>
+
+            <!-- NAV MENU -->
+            <nav class="tw:hidden tw:lg:block">
+                <ul class="tw:flex tw:list-none tw:p-0 tw:m-0 tw:gap-8 tw:items-center">
+                    <li><a class="tw:text-[0.85rem] tw:font-bold tw:text-slate-900 tw:cursor-pointer tw:transition-colors tw:hover:text-blue-600" (click)="navigateTo('home')">Inicio</a></li>
+                    <li><a class="tw:text-[0.85rem] tw:font-bold tw:text-slate-900 tw:cursor-pointer tw:transition-colors tw:hover:text-blue-600" (click)="navigateTo('about')">Acerca de</a></li>
+                    <li><a class="tw:text-[0.85rem] tw:font-bold tw:text-slate-900 tw:cursor-pointer tw:transition-colors tw:hover:text-blue-600" (click)="navigateTo('services')">Servicios</a></li>
+                    <li><a class="tw:text-[0.85rem] tw:font-bold tw:text-slate-400 tw:cursor-not-allowed">Blog</a></li>
+                    <li class="tw:relative">
+                        <a class="tw:text-[0.85rem] tw:font-bold tw:text-slate-900 tw:cursor-pointer tw:flex tw:items-center tw:gap-1 tw:transition-colors tw:hover:text-blue-600"
+                            (click)="toggleDropdown('contacto'); $event.preventDefault()">
+                            <span>Contacto</span>
+                            <i class="material-icons tw:text-lg">expand_more</i>
+                        </a>
+                        <ul class="tw:absolute tw:top-[calc(100%+15px)] tw:right-0 tw:bg-white tw:min-w-[220px] tw:rounded-2xl tw:shadow-2xl tw:p-2 tw:list-none tw:border tw:border-slate-100 tw:transition-all tw:duration-300" 
+                            [ngClass]="activeDropdown === 'contacto' ? 'tw:opacity-100 tw:visible tw:translate-y-0' : 'tw:opacity-0 tw:invisible tw:translate-y-2'">
+                            <li><a (click)="navigateTo('contact')" class="tw:block tw:px-4 tw:py-2.5 tw:text-sm tw:font-bold tw:text-slate-600 tw:rounded-xl tw:transition-colors tw:hover:bg-slate-50 tw:hover:text-blue-600">Solicita Información</a></li>
+                            <li><a (click)="navigateTo('what-we-do')" class="tw:block tw:px-4 tw:py-2.5 tw:text-sm tw:font-bold tw:text-slate-600 tw:rounded-xl tw:transition-colors tw:hover:bg-slate-50 tw:hover:text-blue-600">Qué hacemos</a></li>
+                            <li><a (click)="navigateTo('history')" class="tw:block tw:px-4 tw:py-2.5 tw:text-sm tw:font-bold tw:text-slate-600 tw:rounded-xl tw:transition-colors tw:hover:bg-slate-50 tw:hover:text-blue-600">Historia</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- MOBILE BUTTON -->
+            <div class="tw:lg:hidden">
+                <button class="tw:w-10 tw:h-10 tw:bg-transparent tw:border-none tw:text-slate-900 tw:cursor-pointer tw:flex tw:items-center tw:justify-center tw:rounded-xl tw:transition-all tw:hover:bg-slate-100"
+                        (click)="toggleMobileMenu()"
+                        [attr.aria-expanded]="isMobileMenuOpen"
+                        aria-label="Abrir menú">
+                    <i class="material-icons tw:text-2xl">{{ isMobileMenuOpen ? 'close' : 'menu' }}</i>
+                </button>
+            </div>
+
+        </div>
+
+        <!-- MOBILE MENU PANEL -->
+        <div *ngIf="isMobileMenuOpen"
+             class="tw:absolute tw:top-full tw:left-0 tw:w-full tw:bg-white tw:border-b tw:border-slate-100 tw:shadow-2xl tw:shadow-slate-200/50 tw:lg:hidden tw:z-50"
+             role="dialog" aria-label="Menú principal móvil">
+            <div class="tw:max-w-7xl tw:mx-auto tw:px-6 tw:py-6 tw:flex tw:flex-col tw:gap-1">
+                <a class="tw:flex tw:items-center tw:gap-3 tw:px-4 tw:py-3.5 tw:text-sm tw:font-bold tw:text-slate-700 tw:rounded-2xl tw:transition-all tw:cursor-pointer tw:hover:bg-blue-50 tw:hover:text-blue-600"
+                   (click)="navigateTo('home')">
+                    <i class="material-icons tw:text-lg tw:text-blue-400">home</i>
+                    Inicio
+                </a>
+                <a class="tw:flex tw:items-center tw:gap-3 tw:px-4 tw:py-3.5 tw:text-sm tw:font-bold tw:text-slate-700 tw:rounded-2xl tw:transition-all tw:cursor-pointer tw:hover:bg-blue-50 tw:hover:text-blue-600"
+                   (click)="navigateTo('about')">
+                    <i class="material-icons tw:text-lg tw:text-blue-400">info</i>
+                    Acerca de
+                </a>
+                <a class="tw:flex tw:items-center tw:gap-3 tw:px-4 tw:py-3.5 tw:text-sm tw:font-bold tw:text-slate-700 tw:rounded-2xl tw:transition-all tw:cursor-pointer tw:hover:bg-blue-50 tw:hover:text-blue-600"
+                   (click)="navigateTo('services')">
+                    <i class="material-icons tw:text-lg tw:text-blue-400">medical_services</i>
+                    Servicios
+                </a>
+                <a class="tw:flex tw:items-center tw:gap-3 tw:px-4 tw:py-3.5 tw:text-sm tw:font-bold tw:text-slate-700 tw:rounded-2xl tw:transition-all tw:cursor-pointer tw:hover:bg-blue-50 tw:hover:text-blue-600"
+                   (click)="navigateTo('contact')">
+                    <i class="material-icons tw:text-lg tw:text-blue-400">contact_mail</i>
+                    Contacto
+                </a>
+                <a class="tw:flex tw:items-center tw:gap-3 tw:px-4 tw:py-3.5 tw:text-sm tw:font-bold tw:text-slate-700 tw:rounded-2xl tw:transition-all tw:cursor-pointer tw:hover:bg-blue-50 tw:hover:text-blue-600"
+                   (click)="navigateTo('history')">
+                    <i class="material-icons tw:text-lg tw:text-blue-400">history_edu</i>
+                    Historia
+                </a>
+                <a class="tw:flex tw:items-center tw:gap-3 tw:px-4 tw:py-3.5 tw:text-sm tw:font-bold tw:text-slate-700 tw:rounded-2xl tw:transition-all tw:cursor-pointer tw:hover:bg-blue-50 tw:hover:text-blue-600"
+                   (click)="navigateTo('what-we-do')">
+                    <i class="material-icons tw:text-lg tw:text-blue-400">work</i>
+                    Qué hacemos
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="tw:py-16 animate-fade-in">
+        <div class="tw:max-w-[1200px] tw:mx-auto tw:px-[5%]">
+
+            <header class="tw:text-center tw:mb-12">
+                <h1 class="tw:text-4xl tw:md:text-5xl tw:font-black tw:tracking-tight tw:text-slate-900 tw:mb-10">Programa tu cita</h1>
+
+                <div class="tw:flex tw:items-center tw:justify-center tw:gap-4 tw:md:gap-8 tw:mb-12">
+                    <div class="tw:flex tw:flex-col tw:items-center tw:gap-2">
+                        <div class="tw:w-10 tw:h-10 tw:rounded-full tw:flex tw:items-center tw:justify-center tw:font-black tw:text-sm tw:transition-all" 
+                             [ngClass]="currentStep() >= 1 ? 'tw:bg-blue-600 tw:text-white' : 'tw:bg-slate-200 tw:text-slate-500'">1</div>
+                        <span class="tw:text-[0.65rem] tw:font-black tw:uppercase tw:tracking-widest" [ngClass]="currentStep() >= 1 ? 'tw:text-blue-600' : 'tw:text-slate-400'">Tipo de Cita</span>
+                    </div>
+                    <div class="tw:h-0.5 tw:w-12 tw:md:w-24 tw:bg-slate-200 tw:relative">
+                        <div class="tw:absolute tw:inset-0 tw:bg-blue-600 tw:transition-all tw:duration-500" [style.width.%]="currentStep() >= 2 ? 100 : 0"></div>
+                    </div>
+                    <div class="tw:flex tw:flex-col tw:items-center tw:gap-2">
+                        <div class="tw:w-10 tw:h-10 tw:rounded-full tw:flex tw:items-center tw:justify-center tw:font-black tw:text-sm tw:transition-all" 
+                             [ngClass]="currentStep() >= 2 ? 'tw:bg-blue-600 tw:text-white' : 'tw:bg-slate-200 tw:text-slate-500'">2</div>
+                        <span class="tw:text-[0.65rem] tw:font-black tw:uppercase tw:tracking-widest" [ngClass]="currentStep() >= 2 ? 'tw:text-blue-600' : 'tw:text-slate-400'">Horario</span>
+                    </div>
+                    <div class="tw:h-0.5 tw:w-12 tw:md:w-24 tw:bg-slate-200 tw:relative">
+                        <div class="tw:absolute tw:inset-0 tw:bg-blue-600 tw:transition-all tw:duration-500" [style.width.%]="currentStep() >= 3 ? 100 : 0"></div>
+                    </div>
+                    <div class="tw:flex tw:flex-col tw:items-center tw:gap-2">
+                        <div class="tw:w-10 tw:h-10 tw:rounded-full tw:flex tw:items-center tw:justify-center tw:font-black tw:text-sm tw:transition-all" 
+                             [ngClass]="currentStep() >= 3 ? 'tw:bg-blue-600 tw:text-white' : 'tw:bg-slate-200 tw:text-slate-500'">3</div>
+                        <span class="tw:text-[0.65rem] tw:font-black tw:uppercase tw:tracking-widest" [ngClass]="currentStep() >= 3 ? 'tw:text-blue-600' : 'tw:text-slate-400'">Completar</span>
+                    </div>
+                </div>
+
+                <div class="tw:max-w-2xl tw:mx-auto tw:bg-blue-50 tw:p-6 tw:rounded-3xl tw:border tw:border-blue-100">
+                    <p class="tw:text-blue-800 tw:text-sm tw:font-medium tw:m-0">
+                        ¡Solicita tu cita en el tiempo más conveniente para ti! Selecciona una de las opciones abajo.
+                        Esta información es vital para procedimientos médicos y nos ayuda a brindarte un servicio de
+                        excelencia. ¡Te esperamos con mucho gusto!
+                    </p>
+                </div>
+            </header>
+
+            <main>
+                <!-- SECCIÓN 1: TIPO DE PACIENTE -->
+                <section class="tw:mb-16" *ngIf="!isLoggedPatient">
+                    <h2 class="tw:text-xl tw:font-black tw:text-slate-900 tw:mb-8 tw:text-center tw:md:text-left">¿Qué tipo de paciente eres?</h2>
+                    <div class="tw:grid tw:grid-cols-1 tw:md:grid-cols-2 tw:gap-6">
+                        <label class="tw:relative tw:p-8 tw:bg-white tw:rounded-[32px] tw:border-2 tw:cursor-pointer tw:transition-all tw:duration-300 tw:flex tw:flex-col tw:items-center tw:gap-4 tw:shadow-sm" 
+                               [ngClass]="bookingState().tipoPaciente === 'NUEVO' ? 'tw:border-blue-600 tw:shadow-xl tw:shadow-blue-600/10 tw:scale-[1.02]' : 'tw:border-slate-100 tw:hover:border-blue-200 tw:hover:bg-slate-50'">
+                            <input type="radio" name="patientType" class="tw:hidden" (change)="selectTipoPaciente('NUEVO')"
+                                [checked]="bookingState().tipoPaciente === 'NUEVO'">
+                            <i class="material-icons tw:text-4xl" [ngClass]="bookingState().tipoPaciente === 'NUEVO' ? 'tw:text-blue-600' : 'tw:text-slate-400'">person_add</i>
+                            <span class="tw:text-lg tw:font-black" [ngClass]="bookingState().tipoPaciente === 'NUEVO' ? 'tw:text-blue-600' : 'tw:text-slate-700'">Paciente Nuevo</span>
+                        </label>
+
+                        <label class="tw:relative tw:p-8 tw:bg-white tw:rounded-[32px] tw:border-2 tw:cursor-pointer tw:transition-all tw:duration-300 tw:flex tw:flex-col tw:items-center tw:gap-4 tw:shadow-sm"
+                               [ngClass]="bookingState().tipoPaciente === 'REGRESA' ? 'tw:border-blue-600 tw:shadow-xl tw:shadow-blue-600/10 tw:scale-[1.02]' : 'tw:border-slate-100 tw:hover:border-blue-200 tw:hover:bg-slate-50'">
+                            <input type="radio" name="patientType" class="tw:hidden" (change)="selectTipoPaciente('REGRESA')"
+                                [checked]="bookingState().tipoPaciente === 'REGRESA'">
+                            <i class="material-icons tw:text-4xl" [ngClass]="bookingState().tipoPaciente === 'REGRESA' ? 'tw:text-blue-600' : 'tw:text-slate-400'">history</i>
+                            <span class="tw:text-lg tw:font-black" [ngClass]="bookingState().tipoPaciente === 'REGRESA' ? 'tw:text-blue-600' : 'tw:text-slate-700'">Paciente que regresa</span>
+                        </label>
+                    </div>
+                </section>
+
+                <!-- BANNER LOGUEADO -->
+                <div class="tw:bg-blue-600 tw:p-8 tw:rounded-[32px] tw:mb-16 tw:text-white tw:flex tw:items-center tw:gap-6 tw:shadow-2xl tw:shadow-blue-600/20 animate-fade-in" *ngIf="isLoggedPatient">
+                    <div class="tw:w-16 tw:h-16 tw:bg-white/20 tw:rounded-2xl tw:flex tw:items-center tw:justify-center">
+                        <i class="material-icons tw:text-3xl">how_to_reg</i>
+                    </div>
+                    <div>
+                        <h3 class="tw:m-0 tw:text-xl tw:font-black">Sesión Iniciada</h3>
+                        <p class="tw:m-0 tw:text-white/80 tw:font-medium">Estás agendando como <strong>paciente registrado</strong>. Tus datos clínicos e historial se vincularán automáticamente.</p>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN 2: SELECCIÓN DE CITA -->
+                <section>
+                    <h2 class="tw:text-xl tw:font-black tw:text-slate-900 tw:mb-8 tw:text-center tw:md:text-left">Seleccione el Tipo de Consulta</h2>
+
+                    <div class="tw:grid tw:grid-cols-1 tw:md:grid-cols-2 tw:lg:grid-cols-3 tw:gap-6">
+                        <ng-container *ngFor="let card of businessData.booking_services; let i = index">
+                            <div class="tw:relative tw:bg-white tw:p-8 tw:rounded-[32px] tw:border-2 tw:cursor-pointer tw:transition-all tw:duration-300 tw:shadow-sm" 
+                                 [ngClass]="[
+                                    bookingState().tipoCitaId === i ? 'tw:border-blue-600 tw:shadow-xl tw:shadow-blue-600/10' : 'tw:border-slate-100 tw:hover:border-blue-200 tw:hover:bg-slate-50',
+                                    card.es_emergencia ? 'tw:bg-red-50/30' : ''
+                                 ]" (click)="selectCita(i, card)">
+
+                                <div class="tw:absolute tw:top-6 tw:right-6 tw:text-blue-600 tw:transition-all" [ngClass]="bookingState().tipoCitaId === i ? 'tw:opacity-100 tw:scale-100' : 'tw:opacity-0 tw:scale-0'">
+                                    <i class="material-icons tw:text-2xl">check_circle</i>
+                                </div>
+
+                                <div class="tw:flex tw:flex-col tw:gap-4">
+                                    <div class="tw:w-12 tw:h-12 tw:rounded-2xl tw:flex tw:items-center tw:justify-center" 
+                                         [ngClass]="card.es_emergencia ? 'tw:bg-red-100 tw:text-red-600' : 'tw:bg-blue-50 tw:text-blue-600'">
+                                        <i class="material-icons" *ngIf="!card.es_emergencia">{{ card.icono || 'calendar_today' }}</i>
+                                        <i class="material-icons" *ngIf="card.es_emergencia">warning</i>
+                                    </div>
+                                    <h3 class="tw:m-0 tw:text-lg tw:font-black" [ngClass]="card.es_emergencia ? 'tw:text-red-700' : 'tw:text-slate-900'">{{ card.titulo }}</h3>
+                                    <p class="tw:text-slate-500 tw:text-sm tw:leading-relaxed tw:line-clamp-3">{{ card.descripcion }}</p>
+                                    <div class="tw:flex tw:items-center tw:gap-2 tw:text-[0.65rem] tw:font-black tw:uppercase tw:tracking-widest tw:text-slate-400">
+                                        <i class="material-icons tw:text-base">schedule</i>
+                                        <span>{{ card.duracion_minutos }} min</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Escala de Dolor -->
+                            <div id="pain-scale-container" class="tw:lg:col-span-3 tw:mt-4 tw:bg-white tw:p-10 tw:rounded-[40px] tw:border tw:border-slate-100 tw:shadow-2xl tw:shadow-slate-200/50 animate-fade-in"
+                                *ngIf="bookingState().tipoCitaId === i && card.es_emergencia">
+
+                                <h2 class="tw:text-xl tw:font-black tw:text-slate-900 tw:mb-10 tw:text-center">Por favor, cuantifique su nivel de dolor</h2>
+
+                                <div class="tw:grid tw:grid-cols-2 tw:md:grid-cols-3 tw:lg:grid-cols-6 tw:gap-4 tw:mb-10">
+                                    <label *ngFor="let carita of caritasDolor" class="tw:flex tw:flex-col tw:items-center tw:gap-4 tw:p-6 tw:rounded-3xl tw:cursor-pointer tw:transition-all tw:duration-300 tw:border-2"
+                                        [ngClass]="bookingState().nivelDolor === carita.nivel ? 'tw:border-blue-600 tw:bg-blue-50 tw:scale-110' : 'tw:border-transparent tw:bg-slate-50 tw:hover:bg-slate-100'">
+                                        <input type="radio" name="painLevel" class="tw:hidden" (change)="selectDolor(carita.nivel)"
+                                            [checked]="bookingState().nivelDolor === carita.nivel">
+                                        <i class="material-icons tw:text-5xl" [style.color]="carita.color">{{ carita.icono }}</i>
+                                        <span class="tw:text-xs tw:font-black tw:uppercase tw:tracking-widest" [style.color]="carita.color">{{ carita.label }}</span>
+                                    </label>
+                                </div>
+
+                                <div class="tw:bg-red-50 tw:p-6 tw:rounded-2xl tw:flex tw:items-center tw:gap-4 tw:border tw:border-red-100">
+                                    <i class="material-icons tw:text-red-600">report_problem</i>
+                                    <p class="tw:m-0 tw:text-red-800 tw:text-sm tw:font-bold">Si experimenta una emergencia grave, llame al número de sanidad social.</p>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+
+                    <div *ngIf="!businessData.booking_services?.length" class="tw:p-12 tw:text-center tw:bg-slate-100 tw:rounded-[32px] tw:text-slate-500 tw:font-bold">
+                        <p>No hay tipos de cita disponibles en este momento.</p>
+                    </div>
+                </section>
+            </main>
+
+            <footer class="tw:mt-16 tw:flex tw:justify-center tw:md:justify-end">
+                <button class="tw:flex tw:items-center tw:gap-4 tw:px-10 tw:py-5 tw:bg-blue-600 tw:text-white tw:rounded-[20px] tw:border-none tw:font-black tw:text-lg tw:cursor-pointer tw:transition-all tw:duration-300 tw:shadow-2xl tw:shadow-blue-600/20 tw:hover:bg-blue-700 tw:hover:-translate-y-1 tw:disabled:opacity-50 tw:disabled:cursor-not-allowed" [disabled]="!canProceed()" (click)="proceedToDateTime()">
+                    <span>Seleccione fecha y hora</span>
+                    <i class="material-icons tw:text-2xl">arrow_forward</i>
+                </button>
+            </footer>
+        </div>
+    </div>
+
+    <app-placeholder-footer [businessData]="businessData" [configVisual]="businessData.config_visual"
+        (navigate)="navigateTo($event)">
+    </app-placeholder-footer>
+</div>

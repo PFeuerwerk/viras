@@ -1,0 +1,47 @@
+Indice breve de scripts del proyecto
+====================================
+
+Scripts disponibles
+===================
+
+manual-flow-check.sh
+--------------------
+Ejecuta una prueba funcional completa contra la app local en localhost.
+Crea datos E2E temporales: admin, negocio, doctor, paciente, cita,
+anamnesis, consentimiento y presupuesto. Valida que backend, frontend,
+Prisma y base de datos esten alineados en los flujos principales.
+Incluye validacion del dashboard ejecutivo Admin/Owner protegido por JWT.
+
+visual-flow-check.mjs
+---------------------
+Ejecuta QA visual con Chrome headless usando datos de prueba. Recorre registro
+admin, login admin/paciente, configuracion, staff, registro paciente, reserva,
+agenda admin, formularios clinicos y dashboard asistente en desktop/tablet/movil.
+Genera capturas y reporte JSON en `Docs/qa-visual-*`.
+
+backup-project.sh
+-----------------
+Crea un backup limpio del proyecto en formato TAR. Primero genera un dump
+fresco de PostgreSQL usando `backend/.env`; luego empaqueta el codigo,
+assets y configuracion necesarios, excluyendo dependencias, builds, caches,
+logs, backups previos y carpetas ocultas no necesarias. Al terminar, agrega
+un resumen del TAR creado en este mismo archivo.
+
+restore-latest-backup.sh
+------------------------
+Restaura el proyecto desde el ultimo TAR disponible en `backups`. Extrae los
+archivos en un directorio destino seguro, restaura la base de datos usando el
+dump interno del TAR, instala dependencias, genera Prisma Client y puede validar
+builds/tests. Es el script pensado para migrar el proyecto a un nuevo PC.
+
+Backups TAR validos
+===================
+
+viras_project_backup_20260702_094409.tar
+----------------------------------------
+Backup TAR valido/recomendado. Incluye codigo fuente limpio, assets,
+configuracion del proyecto, scripts actuales de backup/restauracion y dump
+fresco de PostgreSQL: `viras_db_20260702_094409.dump`.
+Estado respaldado: proyecto reconstruido, frontend/backend alineados,
+builds y tests pasando, flujo funcional completo verificado con
+`manual-flow-check.sh`. Tamano aproximado: 71M.

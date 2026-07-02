@@ -1,0 +1,31 @@
+model consentimientos {
+  id                      String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  paciente_id             String    @unique @db.Uuid
+  general_odontologico    Boolean   @default(false)
+  general_fecha           DateTime? @db.Timestamptz(6)
+  general_firma           String?
+  anestesia_sedacion      Boolean   @default(false)
+  anestesia_fecha         DateTime? @db.Timestamptz(6)
+  anestesia_firma         String?
+  proteccion_datos        Boolean   @default(false)
+  lopd_fecha              DateTime? @db.Timestamptz(6)
+  lopd_firma              String?
+  representante_legal     Boolean   @default(false)
+  representante_nombre    String?   @db.VarChar(150)
+  representante_dni       String?   @db.VarChar(50)
+  representante_relacion  String?   @db.VarChar(100)
+  representante_fecha     DateTime? @db.Timestamptz(6)
+  representante_firma     String?
+  politicas_privacidad    Boolean   @default(false)
+  politicas_fecha         DateTime? @db.Timestamptz(6)
+  creado_en               DateTime? @default(now()) @db.Timestamptz(6)
+  actualizado_en          DateTime? @default(now()) @db.Timestamptz(6)
+  lopd_uso_antes_despues  Boolean   @default(false)
+  lopd_uso_asistencial    Boolean   @default(false)
+  lopd_uso_docente        Boolean   @default(false)
+  lopd_uso_publicitario   Boolean   @default(false)
+  anestesia_local_auth    Boolean   @default(false)
+  anestesia_salud_decl    Boolean   @default(false)
+  anestesia_sedacion_auth Boolean   @default(false)
+  usuario                 usuarios  @relation(fields: [paciente_id], references: [id], onDelete: Cascade)
+}

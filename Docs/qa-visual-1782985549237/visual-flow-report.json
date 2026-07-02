@@ -1,0 +1,22 @@
+{
+  "generatedAt": "2026-07-02T09:46:00.412Z",
+  "frontend": "http://localhost:4200",
+  "api": "http://localhost:3100/api",
+  "testData": {
+    "adminEmail": "visual-admin-1782985549237@viras.test",
+    "doctorEmail": "visual-doctor-1782985549237@viras.test",
+    "patientEmail": "visual-patient-1782985549237@viras.test",
+    "assistantEmail": "visual-assistant-1782985549237@viras.test",
+    "businessName": "Clinica Visual 1782985549237",
+    "slug": "clinica-visual-1782985549237",
+    "adminToken": "",
+    "patientToken": "",
+    "assistantToken": "",
+    "businessId": "",
+    "doctorUserId": "",
+    "patientId": ""
+  },
+  "checks": [],
+  "screenshots": [],
+  "error": "La navegacion no llego a http://localhost:4200"
+}

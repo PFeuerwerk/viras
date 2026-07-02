@@ -1,0 +1,442 @@
+<div class="tw:max-w-5xl tw:mx-auto animate-fade-in" id="printable-area">
+    
+    <!-- CABECERA DE DOCUMENTO LEGAL -->
+    <header class="tw:bg-white tw:rounded-[32px] tw:border tw:border-slate-100 tw:shadow-sm tw:p-8 tw:mb-6 tw:flex tw:flex-col tw:md:flex-row tw:justify-between tw:items-start tw:gap-6 no-print">
+        <div class="tw:flex-1">
+            <h1 class="tw:text-2xl tw:font-black tw:text-slate-900 tw:tracking-tight tw:mb-3">{{ title }}</h1>
+            <div class="tw:space-y-2">
+                <p class="tw:text-sm tw:text-slate-600 tw:font-medium">
+                    <strong class="tw:text-slate-800">Validez Legal:</strong> Este documento tiene carácter de declaración jurada y es necesario para proceder con su atención clínica.
+                </p>
+                <p class="tw:text-xs tw:text-slate-500 tw:flex tw:items-start tw:gap-2">
+                    <i class="material-icons tw:text-base tw:text-blue-500 tw:mt-0.5">print</i>
+                    <span>Rellene lo necesario, imprima la página y tráigala a la clínica para su cumplimentación completa, firma y sello.</span>
+                </p>
+            </div>
+        </div>
+        <div class="tw:flex tw:gap-3 tw:shrink-0">
+            <button (click)="printPage()" class="tw:flex tw:items-center tw:gap-2 tw:px-5 tw:py-2.5 tw:bg-slate-100 tw:text-slate-700 tw:text-sm tw:font-bold tw:rounded-xl tw:border-none tw:cursor-pointer tw:transition-all tw:hover:bg-slate-200">
+                <i class="material-icons tw:text-lg">print</i> Imprimir Documento
+            </button>
+            <button (click)="goBack()" class="tw:px-5 tw:py-2.5 tw:bg-white tw:text-slate-600 tw:text-sm tw:font-bold tw:rounded-xl tw:border tw:border-slate-200 tw:cursor-pointer tw:transition-all tw:hover:bg-slate-50">
+                Volver
+            </button>
+        </div>
+    </header>
+
+    <!-- ALERTAS -->
+    <div *ngIf="successMessage" class="tw:mb-6 tw:p-4 tw:bg-emerald-50 tw:text-emerald-700 tw:text-sm tw:font-bold tw:rounded-2xl tw:border tw:border-emerald-100 tw:flex tw:items-center tw:gap-3 no-print">
+        <i class="material-icons tw:text-lg">check_circle</i> {{ successMessage }}
+    </div>
+    <div *ngIf="errorMessage" class="tw:mb-6 tw:p-4 tw:bg-red-50 tw:text-red-700 tw:text-sm tw:font-bold tw:rounded-2xl tw:border tw:border-red-100 tw:flex tw:items-center tw:gap-3 no-print">
+        <i class="material-icons tw:text-lg">error</i> {{ errorMessage }}
+    </div>
+
+    <form [formGroup]="consentForm" (ngSubmit)="onSubmit()" class="tw:space-y-6">
+
+    <!-- TÍTULO EXCLUSIVO PARA IMPRESIÓN (Centrado Profesional Absoluto) -->
+    <div class="tw:hidden print:tw:block tw:text-center tw:mb-10 tw:w-full">
+        <h1 class="tw:text-2xl tw:font-black tw:uppercase tw:mx-auto tw:block tw:text-center">{{ title }}</h1>
+        <p class="tw:text-lg tw:text-slate-600 tw:mt-2 tw:text-center">{{ businessData?.nombre_empresa }}</p>
+        <p class="tw:text-sm tw:text-slate-500 tw:mt-4 tw:italic">Rellene lo necesario, imprima la página y tráigala a la clínica para su cumplimentación completa, firma y sello.</p>
+    </div>
+
+    <!-- 1. IDENTIFICACIÓN DE LA CLÍNICA Y PACIENTE (Auto-completado) -->
+    <section class="tw:bg-white tw:rounded-[32px] tw:border tw:border-slate-100 tw:shadow-sm tw:p-8">
+        <h2 class="tw:text-base tw:font-black tw:text-slate-800 tw:uppercase tw:tracking-widest tw:mb-6 tw:flex tw:items-center tw:gap-3 tw:pb-4 tw:border-b tw:border-slate-100">
+            <span class="tw:w-8 tw:h-8 tw:bg-blue-50 tw:text-blue-600 tw:rounded-xl tw:flex tw:items-center tw:justify-center tw:text-sm">1</span>
+            Información de las Partes
+        </h2>
+        <div class="tw:grid tw:grid-cols-1 tw:md:grid-cols-2 tw:gap-8">
+            <!-- Datos de la Clínica -->
+            <div class="tw:bg-slate-50 tw:p-6 tw:rounded-2xl tw:border tw:border-slate-100">
+                <h3 class="tw:text-sm tw:font-bold tw:text-slate-800 tw:mb-4">Responsable del Tratamiento (Clínica)</h3>
+                <div class="tw:space-y-2 tw:text-sm tw:text-slate-600">
+                    <p><strong class="tw:text-slate-700">Nombre de la clínica:</strong> {{ businessData?.nombre_empresa }}</p>
+                    <p><strong class="tw:text-slate-700">CIF/NIF:</strong> {{ businessData?.cif || '---' }}</p>
+                    <p><strong class="tw:text-slate-700">Dirección:</strong> {{ businessData?.direccion }}</p>
+                    <p><strong class="tw:text-slate-700">Teléfono:</strong> {{ businessData?.telefono }}</p>
+                    <p><strong class="tw:text-slate-700">Correo electrónico:</strong> {{ businessData?.email }}</p>
+                    <p><strong class="tw:text-slate-700">Delegado de Protección de Datos:</strong> {{ businessData?.delegado_datos || 'No aplica / Administrador' }}</p>
+                </div>
+            </div>
+            <!-- Datos del Paciente -->
+            <div class="tw:bg-slate-50 tw:p-6 tw:rounded-2xl tw:border tw:border-slate-100">
+                <h3 class="tw:text-sm tw:font-bold tw:text-slate-800 tw:mb-4">Identificación del Paciente</h3>
+                <div class="tw:space-y-2 tw:text-sm tw:text-slate-600">
+                    <p><strong class="tw:text-slate-700">Nombre:</strong> {{ currentUser?.nombres }} {{ currentUser?.apellidos }}</p>
+                    <p><strong class="tw:text-slate-700">Documento:</strong> {{ currentUser?.numero_documento || '---' }}</p>
+                    <p><strong class="tw:text-slate-700">Fecha Nac.:</strong> {{ currentUser?.fecha_nacimiento | date:'dd/MM/yyyy' }}</p>
+                    <p><strong class="tw:text-slate-700">Email:</strong> {{ currentUser?.email }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Datos del Representante Legal (Si aplica) -->
+        <div class="tw:mt-8 tw:pt-8 tw:border-t tw:border-slate-100" *ngIf="type === 'menores'">
+            <h3 class="tw:text-sm tw:font-bold tw:text-slate-800 tw:mb-4">Representante Legal</h3>
+            <div class="tw:grid tw:grid-cols-1 tw:md:grid-cols-3 tw:gap-5">
+                <div class="tw:flex tw:flex-col tw:gap-1.5">
+                    <label class="tw:text-[11px] tw:font-black tw:text-slate-500 tw:uppercase tw:tracking-wider tw:ml-1">Nombre del Representante*</label>
+                    <input type="text" formControlName="representante_nombre" class="tw:w-full tw:px-4 tw:py-3 tw:bg-white tw:text-slate-800 tw:text-sm tw:rounded-xl tw:border tw:border-slate-200 tw:transition-all tw:focus:outline-none tw:focus:border-blue-500">
+                </div>
+                <div class="tw:flex tw:flex-col tw:gap-1.5">
+                    <label class="tw:text-[11px] tw:font-black tw:text-slate-500 tw:uppercase tw:tracking-wider tw:ml-1">DNI/NIE*</label>
+                    <input type="text" formControlName="representante_dni" class="tw:w-full tw:px-4 tw:py-3 tw:bg-white tw:text-slate-800 tw:text-sm tw:rounded-xl tw:border tw:border-slate-200 tw:transition-all tw:focus:outline-none tw:focus:border-blue-500">
+                </div>
+                <div class="tw:flex tw:flex-col tw:gap-1.5">
+                    <label class="tw:text-[11px] tw:font-black tw:text-slate-500 tw:uppercase tw:tracking-wider tw:ml-1">Relación/Parentesco*</label>
+                    <input type="text" formControlName="representante_relacion" placeholder="Ej: Padre, Tutor..." class="tw:w-full tw:px-4 tw:py-3 tw:bg-white tw:text-slate-800 tw:text-sm tw:rounded-xl tw:border tw:border-slate-200 tw:transition-all tw:focus:outline-none tw:focus:border-blue-500">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. CUERPO DEL CONSENTIMIENTO (LOPD / PROTECCIÓN DE DATOS) -->
+    <ng-container *ngIf="type === 'lopd'">
+        <section class="tw:bg-white tw:rounded-[32px] tw:border tw:border-slate-100 tw:shadow-sm tw:p-8">
+            <h2 class="tw:text-base tw:font-black tw:text-slate-800 tw:uppercase tw:tracking-widest tw:mb-6 tw:flex tw:items-center tw:gap-3 tw:pb-4 tw:border-b tw:border-slate-100">
+                <span class="tw:w-8 tw:h-8 tw:bg-blue-50 tw:text-blue-600 tw:rounded-xl tw:flex tw:items-center tw:justify-center tw:text-sm">2</span>
+                Información sobre Protección de Datos
+            </h2>
+            <div class="tw:bg-slate-50 tw:p-6 tw:rounded-2xl tw:border tw:border-slate-100 tw:text-sm tw:text-slate-600 tw:space-y-4">
+                <p>De conformidad con el Reglamento (UE) 2016/679 (RGPD) y la Ley Orgánica 3/2018 (LOPDGDD), se le informa que la entidad responsable del tratamiento de sus datos es la clínica identificada anteriormente.</p>
+                
+                <p><strong class="tw:text-slate-800">Finalidad:</strong> Sus datos personales y clínicos serán tratados para la gestión asistencial de su tratamiento odontológico, elaboración de historia clínica, facturación y cumplimiento de obligaciones legales. Sus datos se conservarán durante los plazos exigidos por la normativa sanitaria aplicable.</p>
+                
+                <p><strong class="tw:text-slate-800">Derechos:</strong> Podrá ejercer sus derechos de acceso, rectificación, supresión, oposición, limitación y portabilidad mediante escrito a la clínica. También tiene derecho a reclamar ante la AEPD si considera vulnerados sus derechos.</p>
+            </div>
+
+            <h3 class="tw:text-sm tw:font-bold tw:text-slate-800 tw:mt-8 tw:mb-2">Consentimiento para Uso de Imágenes Clínicas</h3>
+            <p class="tw:text-xs tw:text-slate-500 tw:mb-6">Seleccione su preferencia para cada tipo de uso independiente:</p>
+
+            <div class="tw:space-y-4">
+                <!-- Opción A -->
+                <div class="tw:flex tw:flex-col tw:sm:flex-row tw:justify-between tw:items-start tw:sm:items-center tw:gap-4 tw:p-4 tw:bg-white tw:rounded-2xl tw:border tw:border-slate-200">
+                    <div class="tw:flex-1">
+                        <strong class="tw:block tw:text-sm tw:text-slate-800">A. Uso asistencial y clínico:</strong>
+                        <span class="tw:text-xs tw:text-slate-500">Realización y conservación de imágenes exclusivamente para diagnóstico, terapéutica y seguimiento.</span>
+                    </div>
+                    <div class="tw:flex tw:items-center tw:gap-4 tw:shrink-0">
+                        <label class="tw:flex tw:items-center tw:gap-2 tw:text-sm tw:font-bold tw:text-slate-700 tw:cursor-pointer"><input type="radio" formControlName="lopd_uso_asistencial" [value]="true" class="tw:accent-blue-600"> Autorizo</label>
+                        <label class="tw:flex tw:items-center tw:gap-2 tw:text-sm tw:font-bold tw:text-slate-700 tw:cursor-pointer"><input type="radio" formControlName="lopd_uso_asistencial" [value]="false" class="tw:accent-blue-600"> No Autorizo</label>
+                    </div>
+                </div>
+                <!-- Opción B -->
+                <div class="tw:flex tw:flex-col tw:sm:flex-row tw:justify-between tw:items-start tw:sm:items-center tw:gap-4 tw:p-4 tw:bg-white tw:rounded-2xl tw:border tw:border-slate-200">
+                    <div class="tw:flex-1">
+                        <strong class="tw:block tw:text-sm tw:text-slate-800">B. Uso docente o científico:</strong>
+                        <span class="tw:text-xs tw:text-slate-500">Utilización de imágenes en cursos, congresos o publicaciones científicas (anonimizadas).</span>
+                    </div>
+                    <div class="tw:flex tw:items-center tw:gap-4 tw:shrink-0">
+                        <label class="tw:flex tw:items-center tw:gap-2 tw:text-sm tw:font-bold tw:text-slate-700 tw:cursor-pointer"><input type="radio" formControlName="lopd_uso_docente" [value]="true" class="tw:accent-blue-600"> Autorizo</label>
+                        <label class="tw:flex tw:items-center tw:gap-2 tw:text-sm tw:font-bold tw:text-slate-700 tw:cursor-pointer"><input type="radio" formControlName="lopd_uso_docente" [value]="false" class="tw:accent-blue-600"> No Autorizo</label>
+                    </div>
+                </div>
+                <!-- Opción C -->
+                <div class="tw:flex tw:flex-col tw:sm:flex-row tw:justify-between tw:items-start tw:sm:items-center tw:gap-4 tw:p-4 tw:bg-white tw:rounded-2xl tw:border tw:border-slate-200">
+                    <div class="tw:flex-1">
+                        <strong class="tw:block tw:text-sm tw:text-slate-800">C. Uso publicitario o marketing:</strong>
+                        <span class="tw:text-xs tw:text-slate-500">Uso en página web, redes sociales o material corporativo de la clínica.</span>
+                    </div>
+                    <div class="tw:flex tw:items-center tw:gap-4 tw:shrink-0">
+                        <label class="tw:flex tw:items-center tw:gap-2 tw:text-sm tw:font-bold tw:text-slate-700 tw:cursor-pointer"><input type="radio" formControlName="lopd_uso_publicitario" [value]="true" class="tw:accent-blue-600"> Autorizo</label>
+                        <label class="tw:flex tw:items-center tw:gap-2 tw:text-sm tw:font-bold tw:text-slate-700 tw:cursor-pointer"><input type="radio" formControlName="lopd_uso_publicitario" [value]="false" class="tw:accent-blue-600"> No Autorizo</label>
+                    </div>
+                </div>
+                <!-- Opción D -->
+                <div class="tw:flex tw:flex-col tw:sm:flex-row tw:justify-between tw:items-start tw:sm:items-center tw:gap-4 tw:p-4 tw:bg-white tw:rounded-2xl tw:border tw:border-slate-200">
+                    <div class="tw:flex-1">
+                        <strong class="tw:block tw:text-sm tw:text-slate-800">D. Resultados "Antes y Después":</strong>
+                        <span class="tw:text-xs tw:text-slate-500">Exhibición comparativa de imágenes previas y posteriores al tratamiento.</span>
+                    </div>
+                    <div class="tw:flex tw:items-center tw:gap-4 tw:shrink-0">
+                        <label class="tw:flex tw:items-center tw:gap-2 tw:text-sm tw:font-bold tw:text-slate-700 tw:cursor-pointer"><input type="radio" formControlName="lopd_uso_antes_despues" [value]="true" class="tw:accent-blue-600"> Autorizo</label>
+                        <label class="tw:flex tw:items-center tw:gap-2 tw:text-sm tw:font-bold tw:text-slate-700 tw:cursor-pointer"><input type="radio" formControlName="lopd_uso_antes_despues" [value]="false" class="tw:accent-blue-600"> No Autorizo</label>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </ng-container>
+
+    <!-- 3. CUERPO DEL CONSENTIMIENTO (POLÍTICAS DE PRIVACIDAD / HIPAA STYLE) -->
+    <ng-container *ngIf="type === 'privacidad'">
+        <section class="tw:bg-white tw:rounded-[32px] tw:border tw:border-slate-100 tw:shadow-sm tw:p-8">
+            <div class="tw:bg-blue-50 tw:border-l-4 tw:border-blue-500 tw:p-4 tw:mb-6">
+                <p class="tw:text-sm tw:font-bold tw:text-blue-800 tw:uppercase tw:tracking-wider">ESTE DOCUMENTO EXPONE CÓMO LA INFORMACIÓN MÉDICA SOBRE USTED PUEDE SER USADA Y DIVULGADA Y CÓMO USTED PUEDE OBTENER ACCESO A ESTA INFORMACIÓN. POR FAVOR REVÍSELO CON ATENCIÓN.</p>
+            </div>
+
+            <div class="tw:max-h-96 tw:overflow-y-auto tw:pr-4 tw:text-sm tw:text-slate-600 tw:space-y-4">
+                <h3 class="tw:text-base tw:font-bold tw:text-slate-800">I. COMPRENSIÓN DE SU INFORMACIÓN DE SALUD</h3>
+                <p>Cada vez que visita nuestra oficina, tomamos registro de su visita para gestionar los cuidados que recibe. Entendemos que la información médica que queda registrada sobre usted y su salud es personal. La confidencialidad y privacidad de su información de salud queda también bajo la protección de leyes tanto Estatales como Federales.</p>
+                
+                <p><strong class="tw:text-slate-800">Cómo Usaremos o Divulgaremos su información de salud:</strong></p>
+                <ul class="tw:list-disc tw:pl-5 tw:space-y-2">
+                    <li><strong class="tw:text-slate-800">TRATAMIENTO:</strong> Usaremos su información de salud para el tratamiento. Por ejemplo, la información obtenida por el ortodoncista u otros miembros de su equipo sanitario quedará registrada en su expediente y será empleada para determinar el curso del tratamiento.</li>
+                    <li><strong class="tw:text-slate-800">PAGO:</strong> Usaremos su información de salud para el pago. Por ejemplo, una factura podría serle enviada a usted o a su plan de seguro médico.</li>
+                    <li><strong class="tw:text-slate-800">OPERACIONES DE ASISTENCIA MÉDICA:</strong> Usaremos su información de salud para nuestras operaciones habituales de asistencia médica para mejorar la calidad y eficacia de los servicios.</li>
+                    <li><strong class="tw:text-slate-800">SOCIOS COMERCIALES:</strong> Podríamos divulgar su información sanitaria a socios comerciales (contadores, abogados) para que desempeñen tareas una vez aceptado por escrito el salvaguardar su información.</li>
+                    <li><strong class="tw:text-slate-800">INVESTIGACIÓN:</strong> Podríamos divulgar su información de salud a investigadores cuando su investigación haya sido aprobada por un comité de revisión institucional.</li>
+                </ul>
+
+                <h3 class="tw:text-base tw:font-bold tw:text-slate-800 tw:mt-6">II. SUS DERECHOS SOBRE INFORMACIÓN SANITARIA</h3>
+                <p>Aunque su historia clínica sea propiedad física de esta oficina, usted tiene los siguientes derechos:</p>
+                <ul class="tw:list-disc tw:pl-5 tw:space-y-2">
+                    <li>Solicitar restricciones en ciertos usos y divulgaciones de su información.</li>
+                    <li>Recibir comunicaciones confidenciales por medios o localizaciones alternativas.</li>
+                    <li>Inspeccionar y obtener copias de su información de salud (puede aplicar una tarifa razonable).</li>
+                    <li>Solicitar enmiendas a su historial si considera que la información es incorrecta.</li>
+                    <li>Obtener un informe de las divulgaciones realizadas (hasta los últimos 6 años).</li>
+                </ul>
+
+                <h3 class="tw:text-base tw:font-bold tw:text-slate-800 tw:mt-6">III. PARA MÁS INFORMACIÓN O INFORMAR UN PROBLEMA</h3>
+                <p>Tiene derecho a reclamar ante nosotros y la Secretaría del Departamento de Salud y Servicios Sociales de los Estados Unidos (HHS) si considera que hemos violado sus derechos de privacidad.</p>
+            </div>
+
+            <!-- SECCIÓN IV: CONSENTIMIENTO Y DATOS -->
+            <div class="tw:mt-8">
+                <h3 class="tw:text-base tw:font-bold tw:text-slate-800 tw:mb-4">IV. CONSENTIMIENTO PARA EL USO Y DIVULGACIÓN</h3>
+                <div class="tw:grid tw:grid-cols-1 tw:md:grid-cols-2 tw:gap-4 tw:p-6 tw:bg-slate-50 tw:rounded-2xl tw:border tw:border-slate-200 tw:text-sm">
+                    <p><strong class="tw:text-slate-700">Nombre del Paciente:</strong> {{ currentUser?.nombres }} {{ currentUser?.apellidos }}</p>
+                    <p><strong class="tw:text-slate-700">Nº Seguridad Social:</strong> {{ currentUser?.seguridad_social || '---' }}</p>
+                    <p><strong class="tw:text-slate-700">Email:</strong> {{ currentUser?.email }}</p>
+                    <p><strong class="tw:text-slate-700">Teléfono:</strong> {{ currentUser?.movil1 || '---' }}</p>
+                    <p class="tw:col-span-1 tw:md:col-span-2"><strong class="tw:text-slate-700">Dirección:</strong> {{ currentUser?.direccion || '---' }}</p>
+                </div>
+            </div>
+
+            <div class="tw:mt-6 tw:bg-blue-50 tw:p-6 tw:rounded-2xl tw:text-sm tw:text-blue-900 tw:border tw:border-blue-100">
+                <p><strong class="tw:font-bold">PROPÓSITO DEL CONSENTIMIENTO:</strong> Al firmar este formulario, usted nos consiente a usar y divulgar su información de salud protegida para llevar a cabo tratamientos, actividades de pago y labores de atención sanitaria.</p>
+                <p class="tw:mt-4">Yo, <strong class="tw:font-bold">{{ currentUser?.nombres }} {{ currentUser?.apellidos }}</strong>, reconozco haber recibido una copia del Aviso sobre Políticas de Privacidad y otorgo mi consentimiento para el uso y divulgación de mi información protegida de salud.</p>
+            </div>
+        </section>
+    </ng-container>
+
+    <!-- 4. CONTENIDO: ANESTESIA Y SEDACIÓN -->
+    <ng-container *ngIf="type === 'anestesia'">
+        <section class="tw:bg-white tw:rounded-[32px] tw:border tw:border-slate-100 tw:shadow-sm tw:p-8">
+            <h2 class="tw:text-base tw:font-black tw:text-slate-800 tw:uppercase tw:tracking-widest tw:mb-6 tw:flex tw:items-center tw:gap-3 tw:pb-4 tw:border-b tw:border-slate-100">
+                <span class="tw:w-8 tw:h-8 tw:bg-blue-50 tw:text-blue-600 tw:rounded-xl tw:flex tw:items-center tw:justify-center tw:text-sm">2</span>
+                Información General sobre el Procedimiento
+            </h2>
+            <div class="tw:text-sm tw:text-slate-600 tw:space-y-4">
+                <p>Con el fin de realizar el tratamiento odontológico de forma segura y confortable, puede ser necesaria la administración de anestesia local y/o sedación consciente.</p>
+                <p>Estos procedimientos tienen como finalidad:</p>
+                <ul class="tw:list-disc tw:pl-5 tw:space-y-1">
+                    <li>Disminuir o eliminar el dolor durante el tratamiento.</li>
+                    <li>Reducir la ansiedad y el estrés asociados a la atención dental.</li>
+                    <li>Facilitar la realización segura y eficaz del procedimiento clínico.</li>
+                    <li>Mejorar la comodidad y colaboración del paciente.</li>
+                </ul>
+                <p class="tw:mt-4">La técnica será seleccionada por el profesional en función del tratamiento, antecedentes y estado general del paciente.</p>
+            </div>
+        </section>
+
+        <section class="tw:bg-white tw:rounded-[32px] tw:border tw:border-slate-100 tw:shadow-sm tw:p-8">
+            <h2 class="tw:text-base tw:font-black tw:text-slate-800 tw:uppercase tw:tracking-widest tw:mb-6 tw:flex tw:items-center tw:gap-3 tw:pb-4 tw:border-b tw:border-slate-100">
+                <span class="tw:w-8 tw:h-8 tw:bg-blue-50 tw:text-blue-600 tw:rounded-xl tw:flex tw:items-center tw:justify-center tw:text-sm">3</span>
+                Anestesia Local
+            </h2>
+            <div class="tw:text-sm tw:text-slate-600 tw:space-y-4">
+                <h3 class="tw:font-bold tw:text-slate-800">Descripción</h3>
+                <p>Bloqueo temporal de la sensibilidad en una zona concreta para evitar dolor durante el procedimiento.</p>
+                <h3 class="tw:font-bold tw:text-slate-800 tw:mt-4">Riesgos y posibles complicaciones</h3>
+                <p class="tw:text-xs">Dolor en punto de inyección, hematoma, inflamación, sangrado leve, mordeduras accidentales, sensación prolongada de adormecimiento, reacciones alérgicas o, excepcionalmente, lesión nerviosa.</p>
+            </div>
+        </section>
+
+        <section class="tw:bg-white tw:rounded-[32px] tw:border tw:border-slate-100 tw:shadow-sm tw:p-8">
+            <h2 class="tw:text-base tw:font-black tw:text-slate-800 tw:uppercase tw:tracking-widest tw:mb-6 tw:flex tw:items-center tw:gap-3 tw:pb-4 tw:border-b tw:border-slate-100">
+                <span class="tw:w-8 tw:h-8 tw:bg-blue-50 tw:text-blue-600 tw:rounded-xl tw:flex tw:items-center tw:justify-center tw:text-sm">4</span>
+                Sedación Consciente
+            </h2>
+            <div class="tw:text-sm tw:text-slate-600 tw:space-y-4">
+                <h3 class="tw:font-bold tw:text-slate-800">Descripción</h3>
+                <p>Técnica para disminuir la ansiedad y aumentar la relajación. El paciente mantiene la capacidad de responder a estímulos y órdenes verbales.</p>
+                <h3 class="tw:font-bold tw:text-slate-800 tw:mt-4">Riesgos y posibles complicaciones</h3>
+                <p class="tw:text-xs">Náuseas, mareo, somnolencia prolongada, alteraciones respiratorias o cardiovasculares leves. El riesgo aumenta con enfermedades sistémicas, obesidad o embarazo.</p>
+            </div>
+        </section>
+
+        <section class="tw:bg-white tw:rounded-[32px] tw:border tw:border-slate-100 tw:shadow-sm tw:p-8">
+            <h2 class="tw:text-base tw:font-black tw:text-slate-800 tw:uppercase tw:tracking-widest tw:mb-6 tw:flex tw:items-center tw:gap-3 tw:pb-4 tw:border-b tw:border-slate-100">
+                <span class="tw:w-8 tw:h-8 tw:bg-blue-50 tw:text-blue-600 tw:rounded-xl tw:flex tw:items-center tw:justify-center tw:text-sm">5</span>
+                Obligaciones y Recomendaciones
+            </h2>
+            <div class="tw:text-sm tw:text-slate-600">
+                <ul class="tw:list-disc tw:pl-5 tw:space-y-2">
+                    <li>Informar verazmente sobre antecedentes, alergias y medicación.</li>
+                    <li>Comunicar cambios en el estado de salud o posibilidad de embarazo.</li>
+                    <li>Seguir instrucciones preoperatorias y acudir acompañado si se indica.</li>
+                    <li>Evitar conducir o realizar actividades de riesgo tras sedación consciente.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="tw:bg-white tw:rounded-[32px] tw:border tw:border-slate-100 tw:shadow-sm tw:p-8">
+            <h2 class="tw:text-base tw:font-black tw:text-slate-800 tw:uppercase tw:tracking-widest tw:mb-6 tw:flex tw:items-center tw:gap-3 tw:pb-4 tw:border-b tw:border-slate-100">
+                <span class="tw:w-8 tw:h-8 tw:bg-blue-50 tw:text-blue-600 tw:rounded-xl tw:flex tw:items-center tw:justify-center tw:text-sm">6</span>
+                Alternativas
+            </h2>
+            <div class="tw:text-sm tw:text-slate-600">
+                <p>Realización del tratamiento sin sedación, diferentes técnicas anestésicas, manejo conductual o derivación hospitalaria.</p>
+            </div>
+        </section>
+
+        <section class="tw:bg-white tw:rounded-[32px] tw:border tw:border-slate-100 tw:shadow-sm tw:p-8">
+            <h2 class="tw:text-base tw:font-black tw:text-slate-800 tw:uppercase tw:tracking-widest tw:mb-6 tw:flex tw:items-center tw:gap-3 tw:pb-4 tw:border-b tw:border-slate-100">
+                <span class="tw:w-8 tw:h-8 tw:bg-blue-50 tw:text-blue-600 tw:rounded-xl tw:flex tw:items-center tw:justify-center tw:text-sm">7</span>
+                Autorización del Paciente
+            </h2>
+            <div class="tw:bg-slate-50 tw:p-6 tw:rounded-2xl tw:border tw:border-slate-200 tw:space-y-4">
+                <label class="tw:flex tw:items-start tw:gap-3 tw:cursor-pointer">
+                    <input type="checkbox" formControlName="anestesia_local_auth" class="tw:mt-1 tw:accent-blue-600">
+                    <span class="tw:text-sm tw:text-slate-700"><strong class="tw:font-bold tw:text-slate-900">AUTORIZO</strong> la administración de anestesia local para los procedimientos indicados.</span>
+                </label>
+                <label class="tw:flex tw:items-start tw:gap-3 tw:cursor-pointer">
+                    <input type="checkbox" formControlName="anestesia_sedacion_auth" class="tw:mt-1 tw:accent-blue-600">
+                    <span class="tw:text-sm tw:text-slate-700"><strong class="tw:font-bold tw:text-slate-900">AUTORIZO</strong> la administración de sedación consciente cuando se considere adecuado.</span>
+                </label>
+                <label class="tw:flex tw:items-start tw:gap-3 tw:cursor-pointer">
+                    <input type="checkbox" formControlName="anestesia_salud_decl" class="tw:mt-1 tw:accent-blue-600">
+                    <span class="tw:text-sm tw:text-slate-700"><strong class="tw:font-bold tw:text-slate-900">DECLARO</strong> haber informado correctamente sobre mi estado de salud y medicación habitual.</span>
+                </label>
+            </div>
+        </section>
+    </ng-container>
+    
+    <!-- 5. CONTENIDO: CONSENTIMIENTO GENERAL ODONTOLÓGICO -->
+    <ng-container *ngIf="type === 'general'">
+        <section class="tw:bg-white tw:rounded-[32px] tw:border tw:border-slate-100 tw:shadow-sm tw:p-8">
+            <h2 class="tw:text-base tw:font-black tw:text-slate-800 tw:uppercase tw:tracking-widest tw:mb-6 tw:flex tw:items-center tw:gap-3 tw:pb-4 tw:border-b tw:border-slate-100">
+                <span class="tw:w-8 tw:h-8 tw:bg-blue-50 tw:text-blue-600 tw:rounded-xl tw:flex tw:items-center tw:justify-center tw:text-sm">2</span>
+                Información y Consentimiento
+            </h2>
+            <div class="tw:text-sm tw:text-slate-600 tw:space-y-4">
+                <p>Mediante el presente documento, declaro que he acudido voluntariamente a esta clínica dental con el fin de recibir atención odontológica especializada.</p>
+                <p>He sido informado/a de forma clara, comprensible y adecuada sobre mi estado de salud bucodental, así como de las exploraciones diagnósticas, evaluaciones clínicas y opciones terapéuticas que pueden resultar necesarias para mi atención.</p>
+                <p>Asimismo, manifiesto que he podido realizar cuantas preguntas he considerado oportunas y que las explicaciones recibidas han sido satisfactorias y suficientes para comprender el alcance general de la atención odontológica propuesta.</p>
+            </div>
+        </section>
+
+        <section class="tw:bg-white tw:rounded-[32px] tw:border tw:border-slate-100 tw:shadow-sm tw:p-8">
+            <h2 class="tw:text-base tw:font-black tw:text-slate-800 tw:uppercase tw:tracking-widest tw:mb-6 tw:flex tw:items-center tw:gap-3 tw:pb-4 tw:border-b tw:border-slate-100">
+                <span class="tw:w-8 tw:h-8 tw:bg-blue-50 tw:text-blue-600 tw:rounded-xl tw:flex tw:items-center tw:justify-center tw:text-sm">3</span>
+                Autorización Asistencial
+            </h2>
+            <div class="tw:text-sm tw:text-slate-600 tw:space-y-4">
+                <p>Autorizo al equipo profesional de la clínica a realizar las actuaciones diagnósticas, preventivas y terapéuticas propias de la práctica odontológica que resulten clínicamente indicadas dentro del proceso de valoración y tratamiento.</p>
+                <p>Entiendo que determinados procedimientos específicos, especialmente aquellos de carácter quirúrgico, invasivo o que impliquen riesgos particulares, podrán requerir consentimientos informados complementarios antes de su realización.</p>
+            </div>
+        </section>
+
+        <section class="tw:bg-white tw:rounded-[32px] tw:border tw:border-slate-100 tw:shadow-sm tw:p-8">
+            <h2 class="tw:text-base tw:font-black tw:text-slate-800 tw:uppercase tw:tracking-widest tw:mb-6 tw:flex tw:items-center tw:gap-3 tw:pb-4 tw:border-b tw:border-slate-100">
+                <span class="tw:w-8 tw:h-8 tw:bg-blue-50 tw:text-blue-600 tw:rounded-xl tw:flex tw:items-center tw:justify-center tw:text-sm">4</span>
+                Consideraciones Clínicas
+            </h2>
+            <div class="tw:text-sm tw:text-slate-600 tw:space-y-4">
+                <p>Comprendo que la práctica odontológica y la respuesta biológica de cada paciente pueden variar según múltiples factores individuales, por lo que no es posible garantizar resultados concretos o idénticos en todos los casos clínicos.</p>
+                <p>Igualmente, acepto que durante el desarrollo del tratamiento puedan resultar necesarias modificaciones del plan inicialmente previsto, tratamientos complementarios o revisiones adicionales en función de la evolución clínica observada.</p>
+            </div>
+        </section>
+
+        <section class="tw:bg-white tw:rounded-[32px] tw:border tw:border-slate-100 tw:shadow-sm tw:p-8">
+            <h2 class="tw:text-base tw:font-black tw:text-slate-800 tw:uppercase tw:tracking-widest tw:mb-6 tw:flex tw:items-center tw:gap-3 tw:pb-4 tw:border-b tw:border-slate-100">
+                <span class="tw:w-8 tw:h-8 tw:bg-blue-50 tw:text-blue-600 tw:rounded-xl tw:flex tw:items-center tw:justify-center tw:text-sm">5</span>
+                Compromiso del Paciente
+            </h2>
+            <div class="tw:text-sm tw:text-slate-600 tw:space-y-4">
+                <p>Me comprometo a facilitar información veraz y actualizada sobre mi estado general de salud y a seguir las recomendaciones e indicaciones proporcionadas por los profesionales de la clínica para favorecer el adecuado desarrollo del tratamiento y su seguimiento.</p>
+            </div>
+        </section>
+
+        <section class="tw:bg-white tw:rounded-[32px] tw:border tw:border-slate-100 tw:shadow-sm tw:p-8">
+            <h2 class="tw:text-base tw:font-black tw:text-slate-800 tw:uppercase tw:tracking-widest tw:mb-6 tw:flex tw:items-center tw:gap-3 tw:pb-4 tw:border-b tw:border-slate-100">
+                <span class="tw:w-8 tw:h-8 tw:bg-blue-50 tw:text-blue-600 tw:rounded-xl tw:flex tw:items-center tw:justify-center tw:text-sm">6</span>
+                Revocación del Consentimiento
+            </h2>
+            <div class="tw:text-sm tw:text-slate-600 tw:space-y-4">
+                <p>Se me ha informado de que puedo revocar libremente este consentimiento en cualquier momento antes de la realización de cualquier procedimiento, sin perjuicio de las obligaciones asistenciales ya iniciadas.</p>
+            </div>
+        </section>
+
+        <section class="tw:bg-white tw:rounded-[32px] tw:border tw:border-slate-100 tw:shadow-sm tw:p-8">
+            <h2 class="tw:text-base tw:font-black tw:text-slate-800 tw:uppercase tw:tracking-widest tw:mb-6 tw:flex tw:items-center tw:gap-3 tw:pb-4 tw:border-b tw:border-slate-100">
+                <span class="tw:w-8 tw:h-8 tw:bg-blue-50 tw:text-blue-600 tw:rounded-xl tw:flex tw:items-center tw:justify-center tw:text-sm">7</span>
+                Aceptación
+            </h2>
+            <div class="tw:text-sm tw:text-slate-600 tw:space-y-6">
+                <p>Tras haber leído y comprendido el contenido del presente documento, otorgo mi consentimiento libre y voluntario para recibir atención odontológica en esta clínica.</p>
+                
+                <div class="tw:pt-6 tw:space-y-8">
+                    <p class="tw:font-medium">En <span class="tw:border-b tw:border-slate-300 tw:inline-block tw:min-w-[150px]">{{ businessData?.ciudad || '____________________' }}</span>, a <span class="tw:border-b tw:border-slate-300 tw:inline-block tw:min-w-[40px]">{{ (consentForm.get('fecha')?.value | date:'dd') || '____' }}</span> de <span class="tw:border-b tw:border-slate-300 tw:inline-block tw:min-w-[100px]">{{ (consentForm.get('fecha')?.value | date:'MMMM') || '________________' }}</span> de <span class="tw:border-b tw:border-slate-300 tw:inline-block tw:min-w-[60px]">{{ (consentForm.get('fecha')?.value | date:'yyyy') || '______' }}</span></p>
+
+                    <div class="tw:grid tw:grid-cols-1 tw:md:grid-cols-2 tw:gap-12 tw:pt-4">
+                        <div class="tw:flex tw:flex-col tw:items-center tw:text-center">
+                            <p class="tw:font-black tw:text-slate-900 tw:mb-8 tw:uppercase tw:text-xs">PACIENTE / REPRESENTANTE LEGAL</p>
+                            <div class="tw:w-full tw:h-px tw:bg-slate-300 tw:mb-2"></div>
+                            <p class="tw:text-[10px] tw:text-slate-500 tw:uppercase">Firma</p>
+                            <p class="tw:text-xs tw:font-bold tw:text-slate-800 tw:mt-1">{{ currentUser?.nombres }} {{ currentUser?.apellidos }}</p>
+                        </div>
+                        <div class="tw:flex tw:flex-col tw:items-center tw:text-center">
+                            <p class="tw:font-black tw:text-slate-900 tw:mb-8 tw:uppercase tw:text-xs">PROFESIONAL RESPONSABLE</p>
+                            <div class="tw:w-full tw:h-px tw:bg-slate-300 tw:mb-2"></div>
+                            <p class="tw:text-[10px] tw:text-slate-500 tw:uppercase">Nombre y nº colegiado</p>
+                            <p class="tw:text-xs tw:font-bold tw:text-slate-800 tw:mt-1">___________________________________</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </ng-container>
+
+    <!-- PLACEHOLDERS PARA OTROS TIPOS -->
+    <ng-container *ngIf="type !== 'lopd' && type !== 'privacidad' && type !== 'anestesia' && type !== 'general'">
+        <section class="tw:bg-white tw:rounded-[32px] tw:border tw:border-slate-100 tw:shadow-sm tw:p-8">
+            <h2 class="tw:text-base tw:font-black tw:text-slate-800 tw:uppercase tw:tracking-widest tw:mb-6 tw:flex tw:items-center tw:gap-3 tw:pb-4 tw:border-b tw:border-slate-100">Contenido del Consentimiento</h2>
+            <div class="tw:text-sm tw:text-slate-600">
+                <p class="tw:italic">Cargando términos específicos para: {{ title }}...</p>
+            </div>
+        </section>
+    </ng-container>
+
+    <!-- FIRMA Y FECHA -->
+    <section class="tw:bg-white tw:rounded-[32px] tw:border tw:border-slate-100 tw:shadow-sm tw:p-8 tw:mt-8 print:tw:break-before-page">
+        <h2 class="tw:text-base tw:font-black tw:text-slate-800 tw:uppercase tw:tracking-widest tw:mb-4">Declaración y Firma</h2>
+        <p class="tw:text-xs tw:text-slate-500 tw:mb-6">Declaro haber leído y comprendido íntegramente este documento, habiendo resuelto todas mis dudas y otorgando mi consentimiento de forma libre e informada.</p>
+        
+        <div class="tw:grid tw:grid-cols-1 tw:md:grid-cols-2 tw:gap-6 tw:items-end">
+            <div class="tw:flex tw:flex-col tw:gap-1.5">
+                <label class="tw:text-[11px] tw:font-black tw:text-slate-500 tw:uppercase tw:tracking-wider tw:ml-1">Fecha del Documento*</label>
+                <input type="date" formControlName="fecha" class="tw:w-full tw:max-w-[180px] tw:px-4 tw:py-3 tw:bg-slate-50 tw:text-slate-800 tw:text-sm tw:rounded-xl tw:border tw:border-slate-200 tw:focus:outline-none tw:focus:border-blue-500">
+            </div>
+
+            <div class="tw:flex tw:justify-start tw:md:tw:justify-end">
+                <label class="tw:flex tw:items-center tw:gap-3 tw:p-4 tw:bg-emerald-50 tw:rounded-2xl tw:border tw:border-emerald-100 tw:cursor-pointer tw:hover:bg-emerald-100">
+                    <span class="tw:text-sm tw:font-bold tw:text-emerald-800">CONFIRMO LECTURA Y ACEPTO TÉRMINOS*</span>
+                    <input type="checkbox" formControlName="acepto" class="tw:w-5 tw:h-5 tw:accent-emerald-600">
+                </label>
+            </div>
+        </div>
+        
+        <div class="tw:mt-10 tw:text-center tw:hidden print:tw:block">
+            <div class="tw:w-64 tw:h-px tw:bg-slate-400 tw:mx-auto tw:mb-2"></div>
+            <p class="tw:text-xs tw:text-slate-500">Firma del Paciente / Representante</p>
+            <p class="tw:font-bold tw:text-slate-800">{{ currentUser?.nombres }} {{ currentUser?.apellidos }}</p>
+        </div>
+    </section>
+
+    <div class="tw:pb-8 no-print">
+        <button type="submit" [disabled]="isSaving || consentForm.invalid"
+                class="tw:w-full tw:py-5 tw:bg-blue-600 tw:text-white tw:font-black tw:text-base tw:rounded-3xl tw:border-none tw:cursor-pointer tw:shadow-2xl tw:shadow-blue-600/20 tw:transition-all tw:hover:bg-blue-700 tw:hover:scale-[1.02] tw:active:scale-95 tw:disabled:opacity-50 tw:disabled:pointer-events-none">
+            <span *ngIf="!isSaving">Guardar y Firmar Documento</span>
+            <span *ngIf="isSaving" class="tw:inline-flex tw:items-center tw:gap-2">
+                <span class="tw:w-4 tw:h-4 tw:border-2 tw:border-white/30 tw:border-t-white tw:rounded-full tw:animate-spin tw:inline-block"></span>
+                Guardando...
+            </span>
+        </button>
+    </div>
+
+    </form>
+</div>

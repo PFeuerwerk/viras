@@ -1,0 +1,138 @@
+<div class="master-container animate-fade-in">
+    <!-- CABECERA OPERATIVA -->
+    <header class="master-header">
+        <div class="header-info">
+            <h2>Gestión de Citas</h2>
+            <p>Panel operativo para el control de agenda y flujo de pacientes.</p>
+        </div>
+        <div class="header-actions">
+            <button class="btn-refresh" (click)="cargarCitasDelNegocio()" [disabled]="isLoading">
+                <i class="material-icons" [class.spinning]="isLoading">sync</i>
+                <span>Sincronizar</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- ESTADOS DE CARGA Y ERROR -->
+    <div class="status-overlay" *ngIf="isLoading">
+        <div class="spinner"></div>
+        <p>Actualizando agenda médica...</p>
+    </div>
+
+    <div class="error-alert" *ngIf="error">
+        <i class="material-icons">error_outline</i>
+        <span>{{ error }}</span>
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL ORGANIZADO POR PRIORIDAD -->
+    <div class="agenda-sections"
+        *ngIf="!isLoading && (citasHoy.length > 0 || citasProximas.length > 0 || citasHistorial.length > 0)">
+
+        <!-- 1. SECCIÓN: CITAS DE HOY (Foco del Doctor) -->
+        <section class="agenda-group today-focus" *ngIf="citasHoy.length > 0">
+            <h3 class="section-label"><span class="pulse-dot"></span> Citas para Hoy</h3>
+            <div class="table-responsive">
+                <table class="citas-table">
+                    <thead>
+                        <tr>
+                            <th>Paciente</th>
+                            <th>Hora</th>
+                            <th>Motivo / Especialidad</th>
+                            <th>Estado</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let cita of citasHoy" class="row-today">
+                            <td class="col-paciente">
+                                <div class="paciente-info">
+                                    <span class="name">{{ cita.paciente?.nombres }} {{ cita.paciente?.apellidos
+                                        }}</span>
+                                    <span class="email">{{ cita.paciente?.email || 'Sin correo' }}</span>
+                                </div>
+                            </td>
+                            <td class="time-cell">{{ cita.fecha | date:'HH:mm' }}</td>
+                            <td>
+                                <div class="motivo-wrapper">
+                                    <span class="motivo-txt">{{ cita.motivoConsulta || 'Consulta General' }}</span>
+                                    <small class="duration">{{ cita.duracionEstimada || 30 }} min</small>
+                                </div>
+                            </td>
+                            <td>
+                                <span [ngClass]="['badge', getStatusClass(cita.estado)]">
+                                    {{ cita.estado }}
+                                </span>
+                            </td>
+                            <td class="actions">
+                                <div class="action-group">
+                                    <button class="btn-icon confirm" *ngIf="cita.estado === 'PENDIENTE'"
+                                        (click)="cambiarEstado(cita.id, 'CONFIRMADA')" title="Confirmar">
+                                        <i class="material-icons">done</i>
+                                    </button>
+                                    <button class="btn-icon finish" *ngIf="cita.estado === 'CONFIRMADA'"
+                                        (click)="cambiarEstado(cita.id, 'FINALIZADA')" title="Completar Atención">
+                                        <i class="material-icons">check_circle</i>
+                                    </button>
+                                    <button class="btn-icon cancel" (click)="cambiarEstado(cita.id, 'CANCELADA')"
+                                        title="Anular">
+                                        <i class="material-icons">close</i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 2. SECCIÓN: PRÓXIMAS CONSULTAS -->
+        <section class="agenda-group" *ngIf="citasProximas.length > 0">
+            <h3 class="section-label">Calendario Próximo</h3>
+            <div class="table-responsive">
+                <table class="citas-table">
+                    <tbody>
+                        <tr *ngFor="let cita of citasProximas">
+                            <td class="col-paciente">
+                                <strong>{{ cita.paciente?.nombres }} {{ cita.paciente?.apellidos }}</strong>
+                            </td>
+                            <td class="date-cell">{{ cita.fecha | date:'dd/MM - HH:mm' }}</td>
+                            <td class="motivo-cell">{{ cita.motivoConsulta }}</td>
+                            <td><span [ngClass]="['badge', getStatusClass(cita.estado)]">{{ cita.estado }}</span></td>
+                            <td class="actions">
+                                <button class="btn-text-cancel"
+                                    (click)="cambiarEstado(cita.id, 'CANCELADA')">Anular</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 3. SECCIÓN: HISTORIAL (Colapsado visualmente) -->
+        <section class="agenda-group history-section" *ngIf="citasHistorial.length > 0">
+            <h3 class="section-label">Historial Reciente</h3>
+            <div class="table-responsive">
+                <table class="citas-table history-mode">
+                    <tbody>
+                        <tr *ngFor="let cita of citasHistorial">
+                            <td>{{ cita.paciente?.nombres }} {{ cita.paciente?.apellidos }}</td>
+                            <td>{{ cita.fecha | date:'dd/MM/yyyy' }}</td>
+                            <td>{{ cita.estado }}</td>
+                            <td class="text-right"><small>Cita cerrada</small></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <!-- EMPTY STATE -->
+    <div class="empty-state"
+        *ngIf="!isLoading && citasHoy.length === 0 && citasProximas.length === 0 && citasHistorial.length === 0">
+        <div class="empty-icon">
+            <i class="material-icons">calendar_today</i>
+        </div>
+        <h3>Agenda disponible</h3>
+        <p>No hay citas registradas en este periodo. Las nuevas reservas aparecerán aquí automáticamente.</p>
+    </div>
+</div>

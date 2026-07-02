@@ -1,0 +1,54 @@
+<div class="tw:bg-white tw:p-[30px] tw:rounded-[20px] tw:shadow-lg tw:shadow-slate-200/50 tw:border tw:border-slate-100 animate-fade-in">
+    <!-- Header de Sección -->
+    <div class="tw:flex tw:justify-between tw:items-center tw:mb-[30px] tw:border-b tw:border-slate-100 tw:pb-5">
+        <div class="tw:flex tw:gap-[15px] tw:items-center">
+            <i class="material-icons tw:text-amber-500 tw:text-4xl">history_edu</i>
+            <div>
+                <h3 class="tw:text-[1.4rem] tw:text-slate-800 tw:font-extrabold tw:m-0">Línea de Tiempo Histórica</h3>
+                <p class="tw:text-slate-500 tw:text-sm tw:m-0">Gestiona los hitos que narran la evolución y éxito de tu negocio.</p>
+            </div>
+        </div>
+        <button type="button" class="tw:border-2 tw:border-amber-500 tw:bg-transparent tw:text-amber-600 tw:px-[18px] tw:py-2 tw:rounded-xl tw:font-bold tw:flex tw:items-center tw:gap-1.5 tw:cursor-pointer tw:transition-all tw:duration-200 tw:hover:bg-amber-500 tw:hover:text-white" (click)="addMilestone()">
+            <i class="material-icons">add</i> Añadir Hito
+        </button>
+    </div>
+
+    <!-- Lista de Hitos -->
+    <div class="tw:flex tw:flex-col tw:gap-5">
+        <div *ngFor="let item of milestones; let i = index; trackBy: trackByIndex" 
+             class="tw:flex tw:gap-5 tw:bg-slate-50/50 tw:p-6 tw:rounded-2xl tw:border tw:border-slate-100 tw:relative tw:transition-all tw:duration-300 tw:hover:border-amber-500 tw:hover:shadow-lg tw:hover:shadow-amber-500/5">
+            
+            <div class="tw:bg-slate-200 tw:w-[35px] tw:h-[35px] tw:rounded-full tw:flex tw:items-center tw:justify-center tw:font-extrabold tw:text-slate-600 tw:shrink-0">{{ i + 1 }}</div>
+
+            <div class="tw:flex tw:flex-1 tw:flex-col tw:gap-4">
+                <div class="tw:grid tw:grid-cols-[100px_1fr] tw:gap-5">
+                    <div class="tw:flex tw:flex-col">
+                        <label class="viras-label">Año</label>
+                        <input type="text" class="viras-form-control" [(ngModel)]="item.year" (ngModelChange)="changed.emit()"
+                            placeholder="Ej. 2010" maxlength="4">
+                    </div>
+                    <div class="tw:flex tw:flex-col">
+                        <label class="viras-label">Título del Hito</label>
+                        <input type="text" class="viras-form-control" [(ngModel)]="item.title" (ngModelChange)="changed.emit()"
+                            placeholder="Ej. Fundación de la clínica" maxlength="60">
+                    </div>
+                </div>
+                <div class="tw:flex tw:flex-col">
+                    <label class="viras-label">Descripción del logro</label>
+                    <textarea class="viras-form-control" rows="2" [(ngModel)]="item.description" (ngModelChange)="changed.emit()"
+                        placeholder="Describe brevemente este momento importante..." maxlength="180"></textarea>
+                </div>
+            </div>
+
+            <button type="button" class="tw:bg-none tw:border-none tw:text-red-400 tw:cursor-pointer tw:self-start tw:transition-colors tw:hover:text-red-600" (click)="removeMilestone(i)" title="Eliminar hito">
+                <i class="material-icons">delete_sweep</i>
+            </button>
+        </div>
+
+        <!-- Estado vacío con diseño profesional -->
+        <div *ngIf="milestones.length === 0" class="tw:text-center tw:p-[50px] tw:text-slate-400 tw:border-2 tw:border-dashed tw:border-slate-200 tw:rounded-[20px]">
+            <i class="material-icons tw:text-3xl tw:mb-2.5">auto_awesome</i>
+            <p class="tw:m-0">Tu historia merece ser contada. Comienza agregando tu primer gran hito.</p>
+        </div>
+    </div>
+</div>

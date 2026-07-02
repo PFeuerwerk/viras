@@ -1,0 +1,142 @@
+{
+  "generatedAt": "2026-07-02T09:51:29.372Z",
+  "frontend": "http://127.0.0.1:4300",
+  "api": "http://localhost:3100/api",
+  "testData": {
+    "adminEmail": "visual-admin-1782985853494@viras.test",
+    "doctorEmail": "visual-doctor-1782985853494@viras.test",
+    "patientEmail": "visual-patient-1782985853494@viras.test",
+    "assistantEmail": "visual-assistant-1782985853494@viras.test",
+    "businessName": "Clinica Visual 1782985853494",
+    "slug": "clinica-visual-1782985853494",
+    "adminToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhYmUwNzMxMy03MDVlLTQ5ZWItODRmYi1hZWNmNjFlOTA2NjAiLCJlbWFpbCI6InZpc3VhbC1hZG1pbi0xNzgyOTg1ODUzNDk0QHZpcmFzLnRlc3QiLCJyb2wiOiJBRE1JTiIsImJ1c2luZXNzX2lkIjoiMDZjNjE5YTYtMzkwMy00YWFjLWIyY2ItMWJiMWNmYjE5NmU1IiwiaWF0IjoxNzgyOTg1ODU5LCJleHAiOjE3ODMwMTQ2NTl9.9WVyTPxOjVVOBIhgROTgm9Drp1Lw1WsUZqy5xZ2w1G8",
+    "patientToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4N2YwMjhkNy1hOGUwLTRlMTYtOWM2ZC1iMzUzYjA1MjA3N2QiLCJlbWFpbCI6InZpc3VhbC1wYXRpZW50LTE3ODI5ODU4NTM0OTRAdmlyYXMudGVzdCIsInJvbCI6IlBBQ0lFTlRFIiwiYnVzaW5lc3NfaWQiOiIwNmM2MTlhNi0zOTAzLTRhYWMtYjJjYi0xYmIxY2ZiMTk2ZTUiLCJpYXQiOjE3ODI5ODU4NjAsImV4cCI6MTc4MzAxNDY2MH0.RqybcMpjD18auPAzTF--wnCR2F3LmN5loqP8dgyZDGE",
+    "assistantToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlZjg5ZjQxZS1lMTc5LTRmMjEtYTE1Mi03NjRhMTEzYzBjZTgiLCJlbWFpbCI6InZpc3VhbC1hc3Npc3RhbnQtMTc4Mjk4NTg1MzQ5NEB2aXJhcy50ZXN0Iiwicm9sIjoiQVNJU1RFTlRFIiwiYnVzaW5lc3NfaWQiOiIwNmM2MTlhNi0zOTAzLTRhYWMtYjJjYi0xYmIxY2ZiMTk2ZTUiLCJpYXQiOjE3ODI5ODU4NjAsImV4cCI6MTc4MzAxNDY2MH0.Ogsf79mquRyOYV6Ksn-yzrWNFctp5sLHAA0YPIsNpmg",
+    "businessId": "06c619a6-3903-4aac-b2cb-1bb1cfb196e5",
+    "doctorUserId": "8d36368d-42a3-444b-9e3a-d21fb9d1710c",
+    "patientId": "87f028d7-a8e0-4e16-9c6d-b353b052077d"
+  },
+  "checks": [
+    {
+      "name": "Registro admin visual",
+      "passed": true,
+      "detail": "http://127.0.0.1:4300/auth/login"
+    },
+    {
+      "name": "Configuracion de negocio API",
+      "passed": true,
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "Creacion doctor/staff API",
+      "passed": true,
+      "detail": "HTTP 201"
+    },
+    {
+      "name": "Registro paciente API",
+      "passed": true,
+      "detail": "HTTP 201"
+    },
+    {
+      "name": "Login paciente API",
+      "passed": true,
+      "detail": "HTTP 201"
+    },
+    {
+      "name": "Creacion asistente API",
+      "passed": true,
+      "detail": "HTTP 201"
+    },
+    {
+      "name": "Reserva de cita API",
+      "passed": true,
+      "detail": "HTTP 201"
+    },
+    {
+      "name": "Login visual-admin-1782985853494@viras.test",
+      "passed": true,
+      "detail": "http://127.0.0.1:4300/admin/dashboard"
+    },
+    {
+      "name": "Dashboard ejecutivo Admin/Owner visible",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Configuracion de negocio visible",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Creacion doctor/staff visible",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Registro paciente visible",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Login visual-patient-1782985853494@viras.test",
+      "passed": true,
+      "detail": "http://127.0.0.1:4300/paciente/dashboard"
+    },
+    {
+      "name": "Login paciente visible",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Reserva de cita visual",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Agenda admin visualiza cita",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Anamnesis visible",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Consentimientos visible",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Presupuesto visible",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Dashboard asistente desktop visible",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Dashboard asistente responsive capturado",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "screenshots": [
+    "Docs/qa-visual-1782985853494/01-registro-admin.png",
+    "Docs/qa-visual-1782985853494/02-login-admin-dashboard-owner.png",
+    "Docs/qa-visual-1782985853494/03-configuracion-negocio.png",
+    "Docs/qa-visual-1782985853494/04-gestion-staff.png",
+    "Docs/qa-visual-1782985853494/05-registro-paciente-publico.png",
+    "Docs/qa-visual-1782985853494/06-login-paciente-dashboard.png",
+    "Docs/qa-visual-1782985853494/07-reserva-cita-publica.png",
+    "Docs/qa-visual-1782985853494/08-agenda-admin.png",
+    "Docs/qa-visual-1782985853494/09-anamnesis.png",
+    "Docs/qa-visual-1782985853494/10-consentimientos.png",
+    "Docs/qa-visual-1782985853494/11-presupuesto-seguro.png",
+    "Docs/qa-visual-1782985853494/12-asistente-desktop.png",
+    "Docs/qa-visual-1782985853494/13-asistente-tablet.png",
+    "Docs/qa-visual-1782985853494/14-asistente-mobile.png"
+  ]
+}

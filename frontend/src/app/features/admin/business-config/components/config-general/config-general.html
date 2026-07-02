@@ -1,0 +1,110 @@
+<div class="tw:bg-white tw:p-[30px] tw:rounded-[20px] tw:border tw:border-slate-100 tw:shadow-lg tw:shadow-slate-200/50 animate-fade-in">
+    <div class="tw:mb-6 tw:pb-4 tw:border-b tw:border-slate-100">
+        <div class="tw:flex tw:gap-[15px] tw:items-center">
+            <i class="material-icons tw:text-blue-600 tw:text-4xl">business</i>
+            <div>
+                <h3 class="tw:text-[1.4rem] tw:text-slate-800 tw:font-extrabold tw:m-0">Identidad del Negocio</h3>
+                <p class="tw:text-slate-500 tw:text-sm tw:m-0">Configura los datos base y el logotipo de tu marca.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="tw:grid tw:grid-cols-2 tw:gap-5">
+        <!-- Logo Section -->
+        <div class="tw:col-span-2">
+            <label class="viras-label">Logotipo Oficial</label>
+            <div class="tw:flex tw:gap-5 tw:items-center tw:bg-slate-50 tw:p-5 tw:rounded-xl">
+                <div class="tw:w-[100px] tw:h-[100px] tw:bg-contain tw:bg-no-repeat tw:bg-center tw:bg-white tw:border tw:border-slate-200 tw:rounded-xl tw:shrink-0"
+                    [style.backgroundImage]="'url(' + (logoPreview || 'assets/images/placeholder-logo.png') + ')'">
+                </div>
+                <div>
+                    <p class="tw:text-[0.75rem] tw:text-slate-500 tw:mb-2.5">Recomendado: 400x400px (PNG transparente).</p>
+                    <input type="file" id="logoFileInput" (change)="onFileSelect($event)" accept="image/*"
+                        class="tw:hidden">
+                    <label for="logoFileInput" class="tw:px-[15px] tw:py-2 tw:bg-white tw:border tw:border-slate-300 tw:rounded-lg tw:cursor-pointer tw:text-[0.85rem] tw:font-bold tw:inline-flex tw:items-center tw:gap-1.5 tw:transition-all tw:hover:bg-slate-50">
+                        <i class="material-icons tw:text-lg">photo_camera</i> Cambiar Logo
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nombre y Tipo -->
+        <div class="tw:flex tw:flex-col">
+            <label class="viras-label">Nombre de la Empresa</label>
+            <input type="text" class="viras-form-control" [(ngModel)]="business.nombre_empresa" (ngModelChange)="changed.emit()"
+                placeholder="Nombre comercial">
+        </div>
+
+        <div class="tw:flex tw:flex-col">
+            <label class="viras-label">Categoría de Negocio</label>
+            <input type="text" class="viras-form-control tw:bg-slate-100 tw:cursor-not-allowed tw:text-slate-500" [value]="business.tipo_negocio" readonly>
+        </div>
+
+        <!-- Contacto -->
+        <div class="tw:flex tw:flex-col">
+            <label class="viras-label">Teléfono de Contacto</label>
+            <input type="text" class="viras-form-control" [(ngModel)]="business.telefono" (ngModelChange)="changed.emit()"
+                placeholder="+00 000 000 000">
+        </div>
+
+        <div class="tw:flex tw:flex-col">
+            <label class="viras-label">Dirección Física</label>
+            <input type="text" class="viras-form-control" [(ngModel)]="business.direccion" (ngModelChange)="changed.emit()"
+                placeholder="Calle, Ciudad, País">
+        </div>
+
+        <!-- Redes Sociales -->
+        <div class="tw:col-span-2 tw:mt-4 tw:pt-4 tw:border-t tw:border-slate-100">
+            <label class="tw:text-slate-800 tw:font-extrabold tw:text-sm uppercase tracking-wider">Redes Sociales</label>
+            <p class="tw:text-[0.75rem] tw:text-slate-400 tw:mt-1">Introduce los enlaces completos (https://...) para que aparezcan en el pie de página
+                de tu sitio.</p>
+        </div>
+
+        <div class="tw:flex tw:flex-col">
+            <label class="viras-label">Facebook (URL)</label>
+            <div class="tw:relative">
+                <i class="material-icons tw:absolute tw:left-3 tw:top-1/2 tw:-translate-y-1/2 tw:text-slate-400">facebook</i>
+                <input type="text" class="viras-form-control tw:pl-10" [(ngModel)]="business.facebook_url" (ngModelChange)="onSocialLinkChange()"
+                    placeholder="https://facebook.com">
+            </div>
+        </div>
+
+        <div class="tw:flex tw:flex-col">
+            <label class="viras-label">Instagram (URL)</label>
+            <div class="tw:relative">
+                <i class="material-icons tw:absolute tw:left-3 tw:top-1/2 tw:-translate-y-1/2 tw:text-slate-400">camera_alt</i>
+                <input type="text" class="viras-form-control tw:pl-10" [(ngModel)]="business.instagram_url" (ngModelChange)="onSocialLinkChange()"
+                    placeholder="https://instagram.com">
+            </div>
+        </div>
+
+        <div class="tw:flex tw:flex-col">
+            <label class="viras-label">X / Twitter (URL)</label>
+            <div class="tw:relative">
+                <i class="material-icons tw:absolute tw:left-3 tw:top-1/2 tw:-translate-y-1/2 tw:text-slate-400">alternate_email</i>
+                <input type="text" class="viras-form-control tw:pl-10" [(ngModel)]="business.twitter_url" (ngModelChange)="onSocialLinkChange()"
+                    placeholder="https://twitter.com">
+            </div>
+        </div>
+
+        <div class="tw:flex tw:flex-col">
+            <label class="viras-label">LinkedIn (URL)</label>
+            <div class="tw:relative">
+                <i class="material-icons tw:absolute tw:left-3 tw:top-1/2 tw:-translate-y-1/2 tw:text-slate-400">work</i>
+                <input type="text" class="viras-form-control tw:pl-10" [(ngModel)]="business.linkedin_url" (ngModelChange)="onSocialLinkChange()"
+                    placeholder="https://linkedin.com">
+            </div>
+        </div>
+
+        <!-- Google Maps -->
+        <div class="tw:col-span-2 tw:mt-4 tw:pt-4 tw:border-t tw:border-slate-100">
+            <label class="viras-label">Enlace de Google Maps (Ubicación)</label>
+            <div class="tw:relative">
+                <i class="material-icons tw:absolute tw:left-3 tw:top-1/2 tw:-translate-y-1/2 tw:text-slate-400">map</i>
+                <input type="text" class="viras-form-control tw:pl-10" [(ngModel)]="business.google_maps_link" (ngModelChange)="changed.emit()"
+                    placeholder="https://goo.gl...">
+            </div>
+            <span class="tw:text-[0.75rem] tw:text-slate-400 tw:mt-1 tw:block">Use el enlace de "Compartir" de Google Maps (no el código de inserción iframe).</span>
+        </div>
+    </div>
+</div>

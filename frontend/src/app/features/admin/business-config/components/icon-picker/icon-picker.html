@@ -1,0 +1,26 @@
+<div class="tw:border tw:border-slate-200 tw:rounded-xl tw:p-5 tw:bg-white tw:shadow-sm">
+    <!-- Kategoriflikar -->
+    <div class="tw:flex tw:gap-2.5 tw:mb-5 tw:overflow-x-auto tw:pb-2 tw:scrollbar-thin">
+        <button *ngFor="let category of categories" type="button" 
+            class="tw:px-5 tw:py-2.5 tw:rounded-full tw:border tw:border-slate-200 tw:cursor-pointer tw:whitespace-nowrap tw:text-[0.85rem] tw:font-semibold tw:transition-all tw:duration-200"
+            [ngClass]="activeCategory === category ? 'tw:bg-blue-600 tw:text-white tw:border-blue-600 tw:shadow-md tw:shadow-blue-600/20' : 'tw:bg-slate-50 tw:text-slate-500 tw:hover:bg-slate-100 tw:hover:border-slate-300'"
+            (click)="setActiveCategory(category)">
+            {{ category | titlecase }}
+        </button>
+    </div>
+
+    <!-- Ikon-rutnät -->
+    <div class="tw:grid tw:grid-cols-[repeat(auto-fill,minmax(90px,1fr))] tw:gap-5 tw:max-h-[320px] tw:overflow-y-auto tw:p-2">
+        <div *ngFor="let icon of iconGallery[activeCategory]" 
+            class="tw:flex tw:flex-col tw:items-center tw:p-3.5 tw:border-2 tw:border-transparent tw:rounded-xl tw:cursor-pointer tw:transition-all tw:duration-250 tw:hover:bg-slate-50 tw:hover:-translate-y-0.5"
+            [ngClass]="selectedIcon === icon.name ? 'tw:border-blue-600 tw:bg-blue-50/50' : ''" 
+            (click)="selectIcon(icon.name)">
+            <div class="tw:w-12 tw:h-12 tw:mb-2 tw:flex tw:justify-center tw:items-center tw:bg-white tw:rounded-xl tw:shadow-sm">
+                <img class="tw:w-8 tw:h-8 tw:object-contain" 
+                    [src]="'assets/icons/services/' + activeCategory.toLowerCase() + '/' + icon.name.replace('.svg', '.png') + '?v=' + today"
+                    [alt]="icon.label" (error)="handleError($event)">
+            </div>
+            <span class="tw:text-[0.75rem] tw:font-medium tw:text-center tw:text-slate-600 tw:leading-tight">{{ icon.label }}</span>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,7 @@
+- [x] Rediseñar la barra de navegación en `placeholder.html`
+    - [x] Cambiar contenedor a `max-w-7xl`
+    - [x] Centrar los elementos del menú
+    - [x] Añadir botón de acción a la derecha
+- [x] Rediseñar la barra de navegación en `patient-layout.html`
+    - [x] Aplicar la misma estructura de contención y centrado
+- [x] Verificar la visualización en el navegador

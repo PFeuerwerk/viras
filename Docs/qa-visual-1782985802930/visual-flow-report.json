@@ -1,0 +1,100 @@
+{
+  "generatedAt": "2026-07-02T09:50:24.427Z",
+  "frontend": "http://127.0.0.1:4300",
+  "api": "http://localhost:3100/api",
+  "testData": {
+    "adminEmail": "visual-admin-1782985802930@viras.test",
+    "doctorEmail": "visual-doctor-1782985802930@viras.test",
+    "patientEmail": "visual-patient-1782985802930@viras.test",
+    "assistantEmail": "visual-assistant-1782985802930@viras.test",
+    "businessName": "Clinica Visual 1782985802930",
+    "slug": "clinica-visual-1782985802930",
+    "adminToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkZDYxNjU2ZS0xMjlmLTRiODctYWZmOS1iMmJhMjJiZWRlM2YiLCJlbWFpbCI6InZpc3VhbC1hZG1pbi0xNzgyOTg1ODAyOTMwQHZpcmFzLnRlc3QiLCJyb2wiOiJBRE1JTiIsImJ1c2luZXNzX2lkIjoiYmIxZjNlZWQtNTFkZS00YWZkLTlhYWQtZmQ4M2YxZGNhYTFlIiwiaWF0IjoxNzgyOTg1ODA5LCJleHAiOjE3ODMwMTQ2MDl9.PpS4DvZp2yOMvZGSVKT0OnCD0XBPNz5PvP6bCF0XJNg",
+    "patientToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYzgxYjJhYS0zYzkxLTRiMTUtOTIzOC0wNDYzZTQ5ZWQzZDYiLCJlbWFpbCI6InZpc3VhbC1wYXRpZW50LTE3ODI5ODU4MDI5MzBAdmlyYXMudGVzdCIsInJvbCI6IlBBQ0lFTlRFIiwiYnVzaW5lc3NfaWQiOiJiYjFmM2VlZC01MWRlLTRhZmQtOWFhZC1mZDgzZjFkY2FhMWUiLCJpYXQiOjE3ODI5ODU4MDksImV4cCI6MTc4MzAxNDYwOX0.VGEUa5VX1oXxAXFm6RmrnVthX3NnBVJuFl8NT0_ndmE",
+    "assistantToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZWJhMDFhZC1kYTZlLTRjYjAtYTZmZi1mNWUwN2E4MjJlMzIiLCJlbWFpbCI6InZpc3VhbC1hc3Npc3RhbnQtMTc4Mjk4NTgwMjkzMEB2aXJhcy50ZXN0Iiwicm9sIjoiQVNJU1RFTlRFIiwiYnVzaW5lc3NfaWQiOiJiYjFmM2VlZC01MWRlLTRhZmQtOWFhZC1mZDgzZjFkY2FhMWUiLCJpYXQiOjE3ODI5ODU4MDksImV4cCI6MTc4MzAxNDYwOX0.WXK2wLA6JhBwhrWSPrAcqP1jfsdAFK2H35CT6zVWuUI",
+    "businessId": "bb1f3eed-51de-4afd-9aad-fd83f1dcaa1e",
+    "doctorUserId": "f0f9594e-79cd-4ac8-9dd3-022f851e99a2",
+    "patientId": "bc81b2aa-3c91-4b15-9238-0463e49ed3d6"
+  },
+  "checks": [
+    {
+      "name": "Registro admin visual",
+      "passed": true,
+      "detail": "http://127.0.0.1:4300/auth/login"
+    },
+    {
+      "name": "Configuracion de negocio API",
+      "passed": true,
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "Creacion doctor/staff API",
+      "passed": true,
+      "detail": "HTTP 201"
+    },
+    {
+      "name": "Registro paciente API",
+      "passed": true,
+      "detail": "HTTP 201"
+    },
+    {
+      "name": "Login paciente API",
+      "passed": true,
+      "detail": "HTTP 201"
+    },
+    {
+      "name": "Creacion asistente API",
+      "passed": true,
+      "detail": "HTTP 201"
+    },
+    {
+      "name": "Reserva de cita API",
+      "passed": true,
+      "detail": "HTTP 201"
+    },
+    {
+      "name": "Login visual-admin-1782985802930@viras.test",
+      "passed": true,
+      "detail": "http://127.0.0.1:4300/admin/dashboard"
+    },
+    {
+      "name": "Dashboard ejecutivo Admin/Owner visible",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Configuracion de negocio visible",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Creacion doctor/staff visible",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Registro paciente visible",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Login visual-patient-1782985802930@viras.test",
+      "passed": true,
+      "detail": "http://127.0.0.1:4300/paciente/dashboard"
+    },
+    {
+      "name": "Login paciente visible",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "screenshots": [
+    "Docs/qa-visual-1782985802930/01-registro-admin.png",
+    "Docs/qa-visual-1782985802930/02-login-admin-dashboard-owner.png",
+    "Docs/qa-visual-1782985802930/03-configuracion-negocio.png",
+    "Docs/qa-visual-1782985802930/04-gestion-staff.png",
+    "Docs/qa-visual-1782985802930/05-registro-paciente-publico.png",
+    "Docs/qa-visual-1782985802930/06-login-paciente-dashboard.png"
+  ],
+  "error": "Error: No existe selector: input[name=\"patientType\"][type=\"radio\"]\n    at <anonymous>:4:22\n    at <anonymous>:6:7"
+}

@@ -1,0 +1,82 @@
+<div class="tw:min-h-screen tw:bg-slate-50 tw:flex tw:flex-col">
+    <!-- Barra Superior Global APD -->
+    <header class="tw:bg-white tw:border-b tw:border-slate-200 tw:px-8 tw:py-4 tw:flex tw:justify-between tw:items-center tw:sticky tw:top-0 tw:z-50">
+        <div class="tw:flex tw:items-center tw:gap-4">
+            <img src="/assets/logo.png" alt="VIRAS Logo" class="tw:h-8 tw:w-auto">
+            <span class="tw:text-slate-800 tw:font-black tw:tracking-tight tw:text-lg tw:hidden tw:md:block">Administración Personal de Datos (APD)</span>
+        </div>
+
+        <div class="tw:flex tw:items-center tw:gap-6">
+            <div class="tw:flex tw:flex-col tw:items-end tw:hidden tw:sm:flex">
+                <span class="tw:text-[0.65rem] tw:font-black tw:text-blue-600 tw:uppercase tw:tracking-widest">{{ userRole | titlecase }}</span>
+                <span class="tw:text-sm tw:font-bold tw:text-slate-700">{{ userName || 'Usuario' }}</span>
+            </div>
+
+            <button class="tw:flex tw:items-center tw:gap-2 tw:bg-slate-100 tw:text-slate-600 tw:px-4 tw:py-2 tw:rounded-xl tw:border-none tw:font-bold tw:text-sm tw:cursor-pointer tw:transition-all tw:hover:bg-red-50 tw:hover:text-red-600" (click)="logout()" title="Cerrar Sesión">
+                <i class="material-icons tw:text-lg">logout</i>
+                <span>Salir</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Contenido Principal del Calendario -->
+    <main class="tw:flex-grow tw:p-4 tw:md:p-10">
+        <div class="tw:max-w-[1200px] tw:mx-auto">
+            <header class="tw:flex tw:flex-col tw:md:flex-row tw:justify-between tw:items-start tw:md:items-center tw:mb-6 tw:md:mb-10 tw:gap-4 tw:md:gap-6 animate-fade-in">
+                <div>
+                    <h1 class="tw:text-2xl tw:md:text-3xl tw:text-slate-900 tw:font-black tw:mb-1 tw:md:mb-2">Mi Agenda de Citas</h1>
+                    <p class="tw:text-slate-500 tw:text-sm tw:font-medium" *ngIf="userRole === 'PACIENTE'">Seleccione un horario para agendar su consulta médica.</p>
+                    <p class="tw:text-slate-500 tw:text-sm tw:font-medium" *ngIf="userRole !== 'PACIENTE'">Gestión y control de la agenda médica institucional.</p>
+                </div>
+                <button class="tw:flex tw:items-center tw:gap-2 tw:bg-white tw:text-slate-700 tw:px-4 tw:py-2 tw:md:px-5 tw:md:py-2.5 tw:rounded-2xl tw:shadow-sm tw:border tw:border-slate-200 tw:font-bold tw:text-xs tw:md:text-sm tw:cursor-pointer tw:transition-all tw:hover:shadow-md tw:hover:bg-slate-50" (click)="volver()">
+                    <i class="material-icons tw:text-lg">arrow_back</i>
+                    <span>Volver al Tablero</span>
+                </button>
+            </header>
+
+            <div class="tw:bg-white tw:p-4 tw:md:p-8 tw:rounded-[24px] tw:md:rounded-[32px] tw:shadow-xl tw:shadow-slate-200/50 tw:border tw:border-slate-100 animate-fade-in tw:overflow-hidden">
+                
+                <!-- Custom Mobile Toolbar (Beautiful Layout) -->
+                <div class="tw:flex tw:flex-col tw:gap-4 tw:mb-4 tw:md:hidden" *ngIf="isMobile">
+                    <!-- Title Row -->
+                    <div class="tw:text-center">
+                        <h2 class="tw:m-0 tw:text-lg tw:font-black tw:text-slate-800 tw:capitalize">{{ currentTitle || 'Mi Agenda' }}</h2>
+                    </div>
+                    
+                    <!-- Controls Row -->
+                    <div class="tw:flex tw:justify-between tw:items-center tw:w-full">
+                        <!-- Navigation -->
+                        <div class="tw:flex tw:items-center tw:bg-slate-50 tw:rounded-xl tw:border tw:border-slate-200 tw:p-1">
+                            <button class="tw:w-10 tw:h-10 tw:flex tw:items-center tw:justify-center tw:text-slate-600 tw:bg-transparent tw:border-none tw:rounded-lg tw:cursor-pointer tw:transition-all tw:hover:bg-slate-200" (click)="navPrev()" title="Anterior">
+                                <i class="material-icons tw:text-xl">chevron_left</i>
+                            </button>
+                            <div class="tw:w-[1px] tw:h-6 tw:bg-slate-300 tw:mx-1"></div>
+                            <button class="tw:w-10 tw:h-10 tw:flex tw:items-center tw:justify-center tw:text-slate-600 tw:bg-transparent tw:border-none tw:rounded-lg tw:cursor-pointer tw:transition-all tw:hover:bg-slate-200" (click)="navNext()" title="Siguiente">
+                                <i class="material-icons tw:text-xl">chevron_right</i>
+                            </button>
+                        </div>
+                        
+                        <!-- View Toggles -->
+                        <div class="tw:flex tw:items-center tw:bg-slate-50 tw:rounded-xl tw:border tw:border-slate-200 tw:p-1">
+                            <button class="tw:px-4 tw:py-2 tw:text-xs tw:font-bold tw:rounded-lg tw:cursor-pointer tw:transition-all tw:border-none tw:bg-transparent tw:text-slate-500 tw:hover:bg-slate-200 focus:tw:bg-blue-600 focus:tw:text-white" (click)="changeView('dayGridMonth')">
+                                Mes
+                            </button>
+                            <button class="tw:px-4 tw:py-2 tw:text-xs tw:font-bold tw:rounded-lg tw:cursor-pointer tw:transition-all tw:border-none tw:bg-transparent tw:text-slate-500 tw:hover:bg-slate-200 focus:tw:bg-blue-600 focus:tw:text-white" (click)="changeView('timeGridDay')">
+                                Día
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- El calendario principal con configuración profesional -->
+                <full-calendar #calendar class="tw:text-slate-800" [options]="calendarOptions"></full-calendar>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Profesional de Citas -->
+    <app-cita-modal *ngIf="isModalOpen" [selectedDate]="selectedDateForModal" [pacienteId]="pacienteIdActual"
+        [doctorId]="doctorAsignadoId" [businessId]="businessIdActual" [operadorId]="userIdActual" [wizardData]="pendingBookingData"
+        [doctors]="doctors" (onSave)="handleSaveCita($event)" (onClose)="closeModal()">
+    </app-cita-modal>
+</div>

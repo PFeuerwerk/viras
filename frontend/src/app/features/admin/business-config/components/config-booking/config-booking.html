@@ -1,0 +1,83 @@
+<div class="tw:bg-white tw:p-[30px] tw:rounded-[20px] tw:shadow-lg tw:shadow-slate-200/50 tw:border tw:border-slate-100 animate-fade-in">
+    <!-- Encabezado de Sección -->
+    <div class="tw:flex tw:justify-between tw:items-center tw:mb-[30px] tw:border-b tw:border-slate-100 tw:pb-5">
+        <div class="tw:flex tw:gap-[15px] tw:items-center">
+            <i class="material-icons tw:text-blue-600 tw:text-4xl">event_available</i>
+            <div>
+                <h3 class="tw:text-[1.4rem] tw:text-slate-800 tw:font-extrabold tw:m-0">Tipos de Cita y Tiempos</h3>
+                <p class="tw:text-slate-500 tw:text-sm tw:m-0">Configura las tarjetas de servicio y duraciones para el proceso de reserva.</p>
+            </div>
+        </div>
+        <button type="button" class="viras-btn-primary tw:px-[18px] tw:py-[10px] tw:text-sm tw:flex tw:items-center tw:gap-2" (click)="onAddBookingService()">
+            <i class="material-icons">add</i> Nuevo Tipo de Cita
+        </button>
+    </div>
+
+    <!-- Lista de Tipos de Cita -->
+    <div class="tw:flex tw:flex-col tw:gap-5">
+        <div *ngFor="let item of business.booking_services; let i = index; trackBy: trackByIndex"
+            class="tw:grid tw:grid-cols-[120px_1fr_140px_50px] tw:gap-6 tw:bg-slate-50 tw:p-5 tw:rounded-2xl tw:border tw:border-slate-200 tw:transition-all tw:duration-300 tw:hover:bg-white tw:hover:border-blue-600 tw:hover:shadow-xl tw:hover:shadow-blue-600/5"
+            [ngClass]="item.es_emergencia ? 'tw:border-red-500 tw:bg-red-50/30' : ''">
+
+            <!-- Selector de Icono -->
+            <div class="tw:flex tw:flex-col">
+                <label class="viras-label">Icono</label>
+                <app-icon-picker [selectedIcon]="item.icono || 'calendar_today'" [tipoNegocio]="business.tipo_negocio"
+                    (iconSelected)="onIconPick(i, $event)">
+                </app-icon-picker>
+            </div>
+
+            <!-- Información Principal -->
+            <div class="tw:flex tw:flex-col tw:gap-4">
+                <div class="tw:flex tw:gap-4">
+                    <div class="tw:flex tw:flex-col tw:flex-grow">
+                        <label class="viras-label">Título de la Tarjeta</label>
+                        <input type="text" class="viras-form-control" [(ngModel)]="item.titulo" (ngModelChange)="onModelChange()"
+                            placeholder="Ej. Consulta General">
+                    </div>
+
+                    <div class="tw:flex tw:flex-col tw:w-[130px]">
+                        <label class="viras-label">Duración</label>
+                        <select class="viras-form-control" [(ngModel)]="item.duracion_minutos" (ngModelChange)="onModelChange()">
+                            <option *ngFor="let opt of duracionesDisponibles" [value]="opt.value">
+                                {{ opt.label }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="tw:flex tw:flex-col">
+                    <label class="viras-label">Descripción para el Paciente</label>
+                    <textarea class="viras-form-control" rows="2" [(ngModel)]="item.descripcion" (ngModelChange)="onModelChange()"
+                        placeholder="Describe brevemente qué incluye este servicio..." maxlength="200"></textarea>
+                </div>
+            </div>
+
+            <!-- Configuración Especial (Emergencia) -->
+            <div class="tw:flex tw:flex-col tw:justify-center tw:items-center tw:border-l tw:border-slate-200 tw:pl-2.5">
+                <label class="tw:cursor-pointer tw:text-center tw:flex tw:flex-col tw:items-center">
+                    <span class="tw:text-[0.7rem] tw:text-red-600 tw:font-extrabold tw:mb-1.5 uppercase">¿Es Emergencia?</span>
+                    <div class="tw:relative tw:inline-block tw:w-11 tw:height-5.5">
+                        <input type="checkbox" class="tw:opacity-0 tw:w-0 tw:h-0 tw:peer" [(ngModel)]="item.es_emergencia" (ngModelChange)="onModelChange()">
+                        <span class="tw:absolute tw:cursor-pointer tw:inset-0 tw:bg-slate-300 tw:transition-all tw:duration-400 tw:rounded-full tw:peer-checked:bg-red-500 tw:before:absolute tw:before:content-[''] tw:before:h-4 tw:before:w-4 tw:before:left-0.5 tw:before:bottom-0.5 tw:before:bg-white tw:before:transition-all tw:before:duration-400 tw:before:rounded-full tw:before:translate-x-6"></span>
+                    </div>
+                </label>
+                <small *ngIf="item.es_emergencia" class="tw:text-red-600 tw:text-[0.65rem] tw:font-semibold tw:mt-1.5 tw:text-center">Activa escala de dolor</small>
+            </div>
+
+            <!-- Acciones -->
+            <div class="tw:flex tw:items-center tw:justify-center">
+                <button type="button" class="tw:bg-none tw:border-none tw:text-red-500 tw:cursor-pointer tw:transition-all tw:duration-200 tw:hover:scale-125" (click)="onRemoveBookingService(i)"
+                    title="Eliminar tipo de cita">
+                    <i class="material-icons">delete_outline</i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Estado Vacío -->
+        <div *ngIf="!business.booking_services?.length" class="tw:text-center tw:p-[50px] tw:text-slate-400">
+            <i class="material-icons tw:text-[3rem] tw:mb-2.5">calendar_today</i>
+            <p class="tw:m-0">No has definido tipos de cita. Añade uno para que los pacientes puedan agendar.</p>
+        </div>
+    </div>
+</div>

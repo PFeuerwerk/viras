@@ -1,0 +1,213 @@
+<div class="tw:min-h-screen tw:bg-white tw:font-sans tw:text-slate-900 tw:overflow-x-hidden" *ngIf="!isLoading && (businessData$ | async) as businessData">
+
+    <!-- 1. UPPER NAVIGATION -->
+    <app-placeholder-upper-nav [telefono]="businessData.telefono" [direccion]="businessData.direccion"
+        [horario]="businessData.horario_texto" class="tw:print:hidden">
+    </app-placeholder-upper-nav>
+
+    <!-- 2. MAIN NAVBAR -->
+    <header class="tw:sticky tw:top-0 tw:z-[1000] tw:bg-white/95 tw:backdrop-blur-md tw:border-b tw:border-slate-100 tw:transition-all tw:duration-300 tw:relative tw:min-h-[100px] tw:flex tw:items-center tw:print:hidden" 
+            [ngClass]="isScrolled ? 'tw:shadow-lg tw:shadow-slate-200/20' : ''">
+        <div class="tw:w-full tw:max-w-7xl tw:mx-auto tw:px-6 tw:h-full tw:flex tw:justify-between tw:items-center">
+
+            <!-- LOGO -->
+            <div class="tw:flex tw:items-center tw:gap-3 tw:cursor-pointer tw:transition-transform tw:hover:-translate-y-0.5" (click)="navigateTo('home')">
+                <img [src]="businessData.logo_url || 'assets/logos/logo_classic.png'" alt="Logo" class="tw:h-8 tw:w-auto tw:object-contain">
+                <span class="tw:text-base tw:font-black tw:tracking-tighter">{{ businessData.nombre_empresa }}</span>
+            </div>
+
+            <!-- NAV MENU (CENTERED) -->
+            <nav class="tw:hidden tw:lg:block">
+                <ul class="tw:flex tw:list-none tw:p-0 tw:m-0 tw:gap-8 tw:items-center">
+
+                    <!-- INICIO -->
+                    <li>
+                        <a class="tw:text-[0.85rem] tw:font-bold tw:cursor-pointer tw:transition-colors tw:relative tw:after:content-[''] tw:after:absolute tw:after:bottom-[-5px] tw:after:left-0 tw:after:h-0.5 tw:after:bg-blue-600 tw:after:transition-all tw:after:duration-300" 
+                           [ngClass]="currentPage === 'home' ? 'tw:text-blue-600 tw:after:w-full' : 'tw:text-slate-900 tw:after:w-0 tw:hover:text-blue-600 tw:hover:after:w-full'" (click)="navigateTo('home')">
+                            Inicio
+                        </a>
+                    </li>
+
+                    <!-- ABOUT -->
+                    <li>
+                        <a class="tw:text-[0.85rem] tw:font-bold tw:cursor-pointer tw:transition-colors tw:relative tw:after:content-[''] tw:after:absolute tw:after:bottom-[-5px] tw:after:left-0 tw:after:h-0.5 tw:after:bg-blue-600 tw:after:transition-all tw:after:duration-300" 
+                           [ngClass]="currentPage === 'about' ? 'tw:text-blue-600 tw:after:w-full' : 'tw:text-slate-900 tw:after:w-0 tw:hover:text-blue-600 tw:hover:after:w-full'" (click)="navigateTo('about')">
+                            Acerca de
+                        </a>
+                    </li>
+
+                    <!-- SERVICIOS -->
+                    <li>
+                        <a class="tw:text-[0.85rem] tw:font-bold tw:text-slate-900 tw:cursor-pointer tw:transition-colors tw:hover:text-blue-600" (click)="navigateTo('services')">
+                            Servicios
+                        </a>
+                    </li>
+
+                    <!-- BLOG -->
+                    <li>
+                        <a class="tw:text-[0.85rem] tw:font-bold tw:text-slate-400 tw:cursor-not-allowed">Blog</a>
+                    </li>
+
+                    <!-- CONTACTO DROPDOWN -->
+                    <li class="tw:relative">
+                        <a class="tw:text-[0.85rem] tw:font-bold tw:text-slate-900 tw:cursor-pointer tw:flex tw:items-center tw:gap-1 tw:transition-colors tw:hover:text-blue-600"
+                            (click)="toggleDropdown('contacto'); $event.preventDefault()">
+                            <span>Contacto</span>
+                            <i class="material-icons tw:text-lg">expand_more</i>
+                        </a>
+
+                        <ul class="tw:absolute tw:top-[calc(100%+15px)] tw:right-0 tw:bg-white tw:min-w-[220px] tw:rounded-2xl tw:shadow-2xl tw:p-2 tw:list-none tw:border tw:border-slate-100 tw:transition-all tw:duration-300" 
+                            [ngClass]="activeDropdown === 'contacto' ? 'tw:opacity-100 tw:visible tw:translate-y-0' : 'tw:opacity-0 tw:invisible tw:translate-y-2'">
+                            <li>
+                                <a (click)="navigateTo('contact')" class="tw:block tw:px-4 tw:py-2.5 tw:text-sm tw:font-bold tw:text-slate-600 tw:rounded-xl tw:transition-colors tw:hover:bg-slate-50 tw:hover:text-blue-600">Solicita Información</a>
+                            </li>
+                            <li>
+                                <a (click)="navigateTo('what-we-do')" class="tw:block tw:px-4 tw:py-2.5 tw:text-sm tw:font-bold tw:text-slate-600 tw:rounded-xl tw:transition-colors tw:hover:bg-slate-50 tw:hover:text-blue-600">Qué hacemos</a>
+                            </li>
+                            <li>
+                                <a (click)="navigateTo('history')" class="tw:block tw:px-4 tw:py-2.5 tw:text-sm tw:font-bold tw:text-slate-600 tw:rounded-xl tw:transition-colors tw:hover:bg-slate-50 tw:hover:text-blue-600">Historia</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </nav>
+
+            <!-- ACTIONS (RIGHT) -->
+            <div class="tw:hidden tw:lg:flex tw:items-center tw:gap-4">
+                <button (click)="onAgendaCita()" 
+                        class="tw:bg-blue-600 tw:text-white tw:px-5 tw:py-2.5 tw:rounded-full tw:text-xs tw:font-black tw:shadow-lg tw:shadow-blue-600/20 tw:transition-all tw:hover:bg-blue-700 tw:hover:-translate-y-0.5">
+                    Reservar Cita
+                </button>
+            </div>
+
+            <!-- MOBILE BUTTON -->
+            <div class="tw:lg:hidden">
+                <button class="tw:w-10 tw:h-10 tw:bg-transparent tw:border-none tw:text-slate-800 tw:cursor-pointer tw:flex tw:items-center tw:justify-center tw:rounded-xl tw:transition-all tw:hover:bg-slate-100" 
+                        (click)="toggleMobileMenu()" 
+                        [attr.aria-expanded]="isMobileMenuOpen"
+                        aria-label="Abrir menú">
+                    <i class="material-icons tw:text-2xl">{{ isMobileMenuOpen ? 'close' : 'menu' }}</i>
+                </button>
+            </div>
+
+        </div>
+
+        <!-- ══════════════════════════════════════════════ -->
+        <!-- MOBILE MENU PANEL (slide-down drawer)         -->
+        <!-- ══════════════════════════════════════════════ -->
+        <div *ngIf="isMobileMenuOpen"
+             class="tw:absolute tw:top-full tw:left-0 tw:w-full tw:bg-white tw:border-b tw:border-slate-100 tw:shadow-2xl tw:shadow-slate-200/50 tw:lg:hidden tw:z-50"
+             role="dialog" aria-label="Menú principal móvil">
+            <div class="tw:max-w-7xl tw:mx-auto tw:px-6 tw:py-6 tw:flex tw:flex-col tw:gap-1">
+
+                <!-- Nav Links -->
+                <a class="tw:flex tw:items-center tw:gap-3 tw:px-4 tw:py-3.5 tw:text-sm tw:font-bold tw:text-slate-700 tw:rounded-2xl tw:transition-all tw:cursor-pointer tw:hover:bg-blue-50 tw:hover:text-blue-600"
+                   [ngClass]="currentPage === 'home' ? 'tw:text-blue-600 tw:bg-blue-50' : ''"
+                   (click)="navigateTo('home')">
+                    <i class="material-icons tw:text-lg tw:text-blue-400">home</i>
+                    Inicio
+                </a>
+                <a class="tw:flex tw:items-center tw:gap-3 tw:px-4 tw:py-3.5 tw:text-sm tw:font-bold tw:text-slate-700 tw:rounded-2xl tw:transition-all tw:cursor-pointer tw:hover:bg-blue-50 tw:hover:text-blue-600"
+                   [ngClass]="currentPage === 'about' ? 'tw:text-blue-600 tw:bg-blue-50' : ''"
+                   (click)="navigateTo('about')">
+                    <i class="material-icons tw:text-lg tw:text-blue-400">info</i>
+                    Acerca de
+                </a>
+                <a class="tw:flex tw:items-center tw:gap-3 tw:px-4 tw:py-3.5 tw:text-sm tw:font-bold tw:text-slate-700 tw:rounded-2xl tw:transition-all tw:cursor-pointer tw:hover:bg-blue-50 tw:hover:text-blue-600"
+                   (click)="navigateTo('services')">
+                    <i class="material-icons tw:text-lg tw:text-blue-400">medical_services</i>
+                    Servicios
+                </a>
+                <a class="tw:flex tw:items-center tw:gap-3 tw:px-4 tw:py-3.5 tw:text-sm tw:font-bold tw:text-slate-700 tw:rounded-2xl tw:transition-all tw:cursor-pointer tw:hover:bg-blue-50 tw:hover:text-blue-600"
+                   (click)="navigateTo('contact')">
+                    <i class="material-icons tw:text-lg tw:text-blue-400">contact_mail</i>
+                    Contacto
+                </a>
+                <a class="tw:flex tw:items-center tw:gap-3 tw:px-4 tw:py-3.5 tw:text-sm tw:font-bold tw:text-slate-700 tw:rounded-2xl tw:transition-all tw:cursor-pointer tw:hover:bg-blue-50 tw:hover:text-blue-600"
+                   (click)="navigateTo('history')">
+                    <i class="material-icons tw:text-lg tw:text-blue-400">history_edu</i>
+                    Historia
+                </a>
+                <a class="tw:flex tw:items-center tw:gap-3 tw:px-4 tw:py-3.5 tw:text-sm tw:font-bold tw:text-slate-700 tw:rounded-2xl tw:transition-all tw:cursor-pointer tw:hover:bg-blue-50 tw:hover:text-blue-600"
+                   (click)="navigateTo('what-we-do')">
+                    <i class="material-icons tw:text-lg tw:text-blue-400">work</i>
+                    Qué Hacemos
+                </a>
+
+                <!-- Divider -->
+                <div class="tw:border-t tw:border-slate-100 tw:my-3"></div>
+
+                <!-- CTA Button -->
+                <button (click)="onAgendaCita()"
+                        class="tw:w-full tw:py-4 tw:bg-blue-600 tw:text-white tw:text-sm tw:font-black tw:rounded-2xl tw:border-none tw:cursor-pointer tw:transition-all tw:shadow-lg tw:shadow-blue-600/20 tw:hover:bg-blue-700 tw:hover:-translate-y-0.5">
+                    <i class="material-icons tw:align-middle tw:mr-1 tw:text-lg">calendar_today</i>
+                    Reservar Cita Ahora
+                </button>
+
+            </div>
+        </div>
+    </header>
+
+    <!-- CUERPO DINÁMICO -->
+    <main class="tw:min-h-[calc(100vh-170px)]" [ngSwitch]="currentPage">
+
+        <!-- VISTA HOME -->
+        <ng-container *ngSwitchCase="'home'">
+            <app-placeholder-hero [titulo]="businessData.titulo_hero"
+                [slogan]="businessData.slogan_hero || businessData.descripcion_hero"
+                [heroImage]="businessData.config_visual?.hero_image" (onAction)="onAgendaCita()">
+            </app-placeholder-hero>
+
+            <div id="services-section" class="tw:block tw:m-0">
+                <app-placeholder-services [servicios]="businessData.servicios" [tipoNegocio]="businessData.tipo_negocio"
+                    [configVisual]="businessData.config_visual" (onReserve)="onAgendaCita()">
+                </app-placeholder-services>
+            </div>
+
+            <app-placeholder-cta-banner [configVisual]="businessData.config_visual" (onReserve)="onAgendaCita()">
+            </app-placeholder-cta-banner>
+
+            <app-placeholder-info-grid [direccion]="businessData.direccion" [telefono]="businessData.telefono"
+                [horarioTexto]="businessData.horario_texto" [googleMapsLink]="businessData.google_maps_link"
+                [configVisual]="businessData.config_visual">
+            </app-placeholder-info-grid>
+
+            <!-- CONOCE AL STAFF -->
+            <app-placeholder-staff [staff]="(staff$ | async) || []" [tipoNegocio]="businessData.tipo_negocio"
+                [configVisual]="businessData.config_visual">
+            </app-placeholder-staff>
+
+            <!-- TESTIMONIOS -->
+            <app-placeholder-testimonials [reviews]="businessData.reviews" [configVisual]="businessData.config_visual">
+            </app-placeholder-testimonials>
+        </ng-container>
+
+        <!-- VISTAS DE PÁGINAS DINÁMICAS -->
+        <app-about *ngSwitchCase="'about'"></app-about>
+        <app-contact *ngSwitchCase="'contact'"></app-contact>
+        <app-what-we-do *ngSwitchCase="'what-we-do'" (agendarCita)="onAgendaCita()"></app-what-we-do>
+        <app-history *ngSwitchCase="'history'"></app-history>
+
+    </main>
+
+    <!-- FOOTER -->
+    <app-placeholder-footer [businessData]="businessData" [configVisual]="businessData.config_visual"
+        (navigate)="navigateTo($event)">
+    </app-placeholder-footer>
+
+    <!-- MODALES Y COMPONENTES GLOBALES -->
+    <app-placeholder-booking-modal [show]="showBookingModal" [businessName]="businessData.nombre_empresa"
+        [staff]="(staff$ | async) || []" [reserva]="nuevaReserva" [isBooking]="isBooking"
+        [bookingSuccess]="bookingSuccess" (onClose)="closeModal()" (confirmar)="confirmarReserva()">
+    </app-placeholder-booking-modal>
+
+    <app-placeholder-chat [businessName]="businessData.nombre_empresa" [servicios]="businessData.servicios">
+    </app-placeholder-chat>
+
+</div>
+
+<!-- LOADER -->
+<div class="tw:fixed tw:inset-0 tw:bg-white tw:z-[9999] tw:flex tw:items-center tw:justify-center" *ngIf="isLoading">
+    <div class="tw:w-12 tw:h-12 tw:border-4 tw:border-slate-100 tw:border-t-blue-600 tw:rounded-full tw:animate-spin"></div>
+</div>

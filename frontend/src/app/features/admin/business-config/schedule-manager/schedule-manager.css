@@ -1,0 +1,244 @@
+.schedule-container {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 32px;
+}
+
+.schedule-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.schedule-header i {
+    color: var(--business-primary, #2563eb);
+    font-size: 24px;
+}
+
+.schedule-header h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.schedule-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.schedule-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: #f8fafc;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+.schedule-row:hover {
+    background: #f1f5f9;
+}
+
+.day-label {
+    min-width: 100px;
+}
+
+.day-name {
+    font-weight: 600;
+    color: #475569;
+}
+
+/* Kontroller for tid */
+.time-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: opacity 0.3s ease;
+}
+
+.time-controls.disabled {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.input-group label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #94a3b8;
+}
+
+/* Estilización de los nuevos inputs de texto para horario */
+.time-input {
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-family: inherit;
+    font-weight: 600;
+    color: #1e293b;
+    outline: none;
+    width: 90px;
+    text-align: center;
+    background: #ffffff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.time-input:focus {
+    border-color: var(--business-primary, #2563eb);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.time-input::placeholder {
+    color: #cbd5e1;
+    font-weight: 400;
+}
+
+.time-separator {
+    margin-top: 18px;
+    color: #94a3b8;
+    font-weight: 700;
+}
+
+/* Status Toggle (Switch) */
+.status-toggle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 120px;
+    justify-content: flex-end;
+}
+
+.status-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--business-primary, #2563eb);
+    width: 65px;
+    text-align: right;
+}
+
+.closed-text {
+    color: #ef4444;
+}
+
+/* Custom Toggle Switch Design */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 22px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #cbd5e1;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+/* Color azul cuando está abierto (checked en nuestro HTML) */
+input:checked+.slider {
+    background-color: var(--business-primary, #2563eb);
+}
+
+input:checked+.slider:before {
+    transform: translateX(22px);
+}
+
+.schedule-help {
+    margin-top: 20px;
+    font-size: 0.85rem;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.schedule-help i {
+    font-size: 18px;
+    color: #3b82f6;
+}
+
+/* Responsivitet */
+@media (max-width: 640px) {
+    .schedule-container {
+        padding: 16px;
+        border-radius: 14px;
+    }
+
+    .schedule-header {
+        align-items: flex-start;
+    }
+
+    .schedule-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .day-label {
+        min-width: 0;
+    }
+
+    .time-controls {
+        width: 100%;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+        gap: 8px;
+    }
+
+    .time-separator {
+        margin-top: 28px;
+    }
+
+    .status-toggle {
+        width: 100%;
+        justify-content: space-between;
+        padding-top: 12px;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .time-input {
+        width: 100%;
+    }
+
+    .schedule-help {
+        align-items: flex-start;
+    }
+}

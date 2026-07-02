@@ -1,0 +1,113 @@
+model usuarios {
+  id                       String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id              String?                @db.Uuid
+  email                    String                 @unique @db.VarChar(255)
+  password_hash            String
+  rol                      String                 @db.VarChar(20)
+  nombres                  String                 @db.VarChar(150)
+  apellidos                String                 @db.VarChar(150)
+  tipo_documento           String?                @db.VarChar(20)
+  numero_documento         String?                @unique @db.VarChar(50)
+  fecha_nacimiento         DateTime?              @db.Date
+  telefono                 String?                @db.VarChar(20)
+  movil1                   String?                @db.VarChar(20)
+  movil2                   String?                @db.VarChar(20)
+  direccion                String?                @db.VarChar(255)
+  avatar                   String?
+  esta_activo              Boolean?               @default(true)
+  ultima_conexion          DateTime?              @db.Timestamptz(6)
+  ultimo_ip                String?                @db.Inet
+  intentos_fallidos        Int?                   @default(0)
+  creado_en                DateTime?              @default(now()) @db.Timestamptz(6)
+  actualizado_en           DateTime?              @default(now()) @db.Timestamptz(6)
+  genero                   String?                @db.VarChar(20)
+  seguridad_social         String?                @db.VarChar(50)
+  professionals            Professional[]
+  anamnesis                anamnesis?
+  citas_como_doctor        citas[]                @relation("DoctorCitas")
+  citas_como_paciente      citas[]                @relation("PacienteCitas")
+  consentimientos          consentimientos?
+  perfil_asistente         perfil_asistente?
+  perfil_doctor            perfil_doctor?
+  perfil_paciente_dentista perfil_paciente[]      @relation("perfil_paciente_dentista_idTousuarios")
+  perfil_paciente          perfil_paciente?
+  perfil_techsoft          perfil_techsoft?
+  presupuestos_seguros     presupuestos_seguros[]
+  business                 Business?              @relation(fields: [business_id], references: [id])
+
+  @@index([email])
+  @@index([rol])
+  @@index([business_id])
+}
+
+model perfil_doctor {
+  usuario_id                 String    @id @db.Uuid
+  numero_colegiado           String    @unique @db.VarChar(50)
+  especialidad_primaria      String    @db.VarChar(100)
+  especialidades_secundarias Json?
+  universidad_egreso         String?
+  anos_experiencia           Int?
+  biografia                  String?
+  horario_atencion           Json?
+  costo_consulta             Decimal?  @db.Decimal(10, 2)
+  firma_digital_path         String?
+  creado_en                  DateTime? @default(now()) @db.Timestamptz(6)
+  actualizado_en             DateTime? @default(now()) @db.Timestamptz(6)
+  usuario                    usuarios  @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
+}
+
+model perfil_paciente {
+  usuario_id                   String    @id @db.Uuid
+  dentista_id                  String?   @db.Uuid
+  grupo_sanguineo              String?   @db.VarChar(5)
+  factor_rh                    String?   @db.VarChar(1)
+  alergias                     Json?
+  antecedentes_familiares      Json?
+  contacto_emergencia_nombre   String?   @db.VarChar(100)
+  contacto_emergencia_telefono String?   @db.VarChar(20)
+  compañia_seguros            String?   @db.VarChar(100)
+  numero_poliza                String?   @db.VarChar(50)
+  ciudad                       String?   @db.VarChar(100)
+  ocupacion                    String?   @db.VarChar(100)
+  creado_en                    DateTime? @default(now()) @db.Timestamptz(6)
+  actualizado_en               DateTime? @default(now()) @db.Timestamptz(6)
+  consentimiento_email         Boolean?  @default(false)
+  consentimiento_sms           Boolean?  @default(false)
+  detalles_discapacidad        String?
+  discapacidad                 Boolean?  @default(false)
+  estado_civil                 String?   @db.VarChar(50)
+  movil_conyuge                String?   @db.VarChar(20)
+  nombre_conyuge               String?   @db.VarChar(150)
+  tutor_direccion              String?   @db.VarChar(255)
+  tutor_email                  String?   @db.VarChar(150)
+  tutor_es_responsable         Boolean?  @default(true)
+  tutor_movil                  String?   @db.VarChar(20)
+  tutor_nombre                 String?   @db.VarChar(150)
+  tutor_parentesco             String?   @db.VarChar(50)
+  usuario_dentista             usuarios? @relation("perfil_paciente_dentista_idTousuarios", fields: [dentista_id], references: [id])
+  usuario                      usuarios  @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
+}
+
+model perfil_asistente {
+  usuario_id           String    @id @db.Uuid
+  area_asignada        String?   @db.VarChar(100)
+  extension_telefonica String?   @db.VarChar(10)
+  turno                String?   @db.VarChar(20)
+  puede_agendar        Boolean?  @default(true)
+  puede_cobrar         Boolean?  @default(false)
+  creado_en            DateTime? @default(now()) @db.Timestamptz(6)
+  actualizado_en       DateTime? @default(now()) @db.Timestamptz(6)
+  usuario              usuarios  @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
+}
+
+model perfil_techsoft {
+  usuario_id               String    @id @db.Uuid
+  nivel_acceso             Int?      @default(1)
+  clave_publica_ssh        String?
+  notificaciones_criticas  Boolean?  @default(true)
+  herramientas_habilitadas Json?
+  fecha_ultimo_login_admin DateTime? @db.Timestamptz(6)
+  creado_en                DateTime? @default(now()) @db.Timestamptz(6)
+  actualizado_en           DateTime? @default(now()) @db.Timestamptz(6)
+  usuario                  usuarios  @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
+}

@@ -1,0 +1,63 @@
+<section class="tw:relative tw:bg-white animate-fade-in" *ngIf="businessData">
+    <div class="tw:h-[60vh] tw:bg-cover tw:bg-center tw:relative"
+        [style.backgroundImage]="'url(' + (businessData.config_visual?.hero_image || 'assets/images/default-about-hero.jpg') + ')'">
+        <div class="tw:absolute tw:inset-0 tw:bg-slate-900/40 tw:flex tw:items-center tw:justify-center">
+            <div class="tw:text-center tw:text-white tw:max-w-3xl tw:px-6">
+                <h1 class="tw:text-4xl tw:md:text-6xl tw:font-black tw:mb-4 tw:tracking-tight animate-fade-in">{{ businessData.titulo_hero || 'Excelencia y Profesionalismo' }}</h1>
+                <div class="tw:w-20 tw:h-1 tw:bg-blue-500 tw:mx-auto tw:mb-6"></div>
+                <p class="tw:text-xl tw:md:text-2xl tw:font-medium tw:opacity-90 animate-fade-in-delayed">{{ businessData.slogan_hero || 'Comprometidos con tu bienestar.' }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="tw:max-w-[1200px] tw:mx-auto tw:px-[5%] tw:py-20">
+        <div class="tw:grid tw:grid-cols-1 tw:lg:grid-cols-[1fr_300px] tw:gap-16">
+            <div class="tw:flex tw:flex-col">
+                <span class="tw:text-blue-600 tw:font-extrabold tw:text-xs tw:tracking-[2px] tw:uppercase tw:mb-3">Nuestra Historia</span>
+                <h2 class="tw:text-3xl tw:text-slate-800 tw:font-black tw:mb-6">Líderes en Innovación y Cuidado Personalizado</h2>
+                <div class="tw:flex tw:flex-col tw:gap-4">
+                    <p class="tw:text-lg tw:text-slate-600 tw:leading-relaxed">
+                        {{ businessData.descripcion_hero || 'Nuestra trayectoria se define por la búsqueda constante de
+                        la perfección y la satisfacción de quienes confían en nosotros.' }}
+                    </p>
+                    <p class="tw:text-slate-500 tw:leading-relaxed">
+                        Fundados bajo los más altos estándares, en {{ businessData.nombre_empresa }} combinamos
+                        tecnología de vanguardia con un trato humano inigualable.
+                    </p>
+                </div>
+            </div>
+
+            <div class="tw:flex tw:items-center tw:justify-center">
+                <div class="tw:bg-blue-600 tw:text-white tw:p-12 tw:rounded-[32px] tw:text-center tw:shadow-2xl tw:shadow-blue-600/30 tw:relative tw:overflow-hidden">
+                    <span class="tw:text-5xl tw:font-black tw:block tw:mb-2">15+</span>
+                    <span class="tw:text-sm tw:font-bold tw:uppercase tw:tracking-widest">Años de Trayectoria</span>
+                    <div class="tw:absolute tw:bottom-[-20px] tw:right-[-20px] tw:w-24 tw:h-24 tw:bg-white/10 tw:rounded-full"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tw:grid tw:grid-cols-1 tw:md:grid-cols-3 tw:gap-8 tw:mt-20">
+            <div class="tw:flex tw:gap-4 tw:items-center tw:bg-slate-50 tw:p-8 tw:rounded-2xl tw:border tw:border-slate-100">
+                <div class="tw:w-14 tw:h-14 tw:bg-blue-100 tw:text-blue-600 tw:rounded-xl tw:flex tw:items-center tw:justify-center tw:shrink-0"><i class="material-icons tw:text-3xl">groups</i></div>
+                <div class="tw:flex tw:flex-col">
+                    <span class="tw:text-2xl tw:font-black tw:text-slate-800">10k+</span>
+                    <span class="tw:text-sm tw:text-slate-500 tw:font-bold">Pacientes Felices</span>
+                </div>
+            </div>
+            <div class="tw:flex tw:gap-4 tw:items-center tw:bg-slate-50 tw:p-8 tw:rounded-2xl tw:border tw:border-slate-100">
+                <div class="tw:w-14 tw:h-14 tw:bg-blue-100 tw:text-blue-600 tw:rounded-xl tw:flex tw:items-center tw:justify-center tw:shrink-0"><i class="material-icons tw:text-3xl">medical_services</i></div>
+                <div class="tw:flex tw:flex-col">
+                    <span class="tw:text-2xl tw:font-black tw:text-slate-800">25+</span>
+                    <span class="tw:text-sm tw:text-slate-500 tw:font-bold">Especialistas</span>
+                </div>
+            </div>
+            <div class="tw:flex tw:gap-4 tw:items-center tw:bg-slate-50 tw:p-8 tw:rounded-2xl tw:border tw:border-slate-100">
+                <div class="tw:w-14 tw:h-14 tw:bg-blue-100 tw:text-blue-600 tw:rounded-xl tw:flex tw:items-center tw:justify-center tw:shrink-0"><i class="material-icons tw:text-3xl">verified</i></div>
+                <div class="tw:flex tw:flex-col">
+                    <span class="tw:text-2xl tw:font-black tw:text-slate-800">100%</span>
+                    <span class="tw:text-sm tw:text-slate-500 tw:font-bold">Calidad Garantizada</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

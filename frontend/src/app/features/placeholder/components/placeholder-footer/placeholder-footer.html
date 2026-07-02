@@ -1,0 +1,100 @@
+<footer class="tw:bg-slate-950 tw:text-white tw:pt-20 tw:pb-10 tw:print:bg-white tw:print:text-slate-900 tw:print:pt-8 tw:print:pb-4">
+    <div class="tw:max-w-[1200px] tw:mx-auto tw:px-[5%]">
+        <div class="tw:grid tw:grid-cols-1 tw:md:grid-cols-2 tw:lg:grid-cols-4 tw:gap-12 tw:mb-16 tw:print:grid-cols-2 tw:print:gap-8 tw:print:mb-8">
+
+            <!-- Columna 1: Marca e Identidad -->
+            <div class="tw:flex tw:flex-col">
+                <div class="tw:flex tw:items-center tw:gap-3 tw:mb-6">
+                    <img [src]="businessData?.logo_url || 'assets/logos/logo_classic.png'" alt="Logo"
+                        class="tw:h-10 tw:w-auto tw:object-contain">
+                    <span class="tw:text-xl tw:font-black tw:tracking-tighter">{{ businessData?.nombre_empresa }}</span>
+                </div>
+                <p class="tw:text-slate-400 tw:leading-relaxed tw:text-[0.95rem] tw:mb-8">
+                    {{ businessData?.slogan_hero || 'Excelencia y compromiso en cada atención para cuidar de ti y tu familia.' }}
+                </p>
+
+                <!-- Redes Sociales Dinámicas -->
+                <div class="tw:flex tw:gap-3 tw:print:hidden" *ngIf="hasSocialMedia()">
+                    <a *ngIf="businessData?.facebook_url" [href]="businessData?.facebook_url" target="_blank"
+                        class="tw:w-9 tw:h-9 tw:bg-slate-900 tw:rounded-lg tw:flex tw:items-center tw:justify-center tw:transition-all tw:hover:bg-blue-600" title="Facebook">
+                        <i class="material-icons tw:text-lg">facebook</i>
+                    </a>
+                    <a *ngIf="businessData?.instagram_url" [href]="businessData?.instagram_url" target="_blank"
+                        class="tw:w-9 tw:h-9 tw:bg-slate-900 tw:rounded-lg tw:flex tw:items-center tw:justify-center tw:transition-all tw:hover:bg-pink-500" title="Instagram">
+                        <i class="material-icons tw:text-lg">photo_camera</i>
+                    </a>
+                    <a *ngIf="businessData?.twitter_url" [href]="businessData?.twitter_url" target="_blank"
+                        class="tw:w-9 tw:h-9 tw:bg-slate-900 tw:rounded-lg tw:flex tw:items-center tw:justify-center tw:transition-all tw:hover:bg-blue-400" title="Twitter / X">
+                        <i class="material-icons tw:text-lg">alternate_email</i>
+                    </a>
+                    <a *ngIf="businessData?.linkedin_url" [href]="businessData?.linkedin_url" target="_blank"
+                        class="tw:w-9 tw:h-9 tw:bg-slate-900 tw:rounded-lg tw:flex tw:items-center tw:justify-center tw:transition-all tw:hover:bg-blue-700" title="LinkedIn">
+                        <i class="material-icons tw:text-lg">business_center</i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Columna 2: Navegación Corporativa -->
+            <div class="tw:flex tw:flex-col tw:print:hidden">
+                <h4 class="tw:text-sm tw:font-black tw:uppercase tw:tracking-widest tw:text-blue-500 tw:mb-8">Nuestra Empresa</h4>
+                <ul class="tw:list-none tw:p-0 tw:m-0 tw:flex tw:flex-col tw:gap-4">
+                    <li><a (click)="onNavigate('home')" class="tw:text-slate-400 tw:text-[0.95rem] tw:cursor-pointer tw:transition-colors tw:hover:text-white">Inicio</a></li>
+                    <li><a (click)="onNavigate('about')" class="tw:text-slate-400 tw:text-[0.95rem] tw:cursor-pointer tw:transition-colors tw:hover:text-white">Sobre Nosotros</a></li>
+                    <li><a (click)="onNavigate('history')" class="tw:text-slate-400 tw:text-[0.95rem] tw:cursor-pointer tw:transition-colors tw:hover:text-white">Nuestra Historia</a></li>
+                    <li><a (click)="onNavigate('what-we-do')" class="tw:text-slate-400 tw:text-[0.95rem] tw:cursor-pointer tw:transition-colors tw:hover:text-white">Qué Hacemos</a></li>
+                    <li><a (click)="onNavigate('contact')" class="tw:text-slate-400 tw:text-[0.95rem] tw:cursor-pointer tw:transition-colors tw:hover:text-white">Ubicación y Contacto</a></li>
+                </ul>
+            </div>
+
+            <!-- Columna 3: Especialidades (Dinámicas) -->
+            <div class="tw:flex tw:flex-col tw:print:hidden" *ngIf="servicesList.length > 0">
+                <h4 class="tw:text-sm tw:font-black tw:uppercase tw:tracking-widest tw:text-blue-500 tw:mb-8">Servicios</h4>
+                <ul class="tw:list-none tw:p-0 tw:m-0 tw:flex tw:flex-col tw:gap-4">
+                    <li *ngFor="let servicio of servicesList">
+                        <a (click)="onNavigate('services')" class="tw:text-slate-400 tw:text-[0.95rem] tw:cursor-pointer tw:transition-colors tw:hover:text-white">{{ servicio.titulo }}</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Columna 4: Atención al Cliente -->
+            <div class="tw:flex tw:flex-col">
+                <h4 class="tw:text-sm tw:font-black tw:uppercase tw:tracking-widest tw:text-blue-500 tw:mb-8">Atención</h4>
+                <div class="tw:flex tw:flex-col tw:gap-6">
+                    <div class="tw:flex tw:gap-4" *ngIf="businessData?.telefono">
+                        <i class="material-icons tw:text-blue-500">phone_in_talk</i>
+                        <div class="tw:flex tw:flex-col">
+                            <small class="tw:text-[0.65rem] tw:text-slate-500 tw:uppercase tw:font-black">Llámanos</small>
+                            <span class="tw:text-slate-200 tw:font-bold">{{ businessData?.telefono }}</span>
+                        </div>
+                    </div>
+                    <div class="tw:flex tw:gap-4" *ngIf="businessData?.direccion">
+                        <i class="material-icons tw:text-blue-500">location_on</i>
+                        <div class="tw:flex tw:flex-col">
+                            <small class="tw:text-[0.65rem] tw:text-slate-500 tw:uppercase tw:font-black">Visítanos</small>
+                            <span class="tw:text-slate-200 tw:font-bold tw:leading-snug">{{ businessData?.direccion }}</span>
+                        </div>
+                    </div>
+                    <div class="tw:flex tw:gap-4">
+                        <i class="material-icons tw:text-blue-500">mail_outline</i>
+                        <div class="tw:flex tw:flex-col">
+                            <small class="tw:text-[0.65rem] tw:text-slate-500 tw:uppercase tw:font-black">Escríbenos</small>
+                            <span class="tw:text-slate-200 tw:font-bold">{{ businessData?.email || 'soporte@' + (businessData?.slug || 'negocio') + '.com' }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Parte Inferior -->
+        <div class="tw:pt-8 tw:border-t tw:border-slate-900 tw:print:border-slate-100 tw:flex tw:justify-between tw:items-center">
+            <div class="tw:text-slate-500 tw:text-sm">
+                &copy; {{ currentYear }} <strong>{{ businessData?.nombre_empresa }}</strong>.
+                <span class="tw:opacity-60 tw:ml-2 tw:print:hidden">Powered by TechSoft Mundial.</span>
+            </div>
+            <button class="tw:w-10 tw:h-10 tw:bg-blue-600 tw:text-white tw:rounded-full tw:border-none tw:flex tw:items-center tw:justify-center tw:cursor-pointer tw:transition-all tw:hover:bg-blue-700 tw:hover:-translate-y-1 tw:print:hidden" (click)="scrollToTop()" aria-label="Volver arriba">
+                <i class="material-icons">expand_less</i>
+            </button>
+        </div>
+    </div>
+</footer>

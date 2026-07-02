@@ -1,0 +1,37 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["prismaSchemaFolder"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum estado_cita {
+  PENDIENTE
+  CONFIRMADA
+  CANCELADA
+  COMPLETADA
+  AUSENTE
+  FINALIZADA
+}
+
+enum TipoNegocio {
+  DENTAL
+  PELUQUERIA
+  RESTAURANTE
+  ESTETICA
+  MEDICINA_GENERAL
+  CONSULTORIA
+  GIMNASIO
+  VETERINARIA
+  PODOLOGIA
+  MANICURE
+  PEDICURE
+  MASAJE
+  TALLER_MECANICO
+  ABOGACIA
+  ADUANAS
+  OTROS
+}

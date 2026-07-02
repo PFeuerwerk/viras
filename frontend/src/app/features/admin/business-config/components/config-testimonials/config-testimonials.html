@@ -1,0 +1,94 @@
+<div class="tw:bg-white tw:rounded-[20px] tw:p-7 tw:border tw:border-slate-200">
+
+    <!-- HEADER -->
+    <div class="tw:flex tw:items-center tw:gap-2.5 tw:mb-2.5">
+        <i class="material-icons tw:text-blue-600">rate_review</i>
+        <h3 class="tw:m-0 tw:text-[1.4rem] tw:font-extrabold tw:text-slate-900">Testimonios de Clientes</h3>
+    </div>
+
+    <p class="tw:text-[0.9rem] tw:text-slate-500 tw:mb-6">
+        Gestiona las opiniones reales de tus clientes para generar confianza (Social Proof).
+    </p>
+
+    <!-- LISTA DE TESTIMONIOS -->
+    <div class="tw:flex tw:flex-col tw:gap-5">
+
+        <div *ngIf="!business.reviews || business.reviews.length === 0" 
+             class="tw:text-center tw:text-slate-400 tw:italic tw:p-5 tw:border-2 tw:border-dashed tw:border-slate-200 tw:rounded-xl">
+            No hay testimonios aún. Añade el primero.
+        </div>
+
+        <div *ngFor="let review of business.reviews; let i = index; trackBy: trackByIndex"
+            class="tw:bg-slate-50 tw:rounded-2xl tw:p-5 tw:border tw:border-slate-200 animate-fade-in">
+
+            <!-- HEADER ITEM -->
+            <div class="tw:flex tw:justify-between tw:items-center tw:mb-4">
+                <h4 class="tw:m-0 tw:text-base tw:font-bold tw:text-slate-800">Testimonio #{{ i + 1 }}</h4>
+
+                <div class="tw:flex tw:gap-2.5">
+                    <button type="button" 
+                        class="tw:px-3 tw:py-1.5 tw:rounded-lg tw:text-[0.8rem] tw:font-bold tw:transition-all tw:duration-200"
+                        [ngClass]="review.activo ? 'tw:bg-emerald-500 tw:text-white' : 'tw:bg-slate-200 tw:text-slate-700'"
+                        (click)="toggleActive(review)">
+                        {{ review.activo ? 'Activo' : 'Inactivo' }}
+                    </button>
+
+                    <button type="button" 
+                        class="tw:bg-red-100 tw:text-red-600 tw:px-2.5 tw:py-1.5 tw:rounded-lg tw:flex tw:items-center tw:hover:bg-red-200 tw:transition-colors" 
+                        (click)="removeReview(i)">
+                        <i class="material-icons tw:text-lg">delete</i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- FORM -->
+            <div class="tw:grid tw:grid-cols-2 tw:gap-4 tw:sm:grid-cols-1">
+
+                <!-- NOMBRE -->
+                <div class="tw:flex tw:flex-col">
+                    <label class="viras-label">Nombre del cliente</label>
+                    <input type="text" class="viras-form-control" [(ngModel)]="review.nombre_cliente" (ngModelChange)="onFieldChange()"
+                        placeholder="Ej: María López">
+                </div>
+
+                <!-- FOTO -->
+                <div class="tw:flex tw:flex-col">
+                    <label class="viras-label">URL Foto (opcional)</label>
+                    <input type="text" class="viras-form-control" [(ngModel)]="review.foto_url" (ngModelChange)="onFieldChange()"
+                        placeholder="https://...">
+                </div>
+
+                <!-- COMENTARIO -->
+                <div class="tw:flex tw:flex-col tw:col-span-2 tw:sm:col-span-1">
+                    <label class="viras-label">Comentario</label>
+                    <textarea rows="3" class="viras-form-control" [(ngModel)]="review.comentario" (ngModelChange)="onFieldChange()"
+                        placeholder="Describe la experiencia del cliente..."></textarea>
+                </div>
+
+                <!-- RATING -->
+                <div class="tw:flex tw:flex-col tw:col-span-2 tw:sm:col-span-1">
+                    <label class="viras-label">Puntuación</label>
+
+                    <div class="tw:flex tw:gap-1.5 tw:text-2xl tw:cursor-pointer">
+                        <span *ngFor="let star of [1,2,3,4,5]" (click)="updateRating(review, star)"
+                            class="tw:transition-colors tw:duration-200"
+                            [ngClass]="star <= review.puntuacion ? 'tw:text-amber-400' : 'tw:text-slate-300'">
+                            ★
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- BOTÓN AÑADIR -->
+    <button type="button" class="viras-btn-primary tw:mt-5 tw:w-full tw:justify-center tw:flex tw:items-center tw:gap-2" (click)="addReview()">
+        <i class="material-icons">add</i>
+        Añadir Testimonio
+    </button>
+
+</div>

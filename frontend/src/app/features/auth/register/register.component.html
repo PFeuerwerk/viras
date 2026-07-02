@@ -1,0 +1,246 @@
+<div class="tw:min-h-screen tw:flex tw:items-center tw:justify-center tw:p-6 tw:bg-gradient-to-br tw:from-slate-50 tw:to-slate-200">
+    <div class="tw:w-full tw:max-w-[1100px] tw:bg-white tw:p-10 tw:rounded-[32px] tw:shadow-2xl tw:border tw:border-slate-100 tw:sm:p-6">
+        <!-- Cabecera Profesional -->
+        <div class="tw:text-center tw:mb-10">
+            <img src="/assets/logo.png" alt="VIRAS Logo" class="tw:h-[80px] tw:mx-auto tw:mb-4 tw:object-contain">
+            <h2 class="tw:text-3xl tw:font-extrabold tw:text-slate-900 tw:tracking-tight tw:mb-2" *ngIf="!isPatientRegistration">Registra tu Negocio</h2>
+            <h2 class="tw:text-3xl tw:font-extrabold tw:text-slate-900 tw:tracking-tight tw:mb-2" *ngIf="isPatientRegistration">Registro de Paciente</h2>
+            <p class="tw:text-slate-500 tw:text-sm" *ngIf="isPatientRegistration">
+                Crea tu cuenta en <strong class="tw:text-blue-600">{{ businessName }}</strong> para gestionar tus citas.
+            </p>
+        </div>
+
+        <div *ngIf="errorMessage" class="tw:p-4 tw:bg-red-50 tw:text-red-600 tw:text-sm tw:font-semibold tw:rounded-xl tw:border tw:border-red-100 tw:mb-6 tw:text-center">{{ errorMessage }}</div>
+        <div *ngIf="successMessage" class="tw:p-4 tw:bg-green-50 tw:text-green-600 tw:text-sm tw:font-semibold tw:rounded-xl tw:border tw:border-green-100 tw:mb-6 tw:text-center">{{ successMessage }}</div>
+
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="tw:space-y-8">
+
+            <!-- SECCIÓN 1: DATOS DE ACCESO -->
+            <div class="tw:bg-slate-50/50 tw:p-6 tw:rounded-2xl tw:border tw:border-slate-100">
+                <h3 class="viras-section-title"><i class="tw:not-italic">🔑</i> Datos de Acceso</h3>
+                <div class="viras-grid-4">
+                    <div class="tw:flex tw:flex-col">
+                        <label class="viras-label">Correo Electrónico *</label>
+                        <input type="email" formControlName="email" class="viras-form-control" placeholder="ejemplo@mail.com">
+                    </div>
+                    <div class="tw:flex tw:flex-col">
+                        <label class="viras-label">Contraseña *</label>
+                        <input [type]="showPassword ? 'text' : 'password'" formControlName="password" class="viras-form-control" placeholder="Mínimo 6 caracteres">
+                    </div>
+                    <div class="tw:flex tw:flex-col">
+                        <label class="viras-label">Nombres *</label>
+                        <input type="text" formControlName="nombres" class="viras-form-control" placeholder="Tus nombres">
+                    </div>
+                    <div class="tw:flex tw:flex-col">
+                        <label class="viras-label">Apellidos *</label>
+                        <input type="text" formControlName="apellidos" class="viras-form-control" placeholder="Tus apellidos">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 2: INFORMACIÓN OBLIGATORIA (Solo Paciente) -->
+            <div class="tw:bg-slate-50/50 tw:p-6 tw:rounded-2xl tw:border tw:border-slate-100" *ngIf="isPatientRegistration">
+                <h3 class="viras-section-title"><i class="tw:not-italic">👤</i> Información Obligatoria</h3>
+                <div class="viras-grid-3">
+                    <div class="tw:flex tw:flex-col">
+                        <label class="viras-label">Fecha Nacimiento *</label>
+                        <input type="date" formControlName="fecha_nacimiento" class="viras-form-control">
+                    </div>
+                    <div class="tw:flex tw:flex-col">
+                        <label class="viras-label">Sexo *</label>
+                        <select formControlName="genero" class="viras-form-control">
+                            <option value="">Seleccione...</option>
+                            <option value="M">Masculino (M)</option>
+                            <option value="F">Femenino (F)</option>
+                            <option value="OTRO">Otro</option>
+                        </select>
+                    </div>
+                    <div class="tw:flex tw:flex-col">
+                        <label class="viras-label">NSS (Seguridad Social)</label>
+                        <input type="text" formControlName="seguridad_social" class="viras-form-control" placeholder="Ej: 123456789012">
+                    </div>
+                </div>
+                <div class="viras-grid-2 tw:mt-5">
+                    <div class="tw:flex tw:flex-col">
+                        <label class="viras-label">Celular Principal *</label>
+                        <ngx-intl-tel-input
+                            [cssClass]="'viras-form-control'"
+                            [preferredCountries]="preferredCountries"
+                            [enableAutoCountrySelect]="true"
+                            [enablePlaceholder]="true"
+                            [searchCountryFlag]="true"
+                            [selectFirstCountry]="false"
+                            [selectedCountryISO]="CountryISO.Spain"
+                            [maxLength]="15"
+                            [phoneValidation]="true"
+                            [separateDialCode]="separateDialCode"
+                            [numberFormat]="PhoneNumberFormat.International"
+                            formControlName="movil1">
+                        </ngx-intl-tel-input>
+                    </div>
+                    <div class="tw:flex tw:flex-col" *ngIf="isPatientRegistration">
+                        <label class="viras-label">Doctor de Cabecera *</label>
+                        <select formControlName="dentista_id" class="viras-form-control tw:bg-blue-50/30 tw:border-blue-200">
+                            <option value="" disabled>{{ isLoadingDoctors ? 'Cargando...' : 'Seleccione doctor' }}</option>
+                            <option *ngFor="let d of doctors" [value]="d.id">Dr. {{d.nombres}} {{d.apellidos}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 3: INFORMACIÓN OPCIONAL -->
+            <div class="tw:bg-slate-50/50 tw:p-6 tw:rounded-2xl tw:border tw:border-slate-100" *ngIf="isPatientRegistration">
+                <h3 class="viras-section-title"><i class="tw:not-italic">➕</i> Información Adicional (Opcional)</h3>
+                <div class="viras-grid-3">
+                    <div class="tw:flex tw:flex-col">
+                        <label class="viras-label">Tipo de Sangre</label>
+                        <select formControlName="grupo_sanguineo" class="viras-form-control">
+                            <option value="">Seleccione...</option>
+                            <option value="A+">A+</option><option value="A-">A-</option>
+                            <option value="B+">B+</option><option value="B-">B-</option>
+                            <option value="AB+">AB+</option><option value="AB-">AB-</option>
+                            <option value="O+">O+</option><option value="O-">O-</option>
+                        </select>
+                    </div>
+                    <div class="tw:flex tw:flex-col">
+                        <label class="viras-label">Estado Civil</label>
+                        <select formControlName="estado_civil" class="viras-form-control">
+                            <option value="">Seleccione...</option>
+                            <option value="Soltero">Soltero/a</option>
+                            <option value="Casado">Casado/a</option>
+                            <option value="Viudo">Viudo/a</option>
+                            <option value="Divorciado">Divorciado/a</option>
+                            <option value="Union Libre">Unión Libre</option>
+                        </select>
+                    </div>
+                    <div class="tw:flex tw:flex-col">
+                        <label class="viras-label">Ciudad</label>
+                        <input type="text" formControlName="ciudad" class="viras-form-control" placeholder="Ciudad donde vive">
+                    </div>
+                </div>
+
+                <div class="viras-grid-2 tw:mt-5">
+                    <div class="tw:flex tw:flex-col">
+                        <label class="viras-label">Dirección Completa</label>
+                        <input type="text" formControlName="direccion" class="viras-form-control" placeholder="Calle, número, depto...">
+                    </div>
+                    <div class="tw:flex tw:flex-col">
+                        <label class="viras-label">Segundo Móvil</label>
+                        <ngx-intl-tel-input
+                            [cssClass]="'viras-form-control'"
+                            [preferredCountries]="preferredCountries"
+                            [selectedCountryISO]="CountryISO.Spain"
+                            [separateDialCode]="separateDialCode"
+                            formControlName="movil2">
+                        </ngx-intl-tel-input>
+                    </div>
+                </div>
+
+                <div class="viras-grid-2 tw:mt-5">
+                    <div class="tw:flex tw:flex-col">
+                        <label class="viras-label">Nombre del Cónyuge</label>
+                        <input type="text" formControlName="nombre_conyuge" class="viras-form-control" placeholder="Nombre completo">
+                    </div>
+                    <div class="tw:flex tw:flex-col">
+                        <label class="viras-label">Móvil del Cónyuge</label>
+                        <ngx-intl-tel-input
+                            [cssClass]="'viras-form-control'"
+                            [preferredCountries]="preferredCountries"
+                            [selectedCountryISO]="CountryISO.Spain"
+                            [separateDialCode]="separateDialCode"
+                            formControlName="movil_conyuge">
+                        </ngx-intl-tel-input>
+                    </div>
+                </div>
+
+                <div class="tw:flex tw:flex-col tw:gap-3 tw:mt-6 tw:bg-white tw:p-4 tw:rounded-xl tw:border tw:border-slate-100">
+                    <label class="tw:flex tw:items-center tw:gap-3 tw:cursor-pointer tw:text-sm tw:font-semibold tw:text-slate-700">
+                        <input type="checkbox" formControlName="discapacidad" class="tw:w-4 tw:h-4 tw:accent-blue-600">
+                        <span>¿Presenta alguna discapacidad?</span>
+                    </label>
+                    <input *ngIf="registerForm.get('discapacidad')?.value" type="text" formControlName="detalles_discapacidad" class="viras-form-control tw:h-9" placeholder="Especifique...">
+                </div>
+
+                <div class="tw:flex tw:gap-8 tw:mt-5 tw:px-2">
+                    <label class="tw:flex tw:items-center tw:gap-2 tw:cursor-pointer tw:text-xs tw:font-bold tw:text-slate-500 tw:uppercase tw:tracking-wide">
+                        <input type="checkbox" formControlName="consentimiento_email" class="tw:w-4 tw:h-4 tw:accent-blue-600">
+                        <span>Email Info</span>
+                    </label>
+                    <label class="tw:flex tw:items-center tw:gap-2 tw:cursor-pointer tw:text-xs tw:font-bold tw:text-slate-500 tw:uppercase tw:tracking-wide">
+                        <input type="checkbox" formControlName="consentimiento_sms" class="tw:w-4 tw:h-4 tw:accent-blue-600">
+                        <span>SMS Info</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 4: TUTOR / RESPONSABLE -->
+            <div class="tw:bg-slate-50/50 tw:p-6 tw:rounded-2xl tw:border tw:border-slate-100" *ngIf="isPatientRegistration">
+                <h3 class="viras-section-title"><i class="tw:not-italic">🛡️</i> Tutor o Persona Responsable (Emergencias)</h3>
+                <div class="viras-grid-3">
+                    <div class="tw:flex tw:flex-col">
+                        <label class="viras-label">Nombre Completo</label>
+                        <input type="text" formControlName="tutor_nombre" class="viras-form-control" placeholder="Nombre del responsable">
+                    </div>
+                    <div class="tw:flex tw:flex-col">
+                        <label class="viras-label">Parentesco / Relación</label>
+                        <input type="text" formControlName="tutor_parentesco" class="viras-form-control" placeholder="Ej: Padre, Hermano, etc.">
+                    </div>
+                    <div class="tw:flex tw:flex-col">
+                        <label class="viras-label">Móvil Tutor</label>
+                        <ngx-intl-tel-input
+                            [cssClass]="'viras-form-control'"
+                            [preferredCountries]="preferredCountries"
+                            [selectedCountryISO]="CountryISO.Spain"
+                            [separateDialCode]="separateDialCode"
+                            formControlName="tutor_movil">
+                        </ngx-intl-tel-input>
+                    </div>
+                </div>
+                <div class="viras-grid-2 tw:mt-5">
+                    <div class="tw:flex tw:flex-col">
+                        <label class="viras-label">Dirección Tutor</label>
+                        <input type="text" formControlName="tutor_direccion" class="viras-form-control" placeholder="Dirección del tutor">
+                    </div>
+                    <div class="tw:flex tw:flex-col">
+                        <label class="viras-label">Email Tutor</label>
+                        <input type="email" formControlName="tutor_email" class="viras-form-control" placeholder="email@tutor.com">
+                    </div>
+                </div>
+                <div class="tw:mt-5 tw:px-2">
+                    <label class="tw:flex tw:items-center tw:gap-3 tw:cursor-pointer tw:text-sm tw:font-semibold tw:text-slate-700">
+                        <input type="checkbox" formControlName="tutor_es_responsable" class="tw:w-4 tw:h-4 tw:accent-blue-600">
+                        <span>El tutor es el responsable legal y financiero</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- SECCIÓN ADMIN (Solo si no es paciente) -->
+            <div class="tw:bg-slate-50/50 tw:p-6 tw:rounded-2xl tw:border tw:border-slate-100" *ngIf="!isPatientRegistration">
+                <h3 class="viras-section-title"><i class="tw:not-italic">🏢</i> Datos del Negocio</h3>
+                <div class="viras-grid-2">
+                    <div class="tw:flex tw:flex-col">
+                        <label class="viras-label">Nombre de la Empresa *</label>
+                        <input type="text" formControlName="nombre_empresa" class="viras-form-control">
+                    </div>
+                    <div class="tw:flex tw:flex-col">
+                        <label class="viras-label">URL personalizada (Slug) *</label>
+                        <input type="text" formControlName="slug" class="viras-form-control">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tw:pt-10">
+                <button type="submit" class="viras-btn-primary tw:w-full tw:py-4 tw:text-base tw:disabled:bg-slate-400 tw:disabled:cursor-not-allowed" [disabled]="isLoading || registerForm.invalid">
+                    <span *ngIf="!isLoading">
+                        {{ isPatientRegistration ? 'Completar Registro Profesional' : 'Registrar mi Negocio' }}
+                    </span>
+                    <span *ngIf="isLoading" class="tw:inline-block tw:w-5 tw:h-5 tw:border-2 tw:border-white/30 tw:border-t-white tw:rounded-full tw:animate-spin"></span>
+                </button>
+            </div>
+
+            <div class="tw:mt-8 tw:text-center tw:text-slate-500 tw:text-sm">
+                ¿Ya tienes cuenta? <a routerLink="/auth/login" class="tw:text-blue-600 tw:font-bold tw:hover:underline tw:ml-1">Inicia Sesión</a>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,92 @@
+<div class="tw:fixed tw:inset-0 tw:bg-slate-900/60 tw:backdrop-blur-sm tw:z-[100] tw:flex tw:items-center tw:justify-center tw:p-4 animate-fade-in" (click)="close()">
+    <!-- Detenemos el clic para que no cierre el modal al tocar el formulario -->
+    <div class="tw:bg-white tw:w-full tw:max-w-xl tw:rounded-[24px] tw:shadow-2xl tw:overflow-hidden animate-scale-up" (click)="$event.stopPropagation()">
+
+        <header class="tw:bg-blue-600 tw:p-5 tw:text-white tw:flex tw:justify-between tw:items-center">
+            <div class="tw:flex tw:items-center tw:gap-3">
+                <i class="material-icons tw:text-2xl">calendar_today</i>
+                <h2 class="tw:m-0 tw:text-xl tw:font-black tw:tracking-tight">Confirmar Cita</h2>
+            </div>
+            <button class="tw:bg-white/20 tw:text-white tw:w-8 tw:h-8 tw:rounded-full tw:border-none tw:flex tw:items-center tw:justify-center tw:cursor-pointer tw:transition-all tw:hover:bg-white/30" (click)="close()" title="Cerrar">
+                <i class="material-icons tw:text-base">close</i>
+            </button>
+        </header>
+
+        <form [formGroup]="citaForm" (ngSubmit)="save()" class="tw:m-0">
+            <div class="tw:p-6">
+                <!-- Información breve -->
+                <div class="tw:flex tw:items-start tw:gap-3 tw:bg-blue-50 tw:p-3 tw:rounded-xl tw:mb-5">
+                    <i class="material-icons tw:text-blue-600 tw:text-xl">info</i>
+                    <p class="tw:text-blue-800 tw:text-[0.75rem] tw:font-medium tw:m-0">
+                        Verifique los detalles de su cita y asigne a su especialista preferido si lo desea.
+                    </p>
+                </div>
+
+                <!-- Grid de Configuración Base -->
+                <div class="tw:grid tw:grid-cols-1 tw:sm:grid-cols-2 tw:gap-4 tw:mb-5">
+                    <!-- Fecha y Hora -->
+                    <div>
+                        <label class="tw:block tw:text-[0.65rem] tw:font-black tw:text-slate-400 tw:uppercase tw:tracking-widest tw:mb-1.5">Fecha y Hora</label>
+                        <div class="tw:relative">
+                            <i class="material-icons tw:absolute tw:left-3 tw:top-1/2 tw:-translate-y-1/2 tw:text-slate-400 tw:text-lg">event</i>
+                            <input type="datetime-local" formControlName="fecha" 
+                                   class="tw:w-full tw:bg-slate-50 tw:border tw:border-slate-200 tw:rounded-xl tw:pl-10 tw:pr-4 tw:py-2.5 tw:text-slate-700 tw:font-bold tw:text-sm tw:outline-none" readonly>
+                        </div>
+                        <p class="tw:text-red-500 tw:text-[0.6rem] tw:mt-1.5 tw:font-medium tw:flex tw:items-center tw:gap-1">
+                            <i class="material-icons tw:text-[0.7rem]">info</i>
+                            Para cambiar Fecha y Hora, regrese al calendario y selecione su mejor opción.
+                        </p>
+                    </div>
+
+                    <!-- Doctor / Especialista -->
+                    <div>
+                        <label class="tw:block tw:text-[0.65rem] tw:font-black tw:text-slate-400 tw:uppercase tw:tracking-widest tw:mb-1.5">Especialista</label>
+                        <div class="tw:relative">
+                            <i class="material-icons tw:absolute tw:left-3 tw:top-1/2 tw:-translate-y-1/2 tw:text-slate-400 tw:text-lg">medical_services</i>
+                            <select formControlName="doctorId" 
+                                    class="tw:w-full tw:bg-slate-50 tw:border tw:border-slate-200 tw:rounded-xl tw:pl-10 tw:pr-10 tw:py-2.5 tw:text-slate-700 tw:font-bold tw:text-sm tw:outline-none tw:appearance-none tw:cursor-pointer">
+                                <option value="">Seleccione un doctor</option>
+                                <ng-container *ngFor="let doc of doctors">
+                                    <option *ngIf="doc.usuario_id" [value]="doc.usuario_id">
+                                        {{ doc.nombre }} ({{ doc.cargo }})
+                                    </option>
+                                </ng-container>
+                            </select>
+                            <i class="material-icons tw:absolute tw:right-3 tw:top-1/2 tw:-translate-y-1/2 tw:text-slate-400 tw:pointer-events-none">expand_more</i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Antecedentes Clínicos (Más Compacto) -->
+                <div class="tw:mb-5">
+                    <label class="tw:block tw:text-[0.65rem] tw:font-black tw:text-slate-400 tw:uppercase tw:tracking-widest tw:mb-2">Antecedentes Médicos</label>
+                    <div class="tw:grid tw:grid-cols-2 tw:sm:grid-cols-4 tw:gap-2">
+                        <label class="tw:flex tw:items-center tw:gap-2 tw:p-2 tw:bg-slate-50 tw:rounded-lg tw:border tw:border-slate-100 tw:cursor-pointer tw:transition-all tw:hover:bg-blue-50" *ngFor="let antecedente of antecedentesClinicos"
+                               [class.tw:bg-blue-50]="isAntecedenteSelected(antecedente)"
+                               [class.tw:border-blue-200]="isAntecedenteSelected(antecedente)">
+                            <input type="checkbox" class="tw:w-3.5 tw:h-3.5 tw:accent-blue-600" [checked]="isAntecedenteSelected(antecedente)"
+                                (change)="toggleAntecedente(antecedente)">
+                            <span class="tw:text-[0.7rem] tw:font-bold tw:text-slate-600" [class.tw:text-blue-700]="isAntecedenteSelected(antecedente)">{{ antecedente }}</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Observaciones -->
+                <div>
+                    <label class="tw:block tw:text-[0.65rem] tw:font-black tw:text-slate-400 tw:uppercase tw:tracking-widest tw:mb-1.5">Observaciones</label>
+                    <textarea formControlName="notasInternas"
+                        placeholder="Alergias, medicación o síntomas relevantes..."
+                        class="tw:w-full tw:bg-slate-50 tw:border tw:border-slate-200 tw:rounded-xl tw:px-4 tw:py-2.5 tw:text-slate-700 tw:text-sm tw:outline-none tw:transition-all tw:focus:border-blue-600/30" rows="2"></textarea>
+                </div>
+            </div>
+
+            <footer class="tw:p-6 tw:pt-0 tw:flex tw:justify-end tw:gap-3">
+                <button type="button" class="tw:px-5 tw:py-2.5 tw:bg-slate-100 tw:text-slate-600 tw:rounded-xl tw:border-none tw:font-black tw:text-xs tw:cursor-pointer tw:transition-all tw:hover:bg-slate-200" (click)="close()">Cancelar</button>
+                <button type="submit" class="tw:px-6 tw:py-2.5 tw:bg-blue-600 tw:text-white tw:rounded-xl tw:border-none tw:font-black tw:text-xs tw:cursor-pointer tw:transition-all tw:shadow-lg tw:shadow-blue-600/20 tw:hover:bg-blue-700 tw:disabled:opacity-50 tw:disabled:cursor-not-allowed" [disabled]="citaForm.invalid">
+                    Confirmar Mi Cita
+                </button>
+            </footer>
+        </form>
+
+    </div>
+</div>

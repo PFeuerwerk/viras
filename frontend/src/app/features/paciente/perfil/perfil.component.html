@@ -1,0 +1,218 @@
+<div class="tw:max-w-5xl tw:mx-auto animate-fade-in">
+    <div class="tw:bg-white tw:p-8 tw:md:p-12 tw:rounded-[40px] tw:border tw:border-slate-100 tw:shadow-sm">
+        <header class="tw:flex tw:flex-col tw:md:flex-row tw:justify-between tw:items-start tw:md:items-center tw:gap-6 tw:mb-12">
+            <div class="tw:flex-1">
+                <h1 class="tw:text-3xl tw:font-black tw:text-slate-900 tw:tracking-tight tw:mb-2">Mi Expediente Personal</h1>
+                <p class="tw:text-sm tw:text-slate-500 tw:font-medium">Gestione su información clínica y de contacto para un mejor servicio.</p>
+            </div>
+            <div class="tw:flex tw:gap-3">
+                <button class="tw:px-6 tw:py-3 tw:bg-slate-50 tw:text-slate-600 tw:text-[13px] tw:font-black tw:rounded-2xl tw:border tw:border-slate-200 tw:transition-all tw:hover:bg-slate-100" 
+                        (click)="cancelar()">
+                    Volver al Tablero
+                </button>
+            </div>
+        </header>
+
+        <div *ngIf="mensaje" class="tw:mb-8 tw:p-4 tw:bg-emerald-50 tw:text-emerald-700 tw:text-sm tw:font-black tw:rounded-2xl tw:border tw:border-emerald-100 tw:flex tw:items-center tw:gap-3">
+            <span class="tw:text-xl">✅</span> {{ mensaje }}
+        </div>
+
+        <form [formGroup]="perfilForm" (ngSubmit)="onSubmit()" class="tw:space-y-12">
+            
+            <!-- SECCIÓN: IDENTIDAD Y AVATAR -->
+            <div class="tw:p-8 tw:bg-slate-50 tw:rounded-[32px] tw:border tw:border-slate-100">
+                <div class="tw:flex tw:flex-col tw:md:flex-row tw:items-center tw:gap-8">
+                    <div class="tw:relative tw:shrink-0">
+                        <div class="tw:w-32 tw:h-32 tw:rounded-[40px] tw:overflow-hidden tw:border-4 tw:border-white tw:shadow-xl">
+                            <img [src]="avatarPreview || '/assets/default-avatar.png'" class="tw:w-full tw:h-full tw:object-cover" alt="Avatar">
+                        </div>
+                        <label for="avatar-input" class="tw:absolute tw:bottom-[-10px] tw:right-[-10px] tw:w-10 tw:h-10 tw:bg-blue-600 tw:text-white tw:rounded-2xl tw:flex tw:items-center tw:justify-center tw:text-lg tw:cursor-pointer tw:shadow-lg tw:transition-all tw:hover:bg-blue-700 tw:hover:scale-110" title="Cambiar foto">
+                            <i class="material-icons tw:text-xl">photo_camera</i>
+                        </label>
+                        <input type="file" id="avatar-input" (change)="onFileSelected($event)" accept="image/*" hidden>
+                    </div>
+                    <div class="tw:text-center tw:md:text-left">
+                        <h3 class="tw:text-lg tw:font-black tw:text-slate-900 tw:mb-1">Foto de Perfil</h3>
+                        <p class="tw:text-sm tw:text-slate-500 tw:font-medium">Haga clic en el icono para subir una nueva imagen de identificación.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 1: DATOS DE IDENTIDAD -->
+            <div class="tw:space-y-8">
+                <h3 class="tw:flex tw:items-center tw:gap-3 tw:text-sm tw:font-black tw:text-slate-800 tw:uppercase tw:tracking-widest">
+                    <span class="tw:w-8 tw:h-8 tw:bg-blue-50 tw:text-blue-600 tw:rounded-xl tw:flex tw:items-center tw:justify-center">
+                        <i class="material-icons tw:text-lg">person</i>
+                    </span>
+                    Identidad
+                </h3>
+                <div class="tw:grid tw:grid-cols-1 tw:md:grid-cols-2 tw:lg:grid-cols-4 tw:gap-6">
+                    <div class="tw:flex tw:flex-col tw:gap-1.5">
+                        <label class="tw:text-[11px] tw:font-black tw:text-slate-500 tw:uppercase tw:tracking-wider tw:ml-1">Correo (No editable)</label>
+                        <input type="email" formControlName="email" class="tw:w-full tw:px-4 tw:py-3 tw:bg-slate-100 tw:text-slate-400 tw:font-bold tw:text-sm tw:rounded-xl tw:border tw:border-slate-200 tw:cursor-not-allowed">
+                    </div>
+                    <div class="tw:flex tw:flex-col tw:gap-1.5">
+                        <label class="tw:text-[11px] tw:font-black tw:text-slate-500 tw:uppercase tw:tracking-wider tw:ml-1">Nombres *</label>
+                        <input type="text" formControlName="nombres" class="tw:w-full tw:px-4 tw:py-3 tw:bg-white tw:text-slate-800 tw:font-bold tw:text-sm tw:rounded-xl tw:border tw:border-slate-200 tw:transition-all tw:focus:outline-none tw:focus:border-blue-600 tw:focus:ring-4 tw:focus:ring-blue-600/5">
+                    </div>
+                    <div class="tw:flex tw:flex-col tw:gap-1.5">
+                        <label class="tw:text-[11px] tw:font-black tw:text-slate-500 tw:uppercase tw:tracking-wider tw:ml-1">Apellidos *</label>
+                        <input type="text" formControlName="apellidos" class="tw:w-full tw:px-4 tw:py-3 tw:bg-white tw:text-slate-800 tw:font-bold tw:text-sm tw:rounded-xl tw:border tw:border-slate-200 tw:transition-all tw:focus:outline-none tw:focus:border-blue-600 tw:focus:ring-4 tw:focus:ring-blue-600/5">
+                    </div>
+                    <div class="tw:flex tw:flex-col tw:gap-1.5">
+                        <label class="tw:text-[11px] tw:font-black tw:text-slate-500 tw:uppercase tw:tracking-wider tw:ml-1">NSS (Seguridad Social)</label>
+                        <input type="text" formControlName="seguridad_social" class="tw:w-full tw:px-4 tw:py-3 tw:bg-white tw:text-slate-800 tw:font-bold tw:text-sm tw:rounded-xl tw:border tw:border-slate-200 tw:transition-all tw:focus:outline-none tw:focus:border-blue-600 tw:focus:ring-4 tw:focus:ring-blue-600/5">
+                    </div>
+                </div>
+                <div class="tw:grid tw:grid-cols-1 tw:md:grid-cols-3 tw:gap-6">
+                    <div class="tw:flex tw:flex-col tw:gap-1.5">
+                        <label class="tw:text-[11px] tw:font-black tw:text-slate-500 tw:uppercase tw:tracking-wider tw:ml-1">Fecha Nacimiento *</label>
+                        <input type="date" formControlName="fecha_nacimiento" class="tw:w-full tw:px-4 tw:py-3 tw:bg-white tw:text-slate-800 tw:font-bold tw:text-sm tw:rounded-xl tw:border tw:border-slate-200 tw:transition-all tw:focus:outline-none tw:focus:border-blue-600 tw:focus:ring-4 tw:focus:ring-blue-600/5">
+                    </div>
+                    <div class="tw:flex tw:flex-col tw:gap-1.5">
+                        <label class="tw:text-[11px] tw:font-black tw:text-slate-500 tw:uppercase tw:tracking-wider tw:ml-1">Sexo *</label>
+                        <select formControlName="genero" class="tw:w-full tw:px-4 tw:py-3 tw:bg-white tw:text-slate-800 tw:font-bold tw:text-sm tw:rounded-xl tw:border tw:border-slate-200 tw:transition-all tw:focus:outline-none tw:focus:border-blue-600 tw:focus:ring-4 tw:focus:ring-blue-600/5">
+                            <option value="M">Masculino (M)</option>
+                            <option value="F">Femenino (F)</option>
+                            <option value="OTRO">Otro</option>
+                        </select>
+                    </div>
+                    <div class="tw:flex tw:flex-col tw:gap-1.5">
+                        <label class="tw:text-[11px] tw:font-black tw:text-slate-500 tw:uppercase tw:tracking-wider tw:ml-1">Celular Principal *</label>
+                        <ngx-intl-tel-input
+                            [cssClass]="'tw:w-full tw:px-4 tw:py-3 tw:bg-white tw:text-slate-800 tw:font-bold tw:text-sm tw:rounded-xl tw:border tw:border-slate-200 tw:transition-all tw:focus:outline-none tw:focus:border-blue-600'"
+                            [preferredCountries]="preferredCountries"
+                            [selectedCountryISO]="CountryISO.Spain"
+                            [separateDialCode]="separateDialCode"
+                            formControlName="movil1">
+                        </ngx-intl-tel-input>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 2: INFORMACIÓN MÉDICA -->
+            <div class="tw:space-y-8">
+                <h3 class="tw:flex tw:items-center tw:gap-3 tw:text-sm tw:font-black tw:text-slate-800 tw:uppercase tw:tracking-widest">
+                    <span class="tw:w-8 tw:h-8 tw:bg-emerald-50 tw:text-emerald-600 tw:rounded-xl tw:flex tw:items-center tw:justify-center">
+                        <i class="material-icons tw:text-lg">medical_services</i>
+                    </span>
+                    Información Clínica
+                </h3>
+                <div class="tw:grid tw:grid-cols-1 tw:md:grid-cols-3 tw:gap-6">
+                    <div class="tw:flex tw:flex-col tw:gap-1.5">
+                        <label class="tw:text-[11px] tw:font-black tw:text-slate-500 tw:uppercase tw:tracking-wider tw:ml-1">Tipo de Sangre</label>
+                        <select formControlName="grupo_sanguineo" class="tw:w-full tw:px-4 tw:py-3 tw:bg-white tw:text-slate-800 tw:font-bold tw:text-sm tw:rounded-xl tw:border tw:border-slate-200 tw:transition-all tw:focus:outline-none tw:focus:border-blue-600">
+                            <option value="">Seleccione...</option>
+                            <option value="A+">A+</option><option value="A-">A-</option>
+                            <option value="B+">B+</option><option value="B-">B-</option>
+                            <option value="AB+">AB+</option><option value="AB-">AB-</option>
+                            <option value="O+">O+</option><option value="O-">O-</option>
+                        </select>
+                    </div>
+                    <div class="tw:flex tw:flex-col tw:gap-1.5">
+                        <label class="tw:text-[11px] tw:font-black tw:text-slate-500 tw:uppercase tw:tracking-wider tw:ml-1">Estado Civil</label>
+                        <select formControlName="estado_civil" class="tw:w-full tw:px-4 tw:py-3 tw:bg-white tw:text-slate-800 tw:font-bold tw:text-sm tw:rounded-xl tw:border tw:border-slate-200 tw:transition-all tw:focus:outline-none tw:focus:border-blue-600">
+                            <option value="">Seleccione...</option>
+                            <option value="Soltero">Soltero/a</option>
+                            <option value="Casado">Casado/a</option>
+                            <option value="Viudo">Viudo/a</option>
+                            <option value="Divorciado">Divorciado/a</option>
+                            <option value="Union Libre">Unión Libre</option>
+                        </select>
+                    </div>
+                    <div class="tw:flex tw:flex-col tw:gap-1.5">
+                        <label class="tw:text-[11px] tw:font-black tw:text-slate-500 tw:uppercase tw:tracking-wider tw:ml-1">Ciudad</label>
+                        <input type="text" formControlName="ciudad" class="tw:w-full tw:px-4 tw:py-3 tw:bg-white tw:text-slate-800 tw:font-bold tw:text-sm tw:rounded-xl tw:border tw:border-slate-200 tw:transition-all tw:focus:outline-none tw:focus:border-blue-600">
+                    </div>
+                </div>
+                <div class="tw:grid tw:grid-cols-1 tw:md:grid-cols-2 tw:gap-6">
+                    <div class="tw:flex tw:flex-col tw:gap-1.5">
+                        <label class="tw:text-[11px] tw:font-black tw:text-slate-500 tw:uppercase tw:tracking-wider tw:ml-1">Dirección Completa</label>
+                        <input type="text" formControlName="direccion" class="tw:w-full tw:px-4 tw:py-3 tw:bg-white tw:text-slate-800 tw:font-bold tw:text-sm tw:rounded-xl tw:border tw:border-slate-200 tw:transition-all tw:focus:outline-none tw:focus:border-blue-600">
+                    </div>
+                    <div class="tw:flex tw:flex-col tw:gap-1.5">
+                        <label class="tw:text-[11px] tw:font-black tw:text-slate-500 tw:uppercase tw:tracking-wider tw:ml-1">Segundo Móvil</label>
+                        <ngx-intl-tel-input
+                            [cssClass]="'tw:w-full tw:px-4 tw:py-3 tw:bg-white tw:text-slate-800 tw:font-bold tw:text-sm tw:rounded-xl tw:border tw:border-slate-200 tw:transition-all tw:focus:outline-none tw:focus:border-blue-600'"
+                            [preferredCountries]="preferredCountries"
+                            [selectedCountryISO]="CountryISO.Spain"
+                            [separateDialCode]="separateDialCode"
+                            formControlName="movil2">
+                        </ngx-intl-tel-input>
+                    </div>
+                </div>
+
+                <div class="tw:flex tw:flex-wrap tw:gap-6 tw:p-6 tw:bg-slate-50 tw:rounded-2xl tw:border tw:border-slate-100">
+                    <label class="tw:flex tw:items-center tw:gap-3 tw:cursor-pointer">
+                        <input type="checkbox" formControlName="discapacidad" class="tw:w-5 tw:h-5 tw:rounded-lg tw:accent-blue-600">
+                        <span class="tw:text-xs tw:font-black tw:text-slate-700">Presenta alguna discapacidad</span>
+                    </label>
+                    <input *ngIf="perfilForm.get('discapacidad')?.value" type="text" formControlName="detalles_discapacidad" class="tw:flex-1 tw:px-4 tw:py-2 tw:bg-white tw:text-slate-800 tw:font-bold tw:text-xs tw:rounded-xl tw:border tw:border-slate-200" placeholder="Especifique los detalles...">
+                </div>
+
+                <div class="tw:grid tw:grid-cols-1 tw:md:grid-cols-2 tw:gap-4">
+                    <label class="tw:flex tw:items-center tw:gap-3 tw:p-4 tw:bg-slate-50 tw:rounded-2xl tw:border tw:border-slate-100 tw:cursor-pointer tw:hover:bg-slate-100">
+                        <input type="checkbox" formControlName="consentimiento_email" class="tw:w-5 tw:h-5 tw:rounded-lg tw:accent-emerald-500">
+                        <span class="tw:text-xs tw:font-black tw:text-slate-600">Recibir información vía Email</span>
+                    </label>
+                    <label class="tw:flex tw:items-center tw:gap-3 tw:p-4 tw:bg-slate-50 tw:rounded-2xl tw:border tw:border-slate-100 tw:cursor-pointer tw:hover:bg-slate-100">
+                        <input type="checkbox" formControlName="consentimiento_sms" class="tw:w-5 tw:h-5 tw:rounded-lg tw:accent-emerald-500">
+                        <span class="tw:text-xs tw:font-black tw:text-slate-600">Recibir información vía SMS</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 3: TUTOR -->
+            <div class="tw:space-y-8">
+                <h3 class="tw:flex tw:items-center tw:gap-3 tw:text-sm tw:font-black tw:text-slate-800 tw:uppercase tw:tracking-widest">
+                    <span class="tw:w-8 tw:h-8 tw:bg-amber-50 tw:text-amber-600 tw:rounded-xl tw:flex tw:items-center tw:justify-center">
+                        <i class="material-icons tw:text-lg">verified_user</i>
+                    </span>
+                    Tutor o Responsable
+                </h3>
+                <div class="tw:grid tw:grid-cols-1 tw:md:grid-cols-3 tw:gap-6">
+                    <div class="tw:flex tw:flex-col tw:gap-1.5">
+                        <label class="tw:text-[11px] tw:font-black tw:text-slate-500 tw:uppercase tw:tracking-wider tw:ml-1">Nombre del Responsable</label>
+                        <input type="text" formControlName="tutor_nombre" class="tw:w-full tw:px-4 tw:py-3 tw:bg-white tw:text-slate-800 tw:font-bold tw:text-sm tw:rounded-xl tw:border tw:border-slate-200 tw:transition-all tw:focus:outline-none tw:focus:border-blue-600">
+                    </div>
+                    <div class="tw:flex tw:flex-col tw:gap-1.5">
+                        <label class="tw:text-[11px] tw:font-black tw:text-slate-500 tw:uppercase tw:tracking-wider tw:ml-1">Parentesco</label>
+                        <input type="text" formControlName="tutor_parentesco" class="tw:w-full tw:px-4 tw:py-3 tw:bg-white tw:text-slate-800 tw:font-bold tw:text-sm tw:rounded-xl tw:border tw:border-slate-200 tw:transition-all tw:focus:outline-none tw:focus:border-blue-600">
+                    </div>
+                    <div class="tw:flex tw:flex-col tw:gap-1.5">
+                        <label class="tw:text-[11px] tw:font-black tw:text-slate-500 tw:uppercase tw:tracking-wider tw:ml-1">Móvil Tutor</label>
+                        <ngx-intl-tel-input
+                            [cssClass]="'tw:w-full tw:px-4 tw:py-3 tw:bg-white tw:text-slate-800 tw:font-bold tw:text-sm tw:rounded-xl tw:border tw:border-slate-200 tw:transition-all tw:focus:outline-none tw:focus:border-blue-600'"
+                            [preferredCountries]="preferredCountries"
+                            [selectedCountryISO]="CountryISO.Spain"
+                            [separateDialCode]="separateDialCode"
+                            formControlName="tutor_movil">
+                        </ngx-intl-tel-input>
+                    </div>
+                </div>
+                <div class="tw:grid tw:grid-cols-1 tw:md:grid-cols-2 tw:gap-6">
+                    <div class="tw:flex tw:flex-col tw:gap-1.5">
+                        <label class="tw:text-[11px] tw:font-black tw:text-slate-500 tw:uppercase tw:tracking-wider tw:ml-1">Dirección Tutor</label>
+                        <input type="text" formControlName="tutor_direccion" class="tw:w-full tw:px-4 tw:py-3 tw:bg-white tw:text-slate-800 tw:font-bold tw:text-sm tw:rounded-xl tw:border tw:border-slate-200 tw:transition-all tw:focus:outline-none tw:focus:border-blue-600">
+                    </div>
+                    <div class="tw:flex tw:flex-col tw:gap-1.5">
+                        <label class="tw:text-[11px] tw:font-black tw:text-slate-500 tw:uppercase tw:tracking-wider tw:ml-1">Email Tutor</label>
+                        <input type="email" formControlName="tutor_email" class="tw:w-full tw:px-4 tw:py-3 tw:bg-white tw:text-slate-800 tw:font-bold tw:text-sm tw:rounded-xl tw:border tw:border-slate-200 tw:transition-all tw:focus:outline-none tw:focus:border-blue-600">
+                    </div>
+                </div>
+                <label class="tw:flex tw:items-center tw:gap-3 tw:p-4 tw:bg-slate-50 tw:rounded-2xl tw:border tw:border-slate-100 tw:cursor-pointer tw:hover:bg-slate-100">
+                    <input type="checkbox" formControlName="tutor_es_responsable" class="tw:w-5 tw:h-5 tw:rounded-lg tw:accent-blue-600">
+                    <span class="tw:text-xs tw:font-black tw:text-slate-600">El tutor es el responsable legal y financiero</span>
+                </label>
+            </div>
+
+            <div class="tw:pt-12 tw:border-t tw:border-slate-50">
+                <button type="submit" class="tw:w-full tw:py-5 tw:bg-blue-600 tw:text-white tw:font-black tw:text-base tw:rounded-3xl tw:border-none tw:cursor-pointer tw:shadow-2xl tw:shadow-blue-600/20 tw:transition-all tw:hover:bg-blue-700 tw:hover:scale-[1.02] tw:active:scale-95 tw:disabled:opacity-50 tw:disabled:pointer-events-none" 
+                        [disabled]="loading || perfilForm.invalid">
+                    <span *ngIf="!loading">Guardar Cambios en mi Expediente</span>
+                    <span *ngIf="loading" class="tw:w-5 tw:h-5 tw:border-2 tw:border-white/30 tw:border-t-white tw:rounded-full tw:animate-spin tw:inline-block"></span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

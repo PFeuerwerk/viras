@@ -1,0 +1,55 @@
+<div class="tw:bg-slate-900 tw:text-white tw:py-2.5 tw:text-[0.78rem] tw:font-semibold tw:tracking-wide">
+    <div class="tw:max-w-7xl tw:mx-auto tw:px-6 tw:flex tw:justify-between tw:items-center">
+        <!-- BLOQUE IZQUIERDO: INFORMACIÓN DE CONTACTO -->
+        <div class="tw:flex tw:gap-6 tw:items-center">
+            <!-- Ítem: Teléfono -->
+            <div class="tw:flex tw:items-center tw:gap-1.5 tw:opacity-90 tw:transition-opacity tw:hover:opacity-100" *ngIf="telefono">
+                <i class="material-icons tw:text-[1.1rem] tw:text-blue-400">phone_in_talk</i>
+                <span>{{ telefono }}</span>
+            </div>
+
+            <!-- Ítem: Dirección -->
+            <div class="tw:flex tw:items-center tw:gap-1.5 tw:opacity-90 tw:transition-opacity tw:hover:opacity-100 tw:md:flex tw:hidden" *ngIf="direccion">
+                <i class="material-icons tw:text-[1.1rem] tw:text-blue-400">location_on</i>
+                <span>{{ direccion }}</span>
+            </div>
+
+            <!-- Ítem: Horario -->
+            <div class="tw:flex tw:items-center tw:gap-1.5 tw:opacity-90 tw:transition-opacity tw:hover:opacity-100 tw:md:flex tw:hidden" *ngIf="horarioResumen">
+                <i class="material-icons tw:text-[1.1rem] tw:text-blue-400">schedule</i>
+                <span>{{ horarioResumen }}</span>
+            </div>
+        </div>
+
+        <!-- BLOQUE DERECHO: ACCIONES DINÁMICAS -->
+        <div class="tw:flex tw:items-center tw:gap-4">
+
+            <!-- CASO A: USUARIO NO AUTENTICADO -->
+            <ng-container *ngIf="!currentUser">
+                <button class="tw:bg-transparent tw:text-white tw:border-none tw:flex tw:items-center tw:gap-1.5 tw:cursor-pointer tw:transition-colors tw:hover:text-blue-400" (click)="handleAuthAction()" title="Entrar a mi cuenta">
+                    <i class="material-icons tw:text-[1.1rem]">login</i>
+                    <span class="tw:md:inline tw:hidden">Inicio de Sesión</span>
+                </button>
+                <button class="tw:bg-blue-600 tw:text-white tw:px-4 tw:py-1.5 tw:rounded-lg tw:border-none tw:flex tw:items-center tw:gap-1.5 tw:cursor-pointer tw:font-bold tw:transition-all tw:hover:bg-blue-700 tw:hover:-translate-y-px" (click)="goToRegister()" title="Crear cuenta nueva">
+                    <i class="material-icons tw:text-[1.1rem]">person_add</i>
+                    <span>Registrarse</span>
+                </button>
+            </ng-container>
+
+            <!-- CASO B: USUARIO AUTENTICADO -->
+            <ng-container *ngIf="currentUser">
+                <div class="tw:flex tw:items-center tw:gap-4">
+                    <span class="tw:opacity-80 tw:md:inline tw:hidden">Hola, <strong>{{ currentUser.nombres }}</strong></span>
+                    <button class="tw:bg-blue-600 tw:text-white tw:px-4 tw:py-1.5 tw:rounded-lg tw:border-none tw:flex tw:items-center tw:gap-1.5 tw:cursor-pointer tw:font-bold tw:transition-all tw:hover:bg-blue-700" (click)="handleAuthAction()" title="Ir a mi panel de control">
+                        <i class="material-icons tw:text-[1.1rem]">dashboard</i>
+                        <span>Mi Dashboard</span>
+                    </button>
+                    <button class="tw:bg-transparent tw:text-white/60 tw:border-none tw:flex tw:items-center tw:cursor-pointer tw:transition-colors tw:hover:text-red-400" (click)="logout()" title="Cerrar Sesión">
+                        <i class="material-icons tw:text-[1.1rem]">power_settings_new</i>
+                    </button>
+                </div>
+            </ng-container>
+
+        </div>
+    </div>
+</div>

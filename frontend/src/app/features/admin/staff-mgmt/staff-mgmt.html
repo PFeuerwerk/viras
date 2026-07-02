@@ -1,0 +1,221 @@
+<div class="staff-container">
+    <header class="staff-header">
+        <div>
+            <h2>Gestión de Personal</h2>
+            <p *ngIf="professionalModel.business_id !== ''">
+                Administra los doctores que aparecerán en la página pública y que podrán iniciar sesión en el sistema.
+            </p>
+        </div>
+        <button class="btn-add" (click)="showForm ? (showForm = false) : onAddDoctor()">
+            <i class="material-icons">{{ showForm ? 'close' : 'add_circle' }}</i>
+            {{ showForm ? 'Cancelar Edición' : 'Agregar Doctor' }}
+        </button>
+    </header>
+
+    <!-- FORMULARIO DE REGISTRO / EDICIÓN -->
+    <section class="staff-form-card animate-fade-in" *ngIf="showForm">
+        <h3>{{ isEditing ? 'Editar Perfil del Doctor' : 'Registrar Nuevo Doctor' }}</h3>
+
+        <div class="form-layout">
+            <!-- Zona de Carga de Foto -->
+            <div class="upload-section">
+                <div class="image-preview-wrapper" [class.has-image]="imagePreview">
+                    <img *ngIf="imagePreview" [src]="imagePreview" alt="Previsualización de Foto">
+                    <div *ngIf="!imagePreview" class="empty-preview">
+                        <i class="material-icons">account_circle</i>
+                        <span>Sin Foto</span>
+                    </div>
+                </div>
+
+                <div class="file-input-container">
+                    <button type="button" class="btn-upload-trigger">
+                        <i class="material-icons">photo_camera</i> Seleccionar Foto
+                    </button>
+                    <input type="file" (change)="onFileSelected($event)" accept="image/*" title="Elegir imagen">
+                </div>
+                <p class="upload-hint">Formatos: JPG, PNG. Optimizado automáticamente.</p>
+            </div>
+
+            <div class="inputs-section">
+
+                <!-- DATOS DE ACCESO -->
+                <div class="form-block">
+                    <h4 class="block-title">
+                        <i class="material-icons">verified_user</i>
+                        Acceso del doctor
+                    </h4>
+
+                    <div class="input-row">
+                        <div class="form-group flex-2">
+                            <label>Email profesional *</label>
+                            <input type="email" [(ngModel)]="professionalModel.email" placeholder="doctor@clinica.com"
+                                class="form-control" [disabled]="isEditing">
+                        </div>
+
+                        <div class="form-group flex-1">
+                            <label>Contraseña {{ isEditing ? '(no editable)' : '*' }}</label>
+                            <input type="password" [(ngModel)]="professionalModel.password_hash"
+                                placeholder="Mínimo 6 caracteres" class="form-control" [disabled]="isEditing">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- INFORMACIÓN PRINCIPAL -->
+                <div class="form-block">
+                    <h4 class="block-title">
+                        <i class="material-icons">badge</i>
+                        Perfil profesional
+                    </h4>
+
+                    <div class="form-group">
+                        <label>Nombre Completo *</label>
+                        <input type="text" [(ngModel)]="professionalModel.nombre" placeholder="Ej. Dr. Fernando Pérez"
+                            class="form-control">
+                    </div>
+
+                    <div class="input-row">
+                        <div class="form-group flex-2">
+                            <label>Cargo / Especialidad *</label>
+                            <input type="text" [(ngModel)]="professionalModel.cargo"
+                                placeholder="Ej. Odontólogo General" class="form-control">
+                        </div>
+                        <div class="form-group flex-1">
+                            <label>Orden Visual</label>
+                            <input type="number" [(ngModel)]="professionalModel.orden" placeholder="0"
+                                class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="input-row">
+                        <div class="form-group flex-2">
+                            <label>Especialidad primaria</label>
+                            <input type="text" [(ngModel)]="professionalModel.especialidad_primaria"
+                                placeholder="Ej. Odontología General" class="form-control">
+                        </div>
+
+                        <div class="form-group flex-1">
+                            <label>Años de experiencia</label>
+                            <input type="number" [(ngModel)]="professionalModel.anos_experiencia" min="0"
+                                placeholder="0" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="input-row">
+                        <div class="form-group flex-1">
+                            <label>Número de colegiado</label>
+                            <input type="text" [(ngModel)]="professionalModel.numero_colegiado"
+                                placeholder="Ej. COL-12345" class="form-control">
+                        </div>
+
+                        <div class="form-group flex-2">
+                            <label>Universidad de egreso</label>
+                            <input type="text" [(ngModel)]="professionalModel.universidad_egreso"
+                                placeholder="Ej. Universidad Complutense" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Formación Académica</label>
+                        <input type="text" [(ngModel)]="professionalModel.formacion"
+                            placeholder="Ej. Máster en Ortodoncia y Estética Dental" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Reseña Profesional (Bio)</label>
+                        <textarea [(ngModel)]="professionalModel.descripcion" rows="3"
+                            placeholder="Describa brevemente la trayectoria..." class="form-control"></textarea>
+                    </div>
+                </div>
+
+                <!-- CONTACTO -->
+                <div class="form-block">
+                    <h4 class="block-title">
+                        <i class="material-icons">contact_phone</i>
+                        Contacto
+                    </h4>
+
+                    <div class="input-row">
+                        <div class="form-group flex-1">
+                            <label>Teléfono</label>
+                            <input type="text" [(ngModel)]="professionalModel.telefono" placeholder="Teléfono fijo"
+                                class="form-control">
+                        </div>
+
+                        <div class="form-group flex-1">
+                            <label>Móvil</label>
+                            <input type="text" [(ngModel)]="professionalModel.movil1" placeholder="Móvil profesional"
+                                class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Dirección</label>
+                        <input type="text" [(ngModel)]="professionalModel.direccion"
+                            placeholder="Dirección profesional o consulta" class="form-control">
+                    </div>
+                </div>
+
+                <!-- Conectividad Social -->
+                <div class="social-config-box">
+                    <span class="box-label"><i class="material-icons">share</i> Presencia Digital (Links)</span>
+                    <div class="social-input-group">
+                        <div class="social-field">
+                            <i class="material-icons">link</i>
+                            <input type="text" [(ngModel)]="professionalModel.linkedin_url" placeholder="URL LinkedIn">
+                        </div>
+                        <div class="social-field">
+                            <i class="material-icons">photo_camera</i>
+                            <input type="text" [(ngModel)]="professionalModel.instagram_url"
+                                placeholder="URL Instagram">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Acción Final -->
+                <div class="form-actions">
+                    <button class="btn-save-staff" (click)="saveProfessional()"
+                        [disabled]="isSaving || !professionalModel.nombre || !professionalModel.cargo || (!isEditing && (!professionalModel.email || !professionalModel.password_hash))">
+                        <i class="material-icons">{{ isSaving ? 'sync' : 'save' }}</i>
+                        {{ isSaving ? 'Sincronizando...' : (isEditing ? 'Guardar Cambios' : 'Crear Doctor') }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LISTADO DE STAFF ACTUAL -->
+    <div class="loading-overlay" *ngIf="isLoading">
+        <div class="spinner-sm"></div>
+        <p>Actualizando equipo...</p>
+    </div>
+
+    <div class="staff-grid" *ngIf="!isLoading">
+        <div class="staff-card" *ngFor="let member of staffList" [style.order]="member.orden">
+            <div class="card-photo">
+                <img [src]="member.foto_url || 'assets/images/defaults/doctor-placeholder.png'" alt="Foto Profesional">
+            </div>
+            <div class="card-info">
+                <h4>{{ member.nombre }}</h4>
+                <span class="badge-cargo">{{ member.cargo }}</span>
+                <p class="formacion-small" *ngIf="member.formacion">
+                    <i class="material-icons">school</i> {{ member.formacion }}
+                </p>
+                <p class="desc-short">{{ member.descripcion }}</p>
+            </div>
+            <div class="card-footer-actions">
+                <button class="btn-action-icon edit" (click)="editStaff(member)" title="Editar Perfil">
+                    <i class="material-icons">edit</i>
+                </button>
+                <button class="btn-action-icon delete" (click)="deleteStaff(member.id!)" title="Dar de baja">
+                    <i class="material-icons">delete_sweep</i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Estado vacío profesional -->
+        <div class="empty-staff-state" *ngIf="staffList.length === 0 && !isLoading">
+            <i class="material-icons">diversity_3</i>
+            <p>Aún no hay doctores registrados. Comienza agregando al líder del equipo.</p>
+        </div>
+    </div>
+</div>

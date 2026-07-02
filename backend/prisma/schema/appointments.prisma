@@ -1,0 +1,24 @@
+model citas {
+  id                     String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id            String?     @db.Uuid
+  paciente_id            String      @db.Uuid
+  doctor_id              String      @db.Uuid
+  fecha                  DateTime
+  motivo                 String?
+  duracionEstimada       Int?
+  motivoConsulta         String?
+  notasInternas          String?
+  precioEstimado         Decimal?    @db.Decimal(10, 2)
+  googleEventId          String?
+  estado                 estado_cita @default(PENDIENTE)
+  creado_en              DateTime    @default(now())
+  actualizado_en         DateTime    @updatedAt
+  antecedentes_clinicos  Json?
+  nivel_dolor            Int?
+  observaciones_paciente String?
+  servicio_cita          String?
+  tipo_paciente          String?
+  business               Business?   @relation(fields: [business_id], references: [id])
+  doctor                 usuarios    @relation("DoctorCitas", fields: [doctor_id], references: [id], onDelete: Cascade)
+  paciente               usuarios    @relation("PacienteCitas", fields: [paciente_id], references: [id], onDelete: Cascade)
+}

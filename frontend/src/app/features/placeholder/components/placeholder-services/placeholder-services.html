@@ -1,0 +1,87 @@
+<section class="tw:py-6 tw:bg-slate-50" id="servicios" *ngIf="configVisual?.show_services">
+    <div class="tw:max-w-[1200px] tw:mx-auto tw:px-[5%]">
+        <!-- Encabezado con Jerarquía de Clase Mundial -->
+        <header class="tw:text-center tw:mb-6 animate-fade-in">
+            <span class="tw:text-blue-600 tw:font-extrabold tw:text-xs tw:tracking-[2px] tw:uppercase tw:mb-3 tw:inline-block" [ngSwitch]="tipoNegocio">
+                <ng-container *ngSwitchCase="'DENTAL'">Excelencia Odontológica</ng-container>
+                <ng-container *ngSwitchCase="'PELUQUERIA'">Estilo & Tendencia</ng-container>
+                <ng-container *ngSwitchCase="'RESTAURANTE'">Gastronomía de Autor</ng-container>
+                <ng-container *ngSwitchCase="'ESTETICA'">Belleza & Bienestar</ng-container>
+                <ng-container *ngSwitchCase="'MEDICINA_GENERAL'">Cuidado Integral</ng-container>
+                <ng-container *ngSwitchCase="'CONSULTORIA'">Experticia Estratégica</ng-container>
+                <ng-container *ngSwitchCase="'GIMNASIO'">Entrenamiento Elite</ng-container>
+                <ng-container *ngSwitchDefault>Servicios Especializados</ng-container>
+            </span>
+            <h2 class="tw:text-3xl tw:md:text-4xl tw:text-slate-800 tw:font-black tw:mb-4">Soluciones a tu medida</h2>
+            <div class="tw:w-16 tw:h-1 tw:bg-blue-600 tw:mx-auto tw:rounded-full tw:mb-6"></div>
+            <p class="tw:text-slate-500 tw:text-lg tw:max-w-2xl tw:mx-auto">
+                Descubre nuestra selección de servicios diseñados para ofrecerte <br class="tw:md:block tw:hidden">
+                la mejor experiencia y resultados profesionales de alto nivel.
+            </p>
+        </header>
+
+        <!-- Grid de Tarjetas Minimalistas de Calidad Mundial -->
+        <div class="tw:grid tw:grid-cols-1 tw:md:grid-cols-2 tw:lg:grid-cols-3 tw:gap-8" *ngIf="servicios && servicios.length > 0; else noServices">
+            <!-- Usamos el índice 'i' para identificar de forma única cada tarjeta en el Set de expansión -->
+            <div class="tw:bg-white tw:rounded-[32px] tw:shadow-xl tw:shadow-slate-200/50 tw:border tw:border-slate-100 tw:flex tw:flex-col tw:overflow-hidden tw:transition-all tw:duration-300 tw:hover:-translate-y-2 tw:hover:shadow-2xl tw:hover:shadow-blue-600/5 animate-fade-in" *ngFor="let service of servicios; let i = index">
+                <div class="tw:p-6 tw:flex-grow">
+                    <!-- Contenedor de Icono Dinámico -->
+                    <div class="tw:w-16 tw:h-16 tw:bg-blue-50 tw:text-blue-600 tw:rounded-[22px] tw:flex tw:items-center tw:justify-center tw:mb-4">
+                        <ng-container *ngIf="isLocalIcon(service.icono); else materialIcon">
+                            <img [src]="getIconPath(service.icono)" [alt]="service.titulo" class="tw:w-10 tw:h-10 tw:object-contain">
+                        </ng-container>
+
+                        <ng-template #materialIcon>
+                            <i class="material-icons tw:text-3xl">
+                                {{ service.icono || 'auto_awesome' }}
+                            </i>
+                        </ng-template>
+                    </div>
+
+                    <h3 class="tw:text-xl tw:text-slate-800 tw:font-extrabold tw:mb-2">{{ service.titulo }}</h3>
+
+                    <!-- Lógica de Texto Inteligente -->
+                    <div class="tw:flex tw:flex-col">
+                        <p class="tw:text-slate-500 tw:leading-relaxed tw:text-[0.95rem] tw:m-0" [class.tw:line-clamp-none]="expandedServices.has(i)">
+                            <!-- Si no está expandido y es largo, mostramos solo el extracto -->
+                            <ng-container *ngIf="!expandedServices.has(i) && isLongDescription(service.descripcion)">
+                                {{ service.descripcion | slice:0:CHAR_LIMIT }}...
+                            </ng-container>
+                            <!-- De lo contrario, mostramos el texto completo -->
+                            <ng-container *ngIf="expandedServices.has(i) || !isLongDescription(service.descripcion)">
+                                {{ service.descripcion }}
+                            </ng-container>
+                        </p>
+
+                        <!-- Botón de Acción para expandir/contraer -->
+                        <button *ngIf="isLongDescription(service.descripcion)" type="button" class="tw:text-blue-600 tw:font-bold tw:text-sm tw:mt-2 tw:cursor-pointer tw:border-none tw:bg-transparent tw:p-0 tw:text-left tw:transition-opacity tw:hover:opacity-80"
+                            (click)="toggleExpand(i)">
+                            {{ expandedServices.has(i) ? 'Leer menos' : 'Leer más...' }}
+                        </button>
+                    </div>
+                </div>
+
+                <div class="tw:p-6 tw:pt-0 tw:flex tw:justify-between tw:items-end">
+                    <div class="tw:flex tw:flex-col" *ngIf="service.precio_estimado">
+                        <span class="tw:text-[0.65rem] tw:text-slate-400 tw:uppercase tw:font-black tw:tracking-widest tw:mb-0.5">Inversión</span>
+                        <span class="tw:text-xl tw:text-slate-800 tw:font-black">{{ service.precio_estimado }}</span>
+                    </div>
+                    <div class="tw:flex-grow" *ngIf="!service.precio_estimado"></div>
+
+                    <button class="tw:flex tw:items-center tw:gap-1.5 tw:text-blue-600 tw:font-black tw:text-[0.95rem] tw:border-none tw:bg-transparent tw:cursor-pointer tw:transition-all tw:hover:gap-2.5" (click)="handleReserve()" title="Agendar este servicio">
+                        <span>Agendar Cita</span>
+                        <i class="material-icons tw:text-lg">arrow_forward</i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estado Vacío -->
+        <ng-template #noServices>
+            <div class="tw:text-center tw:py-20 tw:bg-white tw:rounded-[40px] tw:border tw:border-dashed tw:border-slate-200 animate-fade-in">
+                <i class="material-icons tw:text-6xl tw:text-slate-200 tw:mb-4">medical_services</i>
+                <p class="tw:text-slate-400 tw:font-medium tw:max-w-xs tw:mx-auto">Nuestra carta de servicios está siendo actualizada para brindarte la mejor atención.</p>
+            </div>
+        </ng-template>
+    </div>
+</section>

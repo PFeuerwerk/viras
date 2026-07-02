@@ -1,0 +1,30 @@
+<div class="tw:fixed tw:bottom-8 tw:right-8 tw:z-[999] tw:flex tw:flex-col tw:items-end tw:gap-4">
+    <!-- Chat Toggle Button -->
+    <button class="tw:w-14 tw:h-14 tw:bg-blue-600 tw:text-white tw:rounded-full tw:border-none tw:flex tw:items-center tw:justify-center tw:cursor-pointer tw:shadow-2xl tw:transition-all tw:duration-300 tw:hover:scale-110 tw:hover:bg-blue-700" (click)="toggleChat()">
+        <i class="material-icons tw:text-2xl">{{ showChat ? 'close' : 'chat' }}</i>
+    </button>
+
+    <!-- Chat Window -->
+    <div class="tw:w-[350px] tw:h-[450px] tw:bg-white tw:rounded-[28px] tw:shadow-2xl tw:flex tw:flex-col tw:overflow-hidden tw:border tw:border-slate-100 animate-fade-in" *ngIf="showChat">
+        <div class="tw:bg-blue-600 tw:p-6 tw:text-white">
+            <h4 class="tw:m-0 tw:text-lg tw:font-black">{{ businessName }} Bot</h4>
+            <span class="tw:text-xs tw:opacity-70 tw:font-bold">Asistente Virtual en línea</span>
+        </div>
+        <div class="tw:flex-grow tw:p-6 tw:overflow-y-auto tw:bg-slate-50 tw:flex tw:flex-col tw:gap-4">
+            <div *ngFor="let msg of chatHistory" class="tw:flex tw:w-full" [ngClass]="msg.sender === 'user' ? 'tw:justify-end' : 'tw:justify-start'">
+                <div class="tw:max-w-[80%] tw:p-3.5 tw:text-[0.9rem] tw:leading-relaxed" 
+                     [ngClass]="msg.sender === 'user' ? 'tw:bg-blue-600 tw:text-white tw:rounded-[20px_20px_4px_20px]' : 'tw:bg-white tw:text-slate-700 tw:rounded-[20px_20px_20px_4px] tw:shadow-sm tw:border tw:border-slate-100'">
+                    {{ msg.text }}
+                </div>
+            </div>
+        </div>
+        <div class="tw:p-4 tw:bg-white tw:border-t tw:border-slate-100 tw:flex tw:gap-2">
+            <input type="text" [(ngModel)]="userMessage" (keyup.enter)="sendMessage()" 
+                   class="tw:flex-grow tw:bg-slate-100 tw:border-none tw:rounded-xl tw:px-4 tw:py-2 tw:text-sm tw:outline-none tw:transition-all tw:focus:bg-slate-200"
+                   placeholder="Escribe aquí...">
+            <button class="tw:bg-blue-600 tw:text-white tw:w-10 tw:h-10 tw:rounded-xl tw:border-none tw:flex tw:items-center tw:justify-center tw:cursor-pointer tw:transition-all tw:hover:bg-blue-700" (click)="sendMessage()">
+                <i class="material-icons tw:text-[1.2rem]">send</i>
+            </button>
+        </div>
+    </div>
+</div>

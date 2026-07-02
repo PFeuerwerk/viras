@@ -1,0 +1,158 @@
+<section class="owner-dashboard">
+  <header class="dashboard-header">
+    <div>
+      <span class="eyebrow">Admin / Owner</span>
+      <h1>{{ dashboard?.business?.nombre_empresa || 'Panel Ejecutivo' }}</h1>
+      <p>Vista operativa y administrativa agregada del negocio autenticado.</p>
+    </div>
+
+    <div class="header-actions">
+      <a routerLink="/admin/citas-master" class="icon-button" title="Abrir agenda">
+        <i class="material-icons">calendar_month</i>
+      </a>
+      <a routerLink="/admin/staff" class="icon-button" title="Gestionar staff">
+        <i class="material-icons">badge</i>
+      </a>
+      <button type="button" class="icon-button" title="Actualizar" (click)="loadDashboard()">
+        <i class="material-icons">refresh</i>
+      </button>
+    </div>
+  </header>
+
+  <div class="loading-state" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <span>Sincronizando indicadores...</span>
+  </div>
+
+  <div class="error-state" *ngIf="!isLoading && error">
+    <i class="material-icons">error</i>
+    <span>{{ error }}</span>
+    <button type="button" (click)="loadDashboard()">Reintentar</button>
+  </div>
+
+  <ng-container *ngIf="!isLoading && !error && dashboard as data">
+    <div class="kpi-grid">
+      <article class="kpi-card">
+        <span>Citas hoy</span>
+        <strong>{{ data.operations.appointmentsToday }}</strong>
+        <small>{{ data.operations.confirmedToday }} confirmadas</small>
+      </article>
+      <article class="kpi-card">
+        <span>Pacientes</span>
+        <strong>{{ data.patients.total }}</strong>
+        <small>{{ data.patients.newThisMonth }} nuevos este mes</small>
+      </article>
+      <article class="kpi-card">
+        <span>Producción mes</span>
+        <strong>{{ formatMoney(data.financial.estimatedMonthlyProduction) }}</strong>
+        <small>Estimado desde citas valoradas</small>
+      </article>
+      <article class="kpi-card">
+        <span>Aceptación</span>
+        <strong>{{ data.financial.acceptanceRate }}%</strong>
+        <small>{{ data.financial.acceptedBudgetsThisMonth }}/{{ data.financial.budgetsThisMonth }} presupuestos</small>
+      </article>
+    </div>
+
+    <div class="content-grid">
+      <section class="panel operations-panel">
+        <div class="panel-title">
+          <h2>Operación del día</h2>
+          <span>{{ formatDateTime(data.period.generatedAt) }}</span>
+        </div>
+
+        <div class="status-grid">
+          <div><strong>{{ data.operations.pendingToday }}</strong><span>Pendientes</span></div>
+          <div><strong>{{ data.operations.confirmedToday }}</strong><span>Confirmadas</span></div>
+          <div><strong>{{ data.operations.completedToday }}</strong><span>Completadas</span></div>
+          <div><strong>{{ data.operations.cancelledToday }}</strong><span>Canceladas</span></div>
+          <div><strong>{{ data.operations.noShowsToday }}</strong><span>No-shows</span></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-title">
+          <h2>Alertas</h2>
+        </div>
+
+        <div class="alert-list">
+          <article class="alert-item" *ngFor="let alert of data.alerts" [class]="alert.type">
+            <i class="material-icons">{{ getAlertIcon(alert.type) }}</i>
+            <div>
+              <strong>{{ alert.title }}</strong>
+              <p>{{ alert.detail }}</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-title">
+          <h2>Próximas citas</h2>
+          <a routerLink="/admin/citas-master">Ver agenda</a>
+        </div>
+
+        <div class="empty-row" *ngIf="data.operations.upcomingAppointments.length === 0">
+          Sin citas próximas.
+        </div>
+
+        <article class="appointment-row" *ngFor="let cita of data.operations.upcomingAppointments">
+          <time>{{ formatDateTime(cita.fecha) }}</time>
+          <div>
+            <strong>{{ cita.paciente.nombres }} {{ cita.paciente.apellidos }}</strong>
+            <span>{{ cita.doctor.nombres }} {{ cita.doctor.apellidos }} · {{ cita.servicio_cita || cita.motivoConsulta || 'Consulta' }}</span>
+          </div>
+          <em>{{ cita.estado }}</em>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="panel-title">
+          <h2>Ocupación por profesional</h2>
+        </div>
+
+        <div class="empty-row" *ngIf="data.occupancy.byProfessional.length === 0">
+          Sin actividad profesional esta semana.
+        </div>
+
+        <div class="occupancy-row" *ngFor="let item of data.occupancy.byProfessional">
+          <span>{{ item.doctorName }}</span>
+          <div class="bar-track">
+            <div class="bar-fill" [style.width.%]="item.appointmentsThisWeek * 10 > 100 ? 100 : item.appointmentsThisWeek * 10"></div>
+          </div>
+          <strong>{{ item.appointmentsThisWeek }}</strong>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-title">
+          <h2>Finanzas administrativas</h2>
+        </div>
+
+        <div class="finance-list">
+          <div><span>Producción semanal</span><strong>{{ formatMoney(data.financial.estimatedWeeklyProduction) }}</strong></div>
+          <div><span>Presupuestos aceptados</span><strong>{{ formatMoney(data.financial.acceptedBudgetAmount) }}</strong></div>
+          <div><span>Presupuestos pendientes</span><strong>{{ formatMoney(data.financial.pendingBudgetAmount) }}</strong></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-title">
+          <h2>Pacientes recientes</h2>
+        </div>
+
+        <div class="empty-row" *ngIf="data.patients.recent.length === 0">
+          Sin pacientes recientes.
+        </div>
+
+        <article class="patient-row" *ngFor="let patient of data.patients.recent">
+          <div>
+            <strong>{{ patient.nombres }} {{ patient.apellidos }}</strong>
+            <span>{{ patient.email }}</span>
+          </div>
+          <small>{{ patient.movil1 || 'Sin móvil' }}</small>
+        </article>
+      </section>
+    </div>
+  </ng-container>
+</section>

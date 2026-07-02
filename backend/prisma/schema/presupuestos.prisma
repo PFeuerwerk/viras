@@ -1,0 +1,26 @@
+model presupuestos_seguros {
+  id                     String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  paciente_id            String    @db.Uuid
+  aseguradora_compania   String?   @db.VarChar(150)
+  aseguradora_poliza     String?   @db.VarChar(100)
+  aseguradora_titular    String?   @db.VarChar(150)
+  aseguradora_numero     String?   @db.VarChar(100)
+  aseguradora_cobertura  String?
+  diagnostico_general    String?
+  plan_tratamiento       Json?
+  observaciones_clinicas String?
+  importe_total          Decimal?  @db.Decimal(10, 2)
+  aceptacion_economica   Boolean   @default(false)
+  modalidad_pago         String?   @db.VarChar(50)
+  detalle_pagos          Json?
+  validez_dias           Int?      @default(30)
+  fecha                  DateTime? @default(now()) @db.Timestamptz(6)
+  firma_paciente         String?
+  firma_representante    String?
+  firma_profesional      String?
+  creado_en              DateTime? @default(now()) @db.Timestamptz(6)
+  actualizado_en         DateTime? @default(now()) @db.Timestamptz(6)
+  usuario                usuarios  @relation(fields: [paciente_id], references: [id], onDelete: Cascade)
+
+  @@index([paciente_id])
+}

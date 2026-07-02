@@ -1,0 +1,58 @@
+<section class="tw:py-12 tw:bg-white" id="equipo" *ngIf="configVisual?.show_staff">
+    <div class="tw:max-w-[1200px] tw:mx-auto tw:px-[5%]">
+        <!-- ENCABEZADO DE SECCIÓN COMPACTO -->
+        <header class="tw:text-center tw:mb-8 animate-fade-in">
+            <span class="tw:text-blue-600 tw:font-extrabold tw:text-xs tw:tracking-[2px] tw:uppercase tw:mb-3 tw:inline-block">{{ sectionTitle }}</span>
+            <h2 class="tw:text-3xl tw:text-slate-800 tw:font-black tw:mb-4">Excelencia Profesional</h2>
+            <div class="tw:w-16 tw:h-1 tw:bg-blue-600 tw:mx-auto tw:rounded-full"></div>
+        </header>
+
+        <!-- GRID DE ALTA DENSIDAD -->
+        <div class="tw:grid tw:grid-cols-1 tw:md:grid-cols-2 tw:lg:grid-cols-3 tw:gap-10">
+            <!-- Usamos sortedStaff para respetar el orden definido por Rosita -->
+            <div class="tw:bg-slate-50 tw:p-6 tw:rounded-[32px] tw:text-center tw:transition-all tw:duration-300 tw:border tw:border-slate-100 tw:hover:bg-white tw:hover:shadow-2xl tw:hover:shadow-blue-600/5 tw:hover:-translate-y-2 animate-fade-in" *ngFor="let member of sortedStaff">
+
+                <!-- FOTO CIRCULAR PREMIUM -->
+                <div class="tw:w-32 tw:h-32 tw:mx-auto tw:mb-4 tw:rounded-full tw:p-1.5 tw:border-2 tw:border-blue-600/20 tw:overflow-hidden">
+                    <img class="tw:w-full tw:h-full tw:object-cover tw:rounded-full" [src]="member.foto_url || 'assets/images/defaults/doctor-placeholder.png'"
+                        [alt]="member.nombre">
+                </div>
+
+                <!-- INFORMACIÓN CONDENSADA -->
+                <div class="tw:flex tw:flex-col">
+                    <h3 class="tw:text-xl tw:text-slate-800 tw:font-extrabold tw:mb-1">{{ member.nombre }}</h3>
+                    <span class="tw:text-blue-600 tw:font-bold tw:text-sm tw:uppercase tw:tracking-widest tw:mb-2">{{ member.cargo || 'Especialista' }}</span>
+
+                    <!-- Formación Académica -->
+                    <p class="tw:flex tw:items-center tw:justify-center tw:gap-1.5 tw:text-slate-400 tw:text-xs tw:font-semibold tw:mb-2" *ngIf="member.formacion">
+                        <i class="material-icons tw:text-sm">school</i>
+                        <span>{{ member.formacion }}</span>
+                    </p>
+
+                    <!-- Biografía con Truncado Inteligente -->
+                    <p class="tw:text-slate-500 tw:text-sm tw:leading-relaxed tw:mb-4 tw:line-clamp-3">
+                        {{ getProfessionalBio(member) }}
+                    </p>
+
+                    <!-- REDES SOCIALES DEL PROFESIONAL -->
+                    <div class="tw:flex tw:justify-center tw:gap-3 tw:mt-auto" *ngIf="member.linkedin_url || member.instagram_url">
+                        <a *ngIf="member.linkedin_url" [href]="member.linkedin_url" target="_blank" class="tw:w-9 tw:h-9 tw:bg-white tw:text-slate-400 tw:rounded-lg tw:flex tw:items-center tw:justify-center tw:transition-all tw:hover:bg-blue-600 tw:hover:text-white"
+                            title="LinkedIn">
+                            <i class="material-icons tw:text-[1.2rem]">business_center</i>
+                        </a>
+                        <a *ngIf="member.instagram_url" [href]="member.instagram_url" target="_blank" class="tw:w-9 tw:h-9 tw:bg-white tw:text-slate-400 tw:rounded-lg tw:flex tw:items-center tw:justify-center tw:transition-all tw:hover:bg-pink-500 tw:hover:text-white"
+                            title="Instagram">
+                            <i class="material-icons tw:text-[1.2rem]">photo_camera</i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ESTADO VACÍO -->
+        <div class="tw:text-center tw:py-12 tw:bg-slate-50 tw:rounded-3xl tw:border tw:border-dashed tw:border-slate-200" *ngIf="sortedStaff.length === 0">
+            <p class="tw:text-slate-400 tw:font-medium">Nuestro equipo de especialistas está listo para atenderte. Muy pronto podrás conocer sus perfiles aquí.
+            </p>
+        </div>
+    </div>
+</section>

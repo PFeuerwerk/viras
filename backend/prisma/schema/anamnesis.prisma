@@ -1,0 +1,31 @@
+model anamnesis {
+  id                            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  paciente_id                   String    @unique @db.Uuid
+  medicamentos_actuales         String?
+  cirugias_previas              String?
+  embarazo_lactancia            Boolean   @default(false)
+  motivo_consulta               String?
+  ultima_visita_dental          DateTime? @db.Date
+  frecuencia_cepillado          String?   @db.VarChar(50)
+  uso_hilo_dental               Boolean   @default(false)
+  sensibilidad_dental           Boolean   @default(false)
+  dolor_actual                  Boolean   @default(false)
+  detalles_problemas_dentales   String?
+  respuestas_evaluacion         Json?
+  fuma                          Boolean   @default(false)
+  frecuencia_fumar              String?   @db.VarChar(100)
+  observaciones_adicionales     String?
+  creado_en                     DateTime? @default(now()) @db.Timestamptz(6)
+  actualizado_en                DateTime? @default(now()) @db.Timestamptz(6)
+  actividades_afectan_mandibula String?
+  alergias_json                 Json?
+  antecedentes_familiares_json  Json?
+  familiares_en_clinica         String?
+  historial_dental_json         Json?
+  historial_medico_json         Json?
+  porque_eligio_clinica         String?
+  preocupacion_dental           String?
+  sugerencia_tratamiento        String?
+  tratamiento_previo_ortodoncia String?
+  usuario                       usuarios  @relation(fields: [paciente_id], references: [id], onDelete: Cascade)
+}

@@ -1,0 +1,292 @@
+<div class="config-container">
+    <!-- 1. HEADER CON TÍTULO -->
+    <header class="config-header">
+        <div class="header-content">
+            <div class="title-with-actions">
+                <h1>Configuración del Negocio</h1>
+                <button type="button" class="btn-view-public" (click)="viewPublicSite()">
+                    <i class="material-icons">visibility</i> <span>Ver Sitio Público</span>
+                </button>
+            </div>
+            <p>Personaliza la identidad y la narrativa de <strong>{{ business.nombre_empresa || 'tu negocio'
+                    }}</strong>.</p>
+        </div>
+    </header>
+
+    <!-- 2. MENSAJES DE ESTADO (TOASTS) -->
+    <div class="status-messages">
+        <div *ngIf="message" [ngClass]="['notification-toast', message.type]" class="animate-fade-in">
+            <i class="material-icons">{{ message.type === 'success' ? 'check_circle' : 'warning' }}</i>
+            <span>{{ message.text }}</span>
+        </div>
+
+        <div class="loader-overlay" *ngIf="isLoading">
+            <div class="spinner-dual"></div>
+            <p>Sincronizando configuración...</p>
+        </div>
+    </div>
+
+    <!-- 3. NAVEGACIÓN POR PESTAÑAS -->
+    <div class="tabs-wrapper" *ngIf="!isLoading">
+        <nav class="config-tabs">
+            <button [class.active]="activeTab === 'general'" (click)="setTab('general')">
+                <i class="material-icons">settings</i> General
+            </button>
+            <button [class.active]="activeTab === 'about'" (click)="setTab('about')">
+                <i class="material-icons">info</i> Acerca de
+            </button>
+            <button [class.active]="activeTab === 'services'" (click)="setTab('services')">
+                <i class="material-icons">medical_services</i> Servicios
+            </button>
+            <!-- NUEVA PESTAÑA: Gestión de Citas -->
+            <button [class.active]="activeTab === 'booking-config'" (click)="setTab('booking-config')">
+                <i class="material-icons">event_available</i> Gestión de Citas
+            </button>
+            <button [class.active]="activeTab === 'testimonials'" (click)="setTab('testimonials')">
+                <i class="material-icons">rate_review</i> Testimonios
+            </button>
+            <button [class.active]="activeTab === 'what-we-do'" (click)="setTab('what-we-do')">
+                <i class="material-icons">architecture</i> Qué Hacemos
+            </button>
+            <button [class.active]="activeTab === 'staff'" (click)="setTab('staff')">
+                <i class="material-icons">groups</i> Equipo
+            </button>
+            <button [class.active]="activeTab === 'history'" (click)="setTab('history')">
+                <i class="material-icons">history_edu</i> Historia
+            </button>
+            <button [class.active]="activeTab === 'design'" (click)="setTab('design')">
+                <i class="material-icons">palette</i> Diseño
+            </button>
+        </nav>
+
+        <!-- 4. CONTENIDO DINÁMICO -->
+        <main class="tab-content">
+
+            <!-- Pestaña: Equipo -->
+            <div *ngIf="activeTab === 'staff'" class="animate-slide-up">
+                <app-staff-mgmt></app-staff-mgmt>
+            </div>
+
+            <form (ngSubmit)="saveConfig()" #configForm="ngForm" *ngIf="activeTab !== 'staff'">
+
+                <!-- Pestaña: General -->
+                <div *ngIf="activeTab === 'general'" class="animate-slide-up">
+                    <app-config-general [business]="business" [logoPreview]="logoPreview" (changed)="saveConfig()"
+                        (fileSelected)="onFileSelected($event, 'logo')">
+                    </app-config-general>
+
+                    <div class="schedule-section-wrapper">
+                        <app-schedule-manager [horarioTexto]="business.horario_texto"
+                            (onScheduleChange)="updateSchedule($event)">
+                        </app-schedule-manager>
+                    </div>
+                </div>
+
+                <!-- Pestaña: Acerca de -->
+                <div *ngIf="activeTab === 'about'" class="animate-slide-up">
+                    <app-config-about [business]="business" [heroPreview]="heroPreview" (changed)="saveConfig()"
+                        (fileSelected)="onFileSelected($event, 'hero')">
+                    </app-config-about>
+                </div>
+
+                <!-- Pestaña: Servicios -->
+                <div *ngIf="activeTab === 'services'" class="animate-slide-up">
+                    <app-config-services [business]="business" (addService)="onAddService()"
+                        (removeService)="onRemoveService($event)" (iconSelected)="onIconSelected($event)"
+                        (changed)="saveConfig()">
+                    </app-config-services>
+                </div>
+
+                <!-- NUEVA PESTAÑA: Configuración de Tipos de Cita (Booking) -->
+                <div *ngIf="activeTab === 'booking-config'" class="animate-slide-up">
+                    <app-config-booking [business]="business" (changed)="saveConfig()">
+                    </app-config-booking>
+                </div>
+
+                <!-- NUEVA PESTAÑA: Testimonios -->
+                <div *ngIf="activeTab === 'testimonials'" class="animate-slide-up">
+                    <app-config-testimonials [business]="business" (changed)="saveConfig()">
+                    </app-config-testimonials>
+                </div>
+
+                <!-- Pestaña: Qué Hacemos (Process Builder) -->
+                <div *ngIf="activeTab === 'what-we-do'" class="animate-slide-up">
+                    <div class="config-section-card">
+                        <div class="card-intro">
+                            <div class="icon-box">
+                                <i class="material-icons">architecture</i>
+                            </div>
+                            <div class="text-box">
+                                <h3>Nuestra Metodología de Trabajo</h3>
+                                <p>Defina los pasos secuenciales que sus pacientes o clientes experimentarán. Esta sección es vital para transmitir confianza y profesionalidad.</p>
+                            </div>
+                        </div>
+
+                        <div class="modern-form-grid">
+                            <div class="input-container">
+                                <label>Título Principal de la Sección</label>
+                                <input type="text" name="wwd_title" [(ngModel)]="business.seccion_que_hacemos!.titulo"
+                                    placeholder="Ej: Nuestra Metodología en {{ business.nombre_empresa }}" class="modern-input">
+                            </div>
+
+                            <div class="input-container">
+                                <label>Descripción Introductoria</label>
+                                <textarea name="wwd_intro" [(ngModel)]="business.seccion_que_hacemos!.introduccion"
+                                    rows="3" placeholder="Explique brevemente cómo su equipo aborda los servicios..." class="modern-textarea"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="process-builder-section">
+                            <div class="section-header">
+                                <h4>Pasos del Proceso (Timeline)</h4>
+                                <span class="badge">{{ business.seccion_que_hacemos?.items?.length || 0 }} Etapas</span>
+                            </div>
+
+                            <div class="steps-container">
+                                <div *ngFor="let item of business.seccion_que_hacemos?.items; let i = index"
+                                    class="step-card animate-fade-in">
+                                    <div class="step-number">{{ i + 1 }}</div>
+                                    <div class="step-content">
+                                        <div class="input-container">
+                                            <label>Título de la Etapa</label>
+                                            <input type="text" [name]="'wwd_item_n_' + i" [(ngModel)]="item.nombre"
+                                                placeholder="Ej: Diagnóstico Inicial" class="modern-input">
+                                        </div>
+                                        <div class="input-container">
+                                            <label>¿Qué ocurre en este paso?</label>
+                                            <input type="text" [name]="'wwd_item_d_' + i" [(ngModel)]="item.descripcion"
+                                                placeholder="Ej: Evaluación detallada de su salud dental..." class="modern-input">
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn-delete-step" (click)="onRemoveWhatWeDoItem(i)"
+                                        title="Eliminar etapa">
+                                        <i class="material-icons">delete_outline</i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn-add-step" (click)="onAddWhatWeDoItem()">
+                                <i class="material-icons">add_circle</i>
+                                <span>Añadir una nueva etapa al proceso</span>
+                            </button>
+                        </div>
+
+                        <hr class="section-divider tw:my-10">
+
+                        <!-- NUEVA SECCIÓN: POR QUÉ ELEGIRNOS -->
+                        <div class="card-intro">
+                            <div class="icon-box">
+                                <i class="material-icons">verified</i>
+                            </div>
+                            <div class="text-box">
+                                <h3>Sección: ¿Por qué elegirnos?</h3>
+                                <p>Destaque sus puntos fuertes, certificaciones y el valor diferencial que ofrece a sus pacientes.</p>
+                            </div>
+                        </div>
+
+                        <div class="modern-form-grid">
+                            <div class="input-container">
+                                <label>Imagen de la Sección</label>
+                                <div class="image-upload-wrapper">
+                                    <div class="image-preview-box" [style.backgroundImage]="'url(' + (diffPreview || 'assets/images/default-wwd.jpg') + ')'">
+                                        <div class="upload-overlay" (click)="diffInput.click()">
+                                            <i class="material-icons">photo_camera</i>
+                                            <span>Cambiar Imagen</span>
+                                        </div>
+                                    </div>
+                                    <input type="file" #diffInput (change)="onFileSelected($event, 'diff')" accept="image/*" style="display: none;">
+                                    <p class="helper-text">Recomendado: 800x1000px (Vertical/Retrato)</p>
+                                </div>
+                            </div>
+
+                            <div class="input-container">
+                                <label>Título de la Sección de Valor</label>
+                                <input type="text" name="wwd_diff_title" [(ngModel)]="business.seccion_que_hacemos!.diferenciales_titulo"
+                                    placeholder="Ej: Compromiso inquebrantable con la calidad" class="modern-input">
+                            </div>
+
+                            <div class="input-container">
+                                <label>Introducción Detallada</label>
+                                <textarea name="wwd_diff_intro" [(ngModel)]="business.seccion_que_hacemos!.diferenciales_introduccion"
+                                    rows="3" placeholder="Explique por qué son la mejor opción..." class="modern-textarea"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="process-builder-section">
+                            <div class="section-header">
+                                <h4>Diferenciales y Fortalezas</h4>
+                                <span class="badge">{{ business.seccion_que_hacemos?.diferenciales_items?.length || 0 }} Puntos</span>
+                            </div>
+
+                            <div class="steps-container">
+                                <div *ngFor="let diff of business.seccion_que_hacemos?.diferenciales_items; let j = index"
+                                    class="step-card animate-fade-in">
+                                    <div class="input-container" style="width: 80px; flex-shrink: 0;">
+                                        <label>Icono</label>
+                                        <input type="text" [name]="'wwd_diff_icon_' + j" [(ngModel)]="diff.icono"
+                                            placeholder="star" class="modern-input tw:text-center">
+                                    </div>
+                                    <div class="step-content">
+                                        <div class="input-container">
+                                            <label>Título del Diferencial</label>
+                                            <input type="text" [name]="'wwd_diff_n_' + j" [(ngModel)]="diff.titulo"
+                                                placeholder="Ej: Especialistas Certificados" class="modern-input">
+                                        </div>
+                                        <div class="input-container">
+                                            <label>Descripción corta</label>
+                                            <input type="text" [name]="'wwd_diff_d_' + j" [(ngModel)]="diff.descripcion"
+                                                placeholder="Ej: Profesionales con formación internacional..." class="modern-input">
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn-delete-step" (click)="onRemoveDiferencialItem(j)"
+                                        title="Eliminar diferencial">
+                                        <i class="material-icons">delete_outline</i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn-add-step" (click)="onAddDiferencialItem()">
+                                <i class="material-icons">add_box</i>
+                                <span>Añadir un nuevo punto de valor</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pestaña: Historia -->
+                <div *ngIf="activeTab === 'history'" class="animate-slide-up">
+                    <app-config-history [business]="business" (changed)="saveConfig()">
+                    </app-config-history>
+                </div>
+
+                <!-- Pestaña: Diseño -->
+                <div *ngIf="activeTab === 'design'" class="animate-slide-up">
+                    <div class="config-card">
+                        <h3>Identidad Visual</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Color Primario de Marca</label>
+                                <div class="color-picker-wrapper">
+                                    <input type="color" [(ngModel)]="business.config_visual!.primary_color"
+                                        name="p_color">
+                                    <span style="font-family: monospace; font-weight: bold; margin-left: 10px;">
+                                        {{ business.config_visual?.primary_color }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOTÓN FLOTANTE DE GUARDADO -->
+                <div class="floating-save-bar">
+                    <p *ngIf="isSaving" class="saving-text">Sincronizando con la nube...</p>
+                    <button type="submit" class="btn-save-main" [disabled]="isSaving">
+                        <i class="material-icons">{{ isSaving ? 'sync' : 'save' }}</i>
+                        {{ isSaving ? 'Guardando...' : 'Guardar Configuración' }}
+                    </button>
+                </div>
+            </form>
+        </main>
+    </div>
+</div>

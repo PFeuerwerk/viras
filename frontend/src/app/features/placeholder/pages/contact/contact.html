@@ -1,0 +1,99 @@
+<section class="tw:bg-white animate-fade-in" *ngIf="businessData">
+    <!-- Header Minimalista -->
+    <div class="tw:text-center tw:py-12 tw:bg-slate-50">
+        <span class="tw:text-blue-600 tw:font-extrabold tw:text-[0.75rem] tw:tracking-[2px] tw:uppercase tw:inline-block tw:mb-2.5">¿Tienes dudas?</span>
+        <h1 class="tw:text-4xl tw:text-slate-800 tw:font-extrabold tw:mb-2.5">Estamos aquí para ayudarte</h1>
+        <p class="tw:text-slate-500 tw:text-lg tw:max-w-2xl tw:mx-auto">Conéctate con nosotros y recibe atención personalizada de inmediato.</p>
+    </div>
+
+    <div class="tw:max-w-[1200px] tw:mx-auto tw:px-[5%] tw:py-16">
+        <div class="tw:grid tw:grid-cols-1 tw:lg:grid-cols-[1fr_1.5fr] tw:gap-12">
+
+            <!-- Columna 1: Información de Contacto -->
+            <div class="tw:flex tw:flex-col">
+                <div class="tw:bg-blue-600 tw:text-white tw:p-10 tw:rounded-[24px] tw:shadow-2xl tw:shadow-blue-600/20">
+                    <h2 class="tw:text-2xl tw:font-extrabold tw:mb-4">Información de contacto</h2>
+                    <p class="tw:text-blue-100 tw:mb-8">Nuestro equipo responderá tus inquietudes en menos de 24 horas hábiles.</p>
+
+                    <div class="tw:flex tw:flex-col tw:gap-8">
+                        <div class="tw:flex tw:gap-4 tw:items-center">
+                            <div class="tw:w-12 tw:h-12 tw:bg-white/10 tw:rounded-xl tw:flex tw:items-center tw:justify-center tw:shrink-0">
+                                <i class="material-icons">phone</i>
+                            </div>
+                            <div class="tw:flex tw:flex-col">
+                                <span class="tw:text-xs tw:text-blue-200 tw:uppercase tw:font-bold">Llámanos</span>
+                                <strong class="tw:text-lg">{{ businessData.telefono || 'Sin teléfono configurado' }}</strong>
+                            </div>
+                        </div>
+
+                        <div class="tw:flex tw:gap-4 tw:items-center">
+                            <div class="tw:w-12 tw:h-12 tw:bg-white/10 tw:rounded-xl tw:flex tw:items-center tw:justify-center tw:shrink-0">
+                                <i class="material-icons">location_on</i>
+                            </div>
+                            <div class="tw:flex tw:flex-col">
+                                <span class="tw:text-xs tw:text-blue-200 tw:uppercase tw:font-bold">Visítanos</span>
+                                <strong class="tw:text-lg">{{ businessData.direccion || 'Dirección no configurada' }}</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Redes Sociales / Mapa -->
+                    <div class="tw:mt-12 tw:pt-8 tw:border-t tw:border-white/10">
+                        <p class="tw:text-blue-200 tw:text-sm tw:font-semibold tw:mb-4">Ubícanos en el mapa:</p>
+                        <div class="tw:flex tw:gap-4">
+                            <a [href]="getGoogleMapsUrl()" target="_blank" 
+                               class="tw:flex tw:items-center tw:gap-3 tw:p-3 tw:bg-white/10 tw:rounded-xl tw:transition-all tw:hover:bg-white/20 tw:no-underline tw:group tw:w-full">
+                                <div class="tw:w-10 tw:h-10 tw:bg-white/20 tw:rounded-lg tw:flex tw:items-center tw:justify-center tw:transition-transform tw:group-hover:scale-110">
+                                    <i class="material-icons tw:text-white">explore</i>
+                                </div>
+                                <div class="tw:flex tw:flex-col">
+                                    <span class="tw:text-white tw:text-sm tw:font-bold">Ver en Google Maps</span>
+                                    <span class="tw:text-blue-200 tw:text-[10px] tw:uppercase tw:tracking-wider tw:font-black">Abrir navegación</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna 2: Formulario -->
+            <div class="tw:flex tw:flex-col">
+                <form (ngSubmit)="onSubmit()" #contactFormRef="ngForm" class="tw:grid tw:gap-6">
+                    <div class="tw:flex tw:flex-col">
+                        <label class="viras-label">Nombre completo</label>
+                        <input type="text" name="name" [(ngModel)]="contactForm.name" required
+                            placeholder="Ej. Juan Pérez" class="viras-form-control">
+                    </div>
+
+                    <div class="tw:flex tw:flex-col">
+                        <label class="viras-label">Correo electrónico</label>
+                        <input type="email" name="email" [(ngModel)]="contactForm.email" required
+                            placeholder="juan@ejemplo.com" class="viras-form-control">
+                    </div>
+
+                    <div class="tw:flex tw:flex-col">
+                        <label class="viras-label">Asunto</label>
+                        <select name="subject" [(ngModel)]="contactForm.subject" class="viras-form-control">
+                            <option value="">Selecciona una opción</option>
+                            <option value="info">Solicitar Información</option>
+                            <option value="cita">Duda sobre Citas</option>
+                            <option value="queja">Sugerencias</option>
+                        </select>
+                    </div>
+
+                    <div class="tw:flex tw:flex-col">
+                        <label class="viras-label">Mensaje</label>
+                        <textarea name="message" [(ngModel)]="contactForm.message" required
+                            placeholder="¿En qué podemos ayudarte?" rows="5" class="viras-form-control"></textarea>
+                    </div>
+
+                    <button type="submit" class="tw:flex tw:items-center tw:justify-center tw:gap-2 tw:w-full tw:p-4 tw:bg-blue-600 tw:text-white tw:border-none tw:rounded-2xl tw:font-bold tw:cursor-pointer tw:mt-4 tw:transition-all tw:duration-300 tw:hover:bg-blue-700 tw:disabled:bg-slate-200 tw:disabled:text-slate-400 tw:disabled:cursor-not-allowed" [disabled]="!contactFormRef.valid">
+                        Enviar Mensaje
+                        <i class="material-icons tw:text-lg">send</i>
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</section>

@@ -1,0 +1,73 @@
+<div class="tw:bg-white tw:p-[30px] tw:rounded-[20px] tw:shadow-lg tw:shadow-slate-200/50 tw:border tw:border-slate-100 animate-fade-in">
+    <!-- Header Informativo -->
+    <div class="tw:mb-[30px] tw:pb-5 tw:border-b tw:border-slate-100">
+        <div class="tw:flex tw:gap-[15px] tw:items-center">
+            <i class="material-icons tw:text-blue-600 tw:text-4xl">info_outline</i>
+            <div>
+                <h3 class="tw:text-[1.4rem] tw:text-slate-800 tw:font-extrabold tw:m-0">Página: Acerca de Nosotros</h3>
+                <p class="tw:text-slate-500 tw:text-sm tw:mt-1">Configura la narrativa que define la calidad de tu negocio.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="tw:grid tw:gap-[25px]">
+        <!-- Zona de Carga de Imagen Hero -->
+        <div class="tw:flex tw:flex-col">
+            <label class="viras-label">Imagen de Portada (Hero Section)</label>
+            <div class="tw:grid tw:grid-cols-[240px_1fr] tw:gap-5 tw:bg-slate-50 tw:p-[15px] tw:rounded-xl">
+                <div class="tw:w-full tw:h-[135px] tw:bg-cover tw:bg-center tw:rounded-xl tw:flex tw:items-center tw:justify-center tw:bg-slate-200"
+                    [style.backgroundImage]="'url(' + (heroPreview || 'assets/images/placeholder-hero.jpg') + ')'">
+                    <div class="tw:text-[0.7rem] tw:text-slate-400 tw:font-bold" *ngIf="!heroPreview">1920 x 1080 px</div>
+                </div>
+                <div class="tw:flex tw:flex-col tw:justify-center">
+                    <div class="tw:inline-flex tw:items-center tw:gap-1.5 tw:bg-blue-100 tw:text-blue-800 tw:px-3 tw:py-1.5 tw:rounded-md tw:text-[0.8rem] tw:font-semibold tw:mb-2.5">
+                        <i class="material-icons tw:text-lg">aspect_ratio</i>
+                        <span>Resolución: <strong>1920x1080px</strong> (16:9)</span>
+                    </div>
+                    <p class="tw:text-[0.85rem] tw:text-slate-500 tw:mb-3.5 tw:leading-tight">Use imágenes profesionales de su clínica o local para generar confianza
+                        inmediata.</p>
+                    <input type="file" id="heroAboutFile" (change)="onFileSelect($event)" accept="image/*"
+                        class="tw:hidden">
+                    <label for="heroAboutFile" class="tw:inline-flex tw:items-center tw:gap-2 tw:px-4 tw:py-2 tw:border-2 tw:border-blue-600 tw:text-blue-600 tw:rounded-lg tw:cursor-pointer tw:font-bold tw:transition-all tw:hover:bg-blue-600 tw:hover:text-white tw:w-fit">
+                        <i class="material-icons">cloud_upload</i> Seleccionar Imagen
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Título Principal -->
+        <div class="tw:flex tw:flex-col">
+            <label class="viras-label">Título de la Sección</label>
+            <input type="text" class="viras-form-control" [(ngModel)]="business.titulo_hero" (ngModelChange)="changed.emit()"
+                placeholder="Ej. Líderes en Innovación Dental" maxlength="60">
+            <div class="tw:flex tw:justify-between tw:mt-1.5 tw:text-[0.8rem]">
+                <span class="tw:text-slate-400">Ideal: 40-50 caracteres para un diseño equilibrado.</span>
+                <span class="tw:font-semibold tw:text-slate-500" [class.tw:text-amber-500]="getCharCount(business.titulo_hero) > 50">
+                    {{ getCharCount(business.titulo_hero) }}/60
+                </span>
+            </div>
+        </div>
+
+        <!-- Slogan de Pasión -->
+        <div class="tw:flex tw:flex-col">
+            <label class="viras-label">Slogan de Pasión e Impacto</label>
+            <textarea class="viras-form-control" [(ngModel)]="business.slogan_hero" (ngModelChange)="changed.emit()" rows="2"
+                placeholder="Ej. Nos apasiona brindar una atención compasiva..." maxlength="130"></textarea>
+            <div class="tw:flex tw:justify-between tw:mt-1.5 tw:text-[0.8rem]">
+                <span class="tw:text-slate-400">Texto breve que resuma tu propósito principal.</span>
+                <span class="tw:font-semibold tw:text-slate-500">{{ getCharCount(business.slogan_hero) }}/130</span>
+            </div>
+        </div>
+
+        <!-- Descripción de Calidad -->
+        <div class="tw:flex tw:flex-col">
+            <label class="viras-label">Descripción de Estándares y Experiencia</label>
+            <textarea class="viras-form-control" [(ngModel)]="business.descripcion_hero" (ngModelChange)="changed.emit()" rows="4"
+                placeholder="Ej. Fundados bajo los más altos estándares..." maxlength="450"></textarea>
+            <div class="tw:flex tw:justify-between tw:mt-1.5 tw:text-[0.8rem]">
+                <span class="tw:text-slate-400">Extensión óptima: 250-350 caracteres para dispositivos móviles.</span>
+                <span class="tw:font-semibold tw:text-slate-500">{{ getCharCount(business.descripcion_hero) }}/450</span>
+            </div>
+        </div>
+    </div>
+</div>
